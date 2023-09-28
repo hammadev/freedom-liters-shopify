@@ -46,7 +46,7 @@ const Splash = ({ navigation }) => {
     // Check if both sets of data have been successfully fetched and stored in Redux
     if (!latestProductLoading && !collectionLoading) {
       // Navigate to the next screen (replace 'BottomTabScreen' with your desired destination)
-      navigation.replace('BottomTabScreen');
+      navigation.replace('SignIn');
     }
   }, [latestProductLoading, latestProductError, latestProductData, collectionLoading, collectionError, collectionData, dispatch, navigation]);
 

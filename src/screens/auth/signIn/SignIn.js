@@ -139,6 +139,14 @@ const SignIn = ({ navigation }) => {
               loading={loading}
               onPressFunc={handleSubmit}
             />
+            <Button
+              text="Continue without login"
+              icon="mail"
+              isIcon={false}
+              theme="secondary"
+              navLink="BottomTabScreen"
+              loading={loading}
+            />
           </View>
           <View style={{ ...styles.BottonContainer }}>
             <Text style={{ ...styles.TextStyle, color: Color.white }}>
