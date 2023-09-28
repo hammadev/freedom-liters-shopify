@@ -24,7 +24,3 @@ query getLatestProducts {
   }
 }
 `;
-
-export const PRODUCT_DETAIL = gql`
-  
-`;

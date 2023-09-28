@@ -109,7 +109,7 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
           fontFamily: Font.Gilroy_Medium,
           fontSize: 11,
         }}>
-        ${item.price}
+        FROM {item.node.priceRange.minVariantPrice.amount + ' ' + item.node.priceRange.minVariantPrice.currencyCode}
       </Text>
       <View
         style={{
@@ -133,21 +133,21 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
           })} */}
         </Text>
         <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-          <View style={{ paddingRight: 5 }}>
+          {/* <View style={{ paddingRight: 5 }}>
             <Icon
               iconFamily={'Fontisto'}
               name={'star'}
               size={10}
               color={Color.tertiary}
             />
-          </View>
+          </View> */}
           <Text
             style={{
               color: 'rgba(8, 14, 30, 0.6)',
               fontFamily: Font.Gilroy_Medium,
               fontSize: 13,
             }}>
-            ({item.rating_count})
+            ({item.node.totalInventory} in stock)
           </Text>
         </View>
       </View>
