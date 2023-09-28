@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { CategoriesReq } from '../apis/categories';
 import { ProductListingReq } from '../apis/product';
 import { GeneralSettings } from '../apis/general_settings';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { gql, useQuery } from '@apollo/client';
 import { GET_LATEST_PRODUCT } from '../graphql/queries/Product';
 import { GET_COLLECTION } from '../graphql/queries/Collection';
