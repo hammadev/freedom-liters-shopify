@@ -27,12 +27,12 @@ const CatBox = ({ item, navigation }) => {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)', flex: 0.85, paddingBottom: 20, paddingLeft: 20, justifyContent: 'flex-end'
                 }}>
                     <Text style={{ ...GlobalStyle.heading, color: Color.white }}>
-                        {item.name}
+                        {item.node.title}
                     </Text>
                     <View
                         style={{
                             height: 3,
-                            width: item.name.length * 10,
+                            width: item.node.title.length * 10,
                             borderRadius: 10,
                             marginTop: 12,
                             backgroundColor: Color.white,
@@ -55,7 +55,7 @@ const Category = ({ navigation }) => {
                         title='Category'
                     />
                     <View style={{ marginVertical: Window.fixPadding }}>
-                        {categories[0].map((item, i) => (
+                        {categories.edges.map((item, i) => (
                             <CatBox navigation={navigation} item={item} key={i} />
                         ))}
                     </View>
