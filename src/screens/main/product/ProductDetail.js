@@ -32,34 +32,37 @@ const ProductDetail = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: Color.white, flex: 1 }}>
+    <SafeAreaView style={{backgroundColor: Color.white, flex: 1}}>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 0 }}
-        style={{ backgroundColor: Color.white, flex: 1 }}>
-        <View style={{
-          backgroundColor: '#F6F4F0', paddingVertical: Window.fixPadding, borderBottomRightRadius: Window.fixPadding * 2,
-          borderBottomLeftRadius: Window.fixPadding * 2,
-        }}>
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
+        style={{backgroundColor: Color.white, flex: 1}}>
+        <View
+          style={{
+            backgroundColor: '#F6F4F0',
+            paddingVertical: Window.fixPadding,
+            borderBottomRightRadius: Window.fixPadding * 2,
+            borderBottomLeftRadius: Window.fixPadding * 2,
+          }}>
           <AppBar
-            theme='dark'
-            header='solid'
-            customStyle={{ paddingHorizontal: Window.fixPadding * 2 }}
+            theme="dark"
+            header="solid"
+            customStyle={{paddingHorizontal: Window.fixPadding * 2}}
             right={
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <ShareIcon />
               </View>
             }
           />
           <View
-            style={{ alignItems: 'center', width: Window.width, height: 200 }}>
+            style={{alignItems: 'center', width: Window.width, height: 200}}>
             <Image
-              style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
-              source={{ uri: product.images[0].src }}
+              style={{width: '100%', height: '100%', resizeMode: 'contain'}}
+              source={{uri: product.node.featuredImage?.url}}
             />
           </View>
         </View>
 
-        <View style={{ backgroundColor: Color.white, paddingTop: 20 }}>
+        <View style={{backgroundColor: Color.white, paddingTop: 20}}>
           <View
             style={{
               paddingHorizontal: 20,
@@ -67,7 +70,7 @@ const ProductDetail = ({ route, navigation }) => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon
                 iconFamily={'Fontisto'}
                 name={'star'}
@@ -81,16 +84,10 @@ const ProductDetail = ({ route, navigation }) => {
                   fontFamily: Font.Gilroy_Medium,
                   color: Color.primary,
                 }}>
-                {product.average_rating + ' '}
-                ({product.rating_count + ' Reviews'})
+                {product.average_rating + ' '}(
+                {product.rating_count + ' Reviews'})
               </Text>
             </View>
-            {/* <Icon
-              iconFamily={'AntDesign'}
-              name="heart"
-              color={'#DE4B4B'}
-              size={20}
-            /> */}
           </View>
           <View
             style={{
@@ -99,26 +96,30 @@ const ProductDetail = ({ route, navigation }) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
             }}>
-            <Heading name={product.name} />
+            <Heading name={product.node.title} />
             <Text
               style={{
                 fontSize: 20,
                 fontFamily: Font.Gilroy_Bold,
                 color: Color.primary,
               }}>
-              ${product.price}
+              {product.node.priceRange.minVariantPrice.amount +
+                ' ' +
+                product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
-          {
-            product.sku && product.categories &&
-            <View style={{ paddingHorizontal: Window.fixPadding * 2, marginTop: Window.fixPadding }}>
-              <Text style={{ ...GlobalStyle.textStlye }}>
-                SKU: {product.sku}
-              </Text>
-              <Text style={{ ...GlobalStyle.textStlye }}>
-                Category: {product?.categories.map((item, i) => {
+          {product.sku && product.categories && (
+            <View
+              style={{
+                paddingHorizontal: Window.fixPadding * 2,
+                marginTop: Window.fixPadding,
+              }}>
+              <Text style={{...GlobalStyle.textStlye}}>SKU: {product.sku}</Text>
+              <Text style={{...GlobalStyle.textStlye}}>
+                Category:{' '}
+                {product?.categories.map((item, i) => {
                   if (i === 0) {
                     return item.name;
                   } else {
@@ -126,19 +127,34 @@ const ProductDetail = ({ route, navigation }) => {
                   }
                 })}
               </Text>
-
             </View>
-          }
+          )}
           <View style={GlobalStyle.borderStyle} />
-          <Heading containerStyle={{ paddingHorizontal: Window.fixPadding * 2, marginTop: Window.fixPadding * 2 }} name="Description" />
+          <Heading
+            containerStyle={{
+              paddingHorizontal: Window.fixPadding * 2,
+              marginTop: Window.fixPadding * 2,
+            }}
+            name="Description"
+          />
 
-          <View style={{ marginTop: 14, paddingHorizontal: 20 }}>
+          <View style={{marginTop: 14, paddingHorizontal: 20}}>
             <RenderHtml
+              tagsStyles={{
+                p: {
+                  color: 'black',
+                  fontSize: 14,
+                  letterSpacing: -0.3,
+                },
+                iframe: {
+                  display: 'none',
+                },
+              }}
               contentWidth={Window.width}
-              source={{ html: product.description }}
+              source={{html: product.node.descriptionHtml}}
             />
             {/* <ReadMoreText
-              text={product.description}
+              text={product.node.descriptionHtml}
               textStyle={{
                 lineHeight: 20,
                 fontFamily: Font.Gilroy_Regular,
@@ -155,10 +171,12 @@ const ProductDetail = ({ route, navigation }) => {
 
           <View style={GlobalStyle.borderStyle} />
 
-
           <Heading
             name="Latest"
-            containerStyle={{ paddingHorizontal: Window.fixPadding * 2, marginTop: Window.fixPadding * 2 }}
+            containerStyle={{
+              paddingHorizontal: Window.fixPadding * 2,
+              marginTop: Window.fixPadding * 2,
+            }}
           />
           <PopularProducts />
           <DileveryPopup
@@ -175,16 +193,14 @@ const ProductDetail = ({ route, navigation }) => {
           backgroundColor: Color.light,
           paddingVertical: 10,
           elevation: 10,
-          marginTop: Window.fixPadding * 1.6
+          marginTop: Window.fixPadding * 1.6,
         }}>
-
         <Button
           onPressFunc={onShowPopup}
           type="tertiary"
           theme="tertiary"
           text="Add to Cart"
         />
-
       </View>
       {/* <View
         style={{
@@ -200,7 +216,6 @@ const ProductDetail = ({ route, navigation }) => {
           <Button onPressFunc={onShowPopup} theme="tertiary" text="Buy Now" />
         </View>
       </View> */}
-
     </SafeAreaView>
   );
 };

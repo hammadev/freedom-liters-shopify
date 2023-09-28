@@ -16,88 +16,117 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from '../core/Icon';
 import { useDispatch } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
+import {TouchableRipple} from 'react-native-paper';
 
-
-const Attribute = ({ attribute, setSelectedOptions, selectedOptions }) => {
-
-  const [active, setActive] = useState();
-  const AttributeOption = ({ item, selectedOption, name }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          if (selectedOptions.some(x => x.name === name)) {
-            const filtered = selectedOptions.filter((option) =>
-              option.name !== name
-            )
-            filtered.push({
-              name: name,
-              option: item
-            })
-            setSelectedOptions(filtered)
-
-          } else {
-            setSelectedOptions(prev => [...prev, {
-              name: name,
-              option: item
-            }])
-            console.log('not find');
-          }
-          setActive(item);
-        }}
+const Attribute = ({
+  attribute,
+  setActive,
+  active,
+  setSelectedOptions,
+  selectedOptions,
+}) => {
+  // const AttributeOption = ({item, selectedOption, name}) => {
+  //   return (
+  //     <TouchableOpacity
+  //       onPress={() => {
+  //         if (selectedOptions.some(x => x.name === name)) {
+  //           const filtered = selectedOptions.filter(
+  //             option => option.name !== name,
+  //           );
+  //           filtered.push({
+  //             name: name,
+  //             option: item,
+  //           });
+  //           setSelectedOptions(filtered);
+  //         } else {
+  //           setSelectedOptions(prev => [
+  //             ...prev,
+  //             {
+  //               name: name,
+  //               option: item,
+  //             },
+  //           ]);
+  //           // console.log('not find');
+  //         }
+  //         setActive(item);
+  //       }}
+  //       style={{
+  //         flexDirection: 'row',
+  //         alignItems: 'center',
+  //         borderRadius: 12,
+  //         justifyContent: 'center',
+  //         backgroundColor: active === item ? Color.tertiary : '#FAF7F1',
+  //         alignItems: 'center',
+  //         width: 85,
+  //         height: 49,
+  //       }}>
+  //       <Text
+  //         style={{
+  //           fontFamily: Font.Gilroy_SemiBold,
+  //           fontSize: 15,
+  //           paddingHorizontal: 15,
+  //           color: active === item ? Color.white : Color.secondary,
+  //         }}>
+  //         {item.node.title}sdfs
+  //       </Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
+  // const productId = attribute.node.id;
+  // console.log('0000', productId);
+  return (
+    <View style={{marginTop: Window.fixPadding}}>
+      <TouchableRipple
+        onPress={() => setSelectedOptions(attribute.node.id)}
         style={{
           flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
+          width: '100%',
+          paddingHorizontal: 10,
+          paddingVertical: 10,
           borderRadius: 12,
-          justifyContent: 'center',
-          backgroundColor: active === item ? Color.tertiary : '#FAF7F1',
-          alignItems: 'center',
-          width: 85,
-          height: 49,
+          backgroundColor:
+            selectedOptions === attribute.node.id ? Color.yellow : Color.light,
         }}>
-        <Text
-          style={{
-            fontFamily: Font.Gilroy_SemiBold,
-            fontSize: 15,
-            paddingHorizontal: 15,
-            color: active === item ? Color.white : Color.secondary,
-          }}>
-          {item}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  return (
-    <View style={{ marginTop: Window.fixPadding }}>
-      <Text
-        style={{
-          color: Color.primary,
-          fontFamily: Font.Gilroy_SemiBold,
-          fontSize: 15,
-          marginVertical: Window.fixPadding / 1.5
-        }}>
-        {attribute.name}
-      </Text>
-      <FlatList
-        contentContainerStyle={{ paddingHorizontal: 0 }}
-        data={attribute.options}
-        renderItem={({ item }) => (
-          <AttributeOption
-            item={item}
-            name={attribute.name}
-          // selectedOption={selectedOption}
-          // setSelectedOption={setSelectedOption}
-          />
-        )}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-      />
+        <>
+          <View>
+            <Text
+              style={{
+                color: Color.primary,
+                fontFamily: Font.Gilroy_Regular,
+                fontSize: 14,
+              }}>
+              {attribute.node.title}
+            </Text>
+            <Text
+              style={{
+                color: Color.primary,
+                fontFamily: Font.Gilroy_Regular,
+                fontSize: 14,
+                marginVertical: Window.fixPadding / 1.5,
+              }}>
+              Quantity: {attribute.node.quantityAvailable}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: Color.primary,
+              fontFamily: Font.Gilroy_Regular,
+              fontSize: 15,
+              marginVertical: Window.fixPadding / 1.5,
+            }}>
+            {attribute.node.price.amount +
+              ' ' +
+              attribute.node.price.currencyCode}
+          </Text>
+        </>
+      </TouchableRipple>
     </View>
   );
-}
+};
 
-const QtyRow = ({ quantity, setQuantity }) => {
+const QtyRow = ({quantity, setQuantity}) => {
   const decrementValue = name => {
     if (quantity === 1) {
       return;
@@ -117,7 +146,6 @@ const QtyRow = ({ quantity, setQuantity }) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-
       }}>
       <Text
         style={{
@@ -157,9 +185,14 @@ const QtyRow = ({ quantity, setQuantity }) => {
   );
 };
 
-const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
+const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
   // console.log('product.variations', product.variations);
-  const [priceAmount, setPriceAmount] = useState(product.price);
+  const [active, setActive] = useState();
+
+  const [priceAmount, setPriceAmount] = useState(
+    product.node.priceRange.minVariantPrice.amount,
+  );
+
   const [quantity, setQuantity] = useState(1);
 
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -169,79 +202,55 @@ const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    setPriceAmount(product.price);
+    setPriceAmount(product.node.priceRange.minVariantPrice.amount);
     setQuantity(1);
-  }, [product.price])
-
-  useEffect(() => {
-    // console.log("rerender", selectedOptions);
-    // const filterAttributes = [{ "name": "Color", "option": "Blue" }, { "name": "Size", "option": "L" }];
-
-    if (product.type !== 'simple' && product.variations) {
-
-      const filteredVariations = product.variations.filter(variation => {
-        return selectedOptions.every(filterAttr => {
-          const attribute = variation.attributes.find(attr => attr.name === filterAttr.name);
-          return attribute && attribute.option === filterAttr.option;
-        });
-      });
-
-      if (filteredVariations[0]?.attributes.length !== selectedOptions.length) {
-        console.log("Error: The number of filtered variations does not match the number of filter attributes.");
-      } else {
-        filteredVariations[0] ? setSelectedVariation(filteredVariations[0]) : selectedVariation(null);
-        setPriceAmount(filteredVariations[0].sale_price);
-        // console.log('filteredVariations',filteredVariations[0]);
-      }
-
-    }
-
-  }, [selectedOptions])
+  }, [product.node.priceRange.minVariantPrice.amount]);
 
   const handleAddToCart = async () => {
-    // if (product.type === 'variable') {
-    //   if (selectedVariation == null) {
-    //     showMessage('Alert', 'Please select variation');
-    //     return;
-    //   }
-    // }
+    if (product.type === 'variable') {
+      if (selectedVariation == null) {
+        showMessage('Alert', 'Please select variation');
+        return;
+      }
+    }
 
-    console.log({
-      productId: product.id,
-      // productDetails: product,
-      totalPrice: priceAmount * quantity,
-      quantity: quantity,
-      ...selectedVariation && { selectedVariation: selectedVariation }
-    })
+    // console.log({
+    //   productId: product.node.id,
+    //   // productDetails: product,
+    //   totalPrice: priceAmount * quantity,
+    //   quantity: quantity,
+    //   ...(selectedVariation && {selectedVariation: selectedVariation}),
+    // });
 
     dispatch({
       type: 'ADD_TO_CART',
       payload: {
-        productId: product.id,
+        productId: product.node.id,
         productDetails: product,
         totalPrice: priceAmount * quantity,
         quantity: quantity,
-        ...selectedVariation && { selectedVariation: selectedVariation }
+        ...(selectedVariation && {selectedVariation: selectedVariation}),
       },
     });
     onTouchOutside();
     navigation.navigate('CheckOut');
-
-  }
+  };
 
   const renderOutsideTouchable = onTouch => {
-    const view = <View style={{ flex: 1, width: '100%' }} />;
+    const view = <View style={{flex: 1, width: '100%'}} />;
     if (!onTouch) {
       return view;
     }
     return (
       <TouchableWithoutFeedback
         onPress={onTouch}
-        style={{ flex: 1, width: '100%' }}>
+        style={{flex: 1, width: '100%'}}>
         {view}
       </TouchableWithoutFeedback>
     );
   };
+
+  // console.log(product.node.variants.edges);
   return (
     <Modal
       animationType="fade"
@@ -263,13 +272,10 @@ const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
             width: '100%',
             borderTopRightRadius: 44,
             borderTopLeftRadius: 44,
-            // height: Window.height * 0.5,
             paddingHorizontal: Window.fixPadding * 2,
             elevation: 10,
-            paddingVertical: Window.fixPadding * 2
-            // flex: 1
+            paddingVertical: Window.fixPadding * 2,
           }}>
-
           <View
             style={{
               flexDirection: 'row',
@@ -286,20 +292,24 @@ const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
                 borderRadius: 16,
               }}>
               <Image
-                style={{ width: 48, height: 48 }}
-                source={{ uri: selectedVariation ? selectedVariation.image : product.images[0].src }}
+                style={{width: 48, height: 48}}
+                source={{
+                  uri: selectedVariation
+                    ? selectedVariation.image
+                    : product.node.featuredImage?.url,
+                }}
               />
             </View>
-            <View style={{ paddingLeft: 24 }}>
+            <View style={{paddingLeft: 24}}>
               <Text
                 style={{
                   color: Color.primary,
                   fontFamily: Font.Gilroy_SemiBold,
                   fontSize: 17,
                 }}>
-                {product.name}
+                {product.node.title}
               </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={{
                     marginTop: 11,
@@ -308,7 +318,11 @@ const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
                     fontSize: 20,
                     textAlign: 'center',
                   }}>
-                  ${selectedVariation ? selectedVariation.sale_price : product.price}
+                  {selectedVariation
+                    ? selectedVariation.sale_price
+                    : product.node.priceRange.minVariantPrice.amount +
+                      ' ' +
+                      product.node.priceRange.minVariantPrice.currencyCode}
                 </Text>
                 <Text
                   style={{
@@ -319,27 +333,34 @@ const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
                     fontFamily: Font.Gilroy_Medium,
                     color: Color.secondary,
                   }}>
-                  ${selectedVariation ? selectedVariation.regular_price : product.regular_price}
+                  $
+                  {selectedVariation
+                    ? selectedVariation.regular_price
+                    : product.regular_price}
                 </Text>
               </View>
             </View>
           </View>
 
-          {
-            product.type !== 'simple' &&
-            product.attributes.map((attribute, i) => (
-              <Attribute attribute={attribute} setSelectedOptions={setSelectedOptions} selectedOptions={selectedOptions} key={i} />
-            ))
-          }
+          {product.node.variants.edges.map((attribute, i) => (
+            <Attribute
+              active={active}
+              setActive={setActive}
+              attribute={attribute}
+              setSelectedOptions={setSelectedOptions}
+              selectedOptions={selectedOptions}
+              key={i}
+            />
+          ))}
 
           <QtyRow
             quantity={quantity}
             setQuantity={setQuantity}
             setPriceAmount={setPriceAmount}
           />
-          <View style={{ marginTop: Window.fixPadding * 4, }}>
+          <View style={{marginTop: Window.fixPadding * 4}}>
             <Button
-              text={`Add to Basket - $${priceAmount * quantity}`}
+              text={`Add to Basket - $${(priceAmount * quantity).toFixed(2)}`}
               theme="tertiary"
               navLink="CheckOut"
               onPressFunc={handleAddToCart}

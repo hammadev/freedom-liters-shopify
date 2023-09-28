@@ -8,19 +8,29 @@ const PopularProducts = () => {
     const { product, wishlist } = useSelector(state => ({ ...state }));
 
     return (
-        <FlatList
-            contentContainerStyle={{ paddingHorizontal: Window.fixPadding * 2, marginBottom: Window.fixPadding }}
-            data={product.latest}
-            // renderItem={({ item, index }) => {
-            //   console.log("item", item);
-            // }}
-            renderItem={({ item, index }) => (
-                <ProductBox wishlist={wishlist} customStyle={{ width: Window.width / 2.3 }} item={item} index={index} />
-            )}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={{ width: Window.fixPadding * 1.5 }}></View>}
-        />
+      <FlatList
+        contentContainerStyle={{
+          paddingHorizontal: Window.fixPadding * 2,
+          marginBottom: Window.fixPadding,
+        }}
+        data={product.all.edges}
+        // renderItem={({ item, index }) => {
+        //   console.log("item", item);
+        // }}
+        renderItem={({item, index}) => (
+          <ProductBox
+            wishlist={wishlist}
+            customStyle={{width: Window.width / 2.3}}
+            item={item}
+            index={index}
+          />
+        )}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => (
+          <View style={{width: Window.fixPadding * 1.5}}></View>
+        )}
+      />
     );
 }
 
