@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,19 +10,19 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { CartSvg, ManuSvg } from '../../../assets/svgs/HomePage';
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {CartSvg, ManuSvg} from '../../../assets/svgs/HomePage';
 import Icon from '../../../core/Icon';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAddress } from '../../../apis/profile';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAddress} from '../../../apis/profile';
 import Heading from '../../../components/Heading';
 import ProductBox from '../product/_partials/ProductBox';
 
-const CatBox = ({ item, navigation }) => {
-
+const CatBox = ({item, navigation}) => {
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('ProductListing', { catId: item.id })}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
       {/* item.image ? { uri: item.image } : require('../../../assets/images/products/review.png') */}
       <ImageBackground
         style={{
@@ -31,14 +31,26 @@ const CatBox = ({ item, navigation }) => {
           flexDirection: 'row',
           marginTop: Window.fixPadding,
         }}
-        source={item.image ? { uri: item.image.src } : require('../../../assets/images/products/review.png')}>
+        source={
+          item.image
+            ? {uri: item.image.src}
+            : require('../../../assets/images/products/review.png')
+        }>
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            paddingBottom: 20, paddingHorizontal: Window.fixPadding, justifyContent: 'flex-end'
+            paddingBottom: 20,
+            paddingHorizontal: Window.fixPadding,
+            justifyContent: 'flex-end',
           }}>
-          <Text style={{ ...GlobalStyle.heading, color: Color.white, lineHeight: Window.fixPadding * 2, fontSize: 14 }}>
+          <Text
+            style={{
+              ...GlobalStyle.heading,
+              color: Color.white,
+              lineHeight: Window.fixPadding * 2,
+              fontSize: 14,
+            }}>
             {item.name}
           </Text>
           <View
@@ -56,8 +68,10 @@ const CatBox = ({ item, navigation }) => {
   );
 };
 
-const Home = ({ navigation }) => {
-  const { auth, categories, product, wishlist, cart } = useSelector(state => ({ ...state }));
+const Home = ({navigation}) => {
+  const {auth, categories, product, wishlist, cart} = useSelector(state => ({
+    ...state,
+  }));
   const dispatch = useDispatch();
   useEffect(() => {
     console.log(product.all.edges);
@@ -65,7 +79,7 @@ const Home = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: Color.light, flex: 1 }}>
+    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={Color.white} />
 
       <ScrollView>
@@ -86,8 +100,8 @@ const Home = ({ navigation }) => {
             }}>
             {/* <ManuSvg /> */}
             <View />
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity style={{ paddingRight: 10 }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity style={{paddingRight: 10}}>
                 <Icon
                   iconFamily={'Feather'}
                   size={20}
@@ -170,50 +184,75 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         </ImageBackground>
 
-        <View style={{ padding: Window.fixPadding * 2, marginVertical: Window.fixPadding }}>
-
+        <View
+          style={{
+            padding: Window.fixPadding * 2,
+            marginVertical: Window.fixPadding,
+          }}>
           {categories && categories[0] && (
             <FlatList
-              contentContainerStyle={{ marginBottom: Window.fixPadding }}
-              columnWrapperStyle={{ justifyContent: 'space-between' }}
+              contentContainerStyle={{marginBottom: Window.fixPadding}}
+              columnWrapperStyle={{justifyContent: 'space-between'}}
               data={categories[0].slice(0, 4)}
-              renderItem={({ item }) => <CatBox item={item} navigation={navigation} />}
+              renderItem={({item}) => (
+                <CatBox item={item} navigation={navigation} />
+              )}
               numColumns={2}
-              ListHeaderComponent={() => <Heading name={'Category'} showMore={true} showMoreLink={'Category'} />}
+              ListHeaderComponent={() => (
+                <Heading
+                  name={'Category'}
+                  showMore={true}
+                  showMoreLink={'Category'}
+                />
+              )}
             />
           )}
 
-          {
-            [{ heading: 'Featured', data_key: 'featured' }, { heading: 'Latest', data_key: 'latest' }, { heading: 'On Sale', data_key: 'onsale' }].map((item, i) => (
-              <>
-                <Heading containerStyle={{ marginTop: Window.fixPadding * 1.5 }} name={item.heading} showMore={true} showMoreLink={'ProductListing'} />
-                {product && (
-                  <FlatList
-                    contentContainerStyle={{ marginVertical: Window.fixPadding }}
-                    data={
-                      item.data_key === 'featured' ? product.all.edges :
-                        item.data_key === 'latest' ? product.all.edges :
-                          item.data_key === 'onsale' ? product.all.edges :
-                            product
-                    }
-                    // renderItem={({ item, index }) => {
-                    //   console.log("item", item);
-                    // }}
-                    renderItem={({ item, index }) => (
-                      <ProductBox wishlist={wishlist} customStyle={{ width: Window.width / 2.3 }} item={item} index={index} />
-                    )}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={() => <View style={{ width: Window.fixPadding * 1.5 }}></View>}
-                  />
-                )}
-
-              </>
-            ))
-          }
-
+          {[
+            {heading: 'Featured', data_key: 'featured'},
+            {heading: 'Latest', data_key: 'latest'},
+            {heading: 'On Sale', data_key: 'onsale'},
+          ].map((item, i) => (
+            <>
+              <Heading
+                containerStyle={{marginTop: Window.fixPadding * 1.5}}
+                name={item.heading}
+                showMore={true}
+                showMoreLink={'ProductListing'}
+              />
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={
+                    item.data_key === 'featured'
+                      ? product.all.edges
+                      : item.data_key === 'latest'
+                      ? product.all.edges
+                      : item.data_key === 'onsale'
+                      ? product.all.edges
+                      : product
+                  }
+                  // renderItem={({ item, index }) => {
+                  //   console.log("item", item);
+                  // }}
+                  renderItem={({item, index}) => (
+                    <ProductBox
+                      wishlist={wishlist}
+                      customStyle={{width: Window.width / 2.3}}
+                      item={item}
+                      index={index}
+                    />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => (
+                    <View style={{width: Window.fixPadding * 1.5}}></View>
+                  )}
+                />
+              )}
+            </>
+          ))}
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
