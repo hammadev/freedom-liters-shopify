@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, StatusBar, View } from 'react-native';
+import { ImageBackground, SafeAreaView, StatusBar, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Color, GlobalStyle, Window } from '../globalStyle/Theme';
 import { LogoSvg } from '../assets/svgs/Logo';
@@ -9,25 +9,39 @@ import { useDispatch } from 'react-redux';
 import { CategoriesReq } from '../apis/categories';
 import { ProductListingReq } from '../apis/product';
 import { GeneralSettings } from '../apis/general_settings';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+import { GET_LATEST_PRODUCT } from '../graphql/queries/Product';
 
 const Splash = ({ navigation }) => {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
+  const { loading, error, data } = useQuery(GET_LATEST_PRODUCT);
+
+
+
   useEffect(() => {
+    if (!loading && !error && data) {
+      dispatch({
+        type: 'PRODUCTS',
+        Payload: data.products,
+      })
+      navigation.replace('BottomTabScreen');
+    }
     // navigation.replace('SignIn');
-    Promise.all([
-      CategoriesReq(dispatch),
-      ProductListingReq(dispatch, 'featured'),
-      ProductListingReq(dispatch, 'onsale'),
-      ProductListingReq(dispatch, 'latest'),
-      ProductListingReq(dispatch),
-      GeneralSettings(dispatch),
-    ]
-    );
-    checkUser();
-    return () => setLoading(false);
-  }, []);
+    // Promise.all([
+    //   CategoriesReq(dispatch),
+    //   ProductListingReq(dispatch, 'featured'),
+    //   ProductListingReq(dispatch, 'onsale'),
+    //   ProductListingReq(dispatch, 'latest'),
+    //   ProductListingReq(dispatch),
+    //   GeneralSettings(dispatch),
+    // ]
+    // );
+    // checkUser();
+    // return () => setLoading(false);
+  }, [loading, error, data, dispatch]);
 
   const checkUser = async () => {
     const timer = setTimeout(async () => {
@@ -61,6 +75,17 @@ const Splash = ({ navigation }) => {
     }, 1000);
     return () => clearTimeout(timer);
   };
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error: {error.message}</Text>;
+  }
+
+  // const product  s = data.products.edges;
+  console.log('Fetched products:', data.products.edges);
 
   return (
     // <SafeAreaView style={{...GlobalStyle.Container}}>

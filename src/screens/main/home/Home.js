@@ -60,8 +60,8 @@ const Home = ({ navigation }) => {
   const { auth, categories, product, wishlist, cart } = useSelector(state => ({ ...state }));
   const dispatch = useDispatch();
   useEffect(() => {
-    // console.log(auth.user.ID);
-    getAddress(dispatch, auth.user.ID);
+    console.log(product.all.edges);
+    // getAddress(dispatch, auth.user.ID);
   }, []);
 
   return (
@@ -191,9 +191,9 @@ const Home = ({ navigation }) => {
                   <FlatList
                     contentContainerStyle={{ marginVertical: Window.fixPadding }}
                     data={
-                      item.data_key === 'featured' ? product.featured :
-                        item.data_key === 'latest' ? product.latest :
-                          item.data_key === 'onsale' ? product.onsale :
+                      item.data_key === 'featured' ? product.all.edges :
+                        item.data_key === 'latest' ? product.all.edges :
+                          item.data_key === 'onsale' ? product.all.edges :
                             product
                     }
                     // renderItem={({ item, index }) => {

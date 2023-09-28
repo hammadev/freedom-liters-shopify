@@ -90,7 +90,7 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
       </TouchableOpacity>
       <Image
         style={style.proImg}
-        source={{ uri: item.images[0].src }}
+        source={{ uri: item.node.featuredImage?.url }}
       />
       <Text
         numberOfLines={1}
@@ -100,7 +100,7 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
           fontFamily: Font.Gilroy_SemiBold,
           fontSize: 13,
         }}>
-        {item.name}
+        {item.node.title}
       </Text>
       <Text
         style={{
@@ -124,13 +124,13 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
             fontFamily: Font.Gilroy_Medium,
             fontSize: 11,
           }}>
-          {item.categories.map((item, i) => {
+          {/* {item.categories.map((item, i) => {
             if (i === 0) {
               return item.name;
             } else {
               return ' / ' + item.name;
             }
-          })}
+          })} */}
         </Text>
         <View style={{ alignItems: 'center', flexDirection: 'row' }}>
           <View style={{ paddingRight: 5 }}>

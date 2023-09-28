@@ -12,7 +12,7 @@ import SignIn from '../screens/auth/signIn/SignIn';
 import SignUp from '../screens/auth/signUp/SignUp';
 import ProductDetail from '../screens/main/product/ProductDetail';
 import Review from '../screens/main/review/Review';
-import CheckOut from '../screens/main/checkout/CheckOut';
+import CheckOut from '../screens/main/checkOut/CheckOut';
 import Splash from '../screens/Splash';
 import WishList from '../screens/main/wishList/WishList';
 import MyOrder from '../screens/main/myOrder/MyOrder';
