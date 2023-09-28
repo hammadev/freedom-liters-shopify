@@ -18,9 +18,9 @@ import { useSelector } from 'react-redux';
 
 const CatBox = ({ item, navigation }) => {
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('ProductListing', { catId: item.id })}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProductListing', { catId: item.node.id })}>
             <ImageBackground style={{ height: 210, flex: 1, marginBottom: Window.fixPadding }}
-                source={item.image ? { uri: item.image.src } : require('../../../assets/images/products/review.png')}
+                source={item.image ? { uri: item.image.url } : require('../../../assets/images/products/review.png')}
             >
                 <View style={{
                     ...StyleSheet.absoluteFillObject,
