@@ -14,18 +14,58 @@ import { useSelector } from 'react-redux';
 import { SkypeIndicator } from 'react-native-indicators';
 import { ProductPaginationReq, ProductCategoryWiseReq } from '../../../apis/product';
 import ProductBox from './_partials/ProductBox';
+import { GET_PRODUCTS_IN_COLLECTION } from '../../../graphql/queries/Collection';
+import { useLazyQuery } from '@apollo/client';
 
 const ProductListing = ({ navigation, route }) => {
     // const navigation = useNavigation('');
     const { product, categories, wishlist } = useSelector(state => ({ ...state }));
     // console.log("product",product.products[0]);
-    const [products, setProducts] = useState(product.all);
-    const [loading, setLoading] = useState(false);
+    const [products, setProducts] = useState(product.all.edges);
+    // const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [endOfScrolling, setEndOfScrolling] = useState(false);
     const [categoryWiseList, setCategoryWiseList] = useState(null);
     const [active, setActive] = useState(0);
-    // console.log(product);
+    // console.log(route.params);
+
+    const [getProductsInCollection, { loading, error }] = useLazyQuery(GET_PRODUCTS_IN_COLLECTION, {
+        onCompleted: (data) => {
+            console.log(data);
+            // Handle data after it's successfully fetched
+            setCategoryWiseList(data.collection.products.edges);
+            setPage(1);
+            setEndOfScrolling(false);
+        },
+    });
+
+    if (error) {
+        console.log(error);
+    }
+
+    const setCategory = async (catId) => {
+
+        setCategoryWiseList(null);
+
+        setActive(catId);
+
+        if (catId) {
+            console.log(catId);
+            getProductsInCollection({
+                variables: { id: catId },
+            });
+            // console.log('data....', data);
+            // setCategoryWiseList(null);
+
+            // if (data) {
+            //     setCategoryWiseList(data);
+            //     setPage(1);
+            //     // ProductCategoryWiseReq(catId, setLoading, setCategoryWiseList, setEndOfScrolling);
+            //     setEndOfScrolling(false);
+            // }
+        }
+
+    }
 
     function handleEnd() {
         if (!endOfScrolling) {
@@ -36,19 +76,9 @@ const ProductListing = ({ navigation, route }) => {
         }
     }
 
-
-    function setCategory(catId) {
-        setActive(catId);
-        if (catId !== 0) {
-            setCategoryWiseList(null);
-            setPage(1);
-            ProductCategoryWiseReq(catId, setLoading, setCategoryWiseList, setEndOfScrolling);
-            setEndOfScrolling(false);
-        }
-    }
-
     useEffect(() => {
-        if (route.params?.catId > 0)
+        console.log(route.params?.catId);
+        if (route.params?.catId)
             setCategory(route.params.catId);
     }, [route.params?.catId])
 
@@ -56,15 +86,15 @@ const ProductListing = ({ navigation, route }) => {
         <TouchableOpacity
             style={{
                 ...styles.menuButton,
-                backgroundColor: active === item.id ? Color.tertiary : 'white',
+                backgroundColor: active === item.node.id ? Color.tertiary : 'white',
             }}
-            onPress={() => setCategory(item.id)}>
+            onPress={() => setCategory(item.node.id)}>
             <Text
                 style={{
                     ...styles.menuText,
-                    color: active === item.id ? 'white' : '#707070',
+                    color: active === item.node.id ? 'white' : '#707070',
                 }}>
-                {item.name.replace('&amp;', '&')}
+                {item.node.title}
             </Text>
         </TouchableOpacity>
     );
@@ -96,7 +126,7 @@ const ProductListing = ({ navigation, route }) => {
             <View >
                 <FlatList
                     horizontal
-                    data={[{ id: 0, name: 'All' }, ...categories[0]]}
+                    data={[{ node: { id: 0, title: 'all', image: null } }, ...categories.edges]}
                     renderItem={MenuItem}
                     keyExtractor={item => item.id}
                     showsHorizontalScrollIndicator={false}
@@ -117,7 +147,7 @@ const ProductListing = ({ navigation, route }) => {
                 showsHorizontalScrollIndicator={false}
                 // ListFooterComponent={renderFooter}
                 // ItemSeparatorComponent={() => <View style={{ width: 15, margin: 20 }} />}
-                onEndReached={handleEnd}
+                // onEndReached={handleEnd}
                 onEndReachedThreshold={0.5}
                 refreshing={loading}
                 onRefresh={() => (

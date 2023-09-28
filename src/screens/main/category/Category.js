@@ -18,21 +18,21 @@ import { useSelector } from 'react-redux';
 
 const CatBox = ({ item, navigation }) => {
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('ProductListing', { catId: item.id })}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProductListing', { catId: item.node.id })}>
             <ImageBackground style={{ height: 210, flex: 1, marginBottom: Window.fixPadding }}
-                source={item.image ? { uri: item.image.src } : require('../../../assets/images/products/review.png')}
+                source={item.image ? { uri: item.image.url } : require('../../../assets/images/products/review.png')}
             >
                 <View style={{
                     ...StyleSheet.absoluteFillObject,
                     backgroundColor: 'rgba(0, 0, 0, 0.5)', flex: 0.85, paddingBottom: 20, paddingLeft: 20, justifyContent: 'flex-end'
                 }}>
                     <Text style={{ ...GlobalStyle.heading, color: Color.white }}>
-                        {item.name}
+                        {item.node.title}
                     </Text>
                     <View
                         style={{
                             height: 3,
-                            width: item.name.length * 10,
+                            width: item.node.title.length * 10,
                             borderRadius: 10,
                             marginTop: 12,
                             backgroundColor: Color.white,
@@ -55,7 +55,7 @@ const Category = ({ navigation }) => {
                         title='Category'
                     />
                     <View style={{ marginVertical: Window.fixPadding }}>
-                        {categories[0].map((item, i) => (
+                        {categories.edges.map((item, i) => (
                             <CatBox navigation={navigation} item={item} key={i} />
                         ))}
                     </View>
