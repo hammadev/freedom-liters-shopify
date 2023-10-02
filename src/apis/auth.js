@@ -177,13 +177,33 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
 //   password: variables.input.password,
 // };
 
-export const handleCreateAccessToken = async (createCustomerAccessToken, input) => {
+export const handleCreateAccessToken = async (createCustomerAccessToken, input, dispatch, navigation) => {
   const tokenResult = await createCustomerAccessToken({
     variables: {
       input
     },
   });
 
+  if ((tokenResult.data.customerAccessTokenCreate.customerUserErrors).length) {
+    showMessage({
+      message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
+      type: 'danger',
+    });
+    return;
+  }
   // Handle the access token result here (data, errors, etc.)
-  console.log('Access Token Result:', tokenResult);
+  // console.log('Access Token Result:', tokenResult);
+  let token = tokenResult.data.customerAccessTokenCreate.customerAccessToken;
+  if (token) {
+    await AsyncStorage.setItem('auth', JSON.stringify(token));
+
+    dispatch({
+      type: 'LOGGED_IN_USER',
+      payload: token,
+    });
+
+    navigation.replace('BottomTabScreen');
+  }
+
+
 }

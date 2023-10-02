@@ -25,10 +25,9 @@ const SignIn = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const [createCustomerAccessToken, { loading: tokenLoading, error: tokenError, data }] = useMutation(
+  const [createCustomerAccessToken, { loading, error, data }] = useMutation(
     CREATE_CUSTOMER_ACCESS_TOKEN
   );
 
@@ -65,7 +64,7 @@ const SignIn = ({ navigation }) => {
       password,
     };
 
-    handleCreateAccessToken(createCustomerAccessToken, input);
+    handleCreateAccessToken(createCustomerAccessToken, input, dispatch, navigation);
 
     // signinReq(
     //   {
@@ -157,7 +156,6 @@ const SignIn = ({ navigation }) => {
                 isIcon={false}
                 theme="secondary"
                 navLink="BottomTabScreen"
-                loading={loading}
               />
             </View>
           </View>
