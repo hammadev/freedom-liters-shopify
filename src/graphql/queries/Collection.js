@@ -16,6 +16,10 @@ export const GET_COLLECTION = gql`
   }
 `;
 
+
+
+
+
 export const GET_PRODUCTS_IN_COLLECTION = gql`query getProductsInCollection($id: ID!) {
 	collection(id: $id) {
 		id

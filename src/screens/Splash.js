@@ -5,26 +5,44 @@ import { LogoSvg } from '../assets/svgs/Logo';
 import { SkypeIndicator } from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signinReq } from '../apis/auth';
-import { useDispatch } from 'react-redux';
-import { CategoriesReq } from '../apis/categories';
-import { ProductListingReq } from '../apis/product';
-import { GeneralSettings } from '../apis/general_settings';
-import { gql, useQuery } from '@apollo/client';
-import { GET_LATEST_PRODUCT } from '../graphql/queries/Product';
-import { GET_COLLECTION } from '../graphql/queries/Collection';
+import {useDispatch} from 'react-redux';
+import {gql, useQuery} from '@apollo/client';
+import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
+import {GET_COLLECTION} from '../graphql/queries/Collection';
+import {Checkout} from '../graphql/queries/Orders';
 
-const Splash = ({ navigation }) => {
+const Splash = ({navigation}) => {
   // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   // Fetch the first query (GET_LATEST_PRODUCT)
-  const { loading: latestProductLoading, error: latestProductError, data: latestProductData } = useQuery(GET_LATEST_PRODUCT);
+  const {
+    loading: latestProductLoading,
+    error: latestProductError,
+    data: latestProductData,
+  } = useQuery(GET_LATEST_PRODUCT);
 
   // Fetch the second query (GET_COLLECTION)
-  const { loading: collectionLoading, error: collectionError, data: collectionData } = useQuery(GET_COLLECTION);
+  const {
+    loading: collectionLoading,
+    error: collectionError,
+    data: collectionData,
+  } = useQuery(GET_COLLECTION);
   // const { loading, error, data } = useQuery(GET_COLLECTION);
 
+  // Fetch the third query (GET_COLLECTION)
 
+  // const {
+  //   loading: checkoutLoading,
+  //   error: checkoutError,
+  //   data: checkoutData,
+  // } = useQuery(Checkout);
+
+  // const {
+  //   loading: checkoutLoading,
+  //   error: checkoutError,
+  //   data: checkoutData,
+  // } = useQuery(Checkout);
 
   useEffect(() => {
     if (!latestProductLoading && !latestProductError && latestProductData) {
@@ -32,7 +50,7 @@ const Splash = ({ navigation }) => {
       dispatch({
         type: 'PRODUCTS',
         Payload: latestProductData.products,
-      })
+      });
     }
 
     if (!collectionLoading && !collectionError && collectionData) {
@@ -40,7 +58,7 @@ const Splash = ({ navigation }) => {
       dispatch({
         type: 'CATEGORIES',
         Payload: collectionData.collections,
-      })
+      });
     }
 
     // Check if both sets of data have been successfully fetched and stored in Redux
@@ -48,7 +66,16 @@ const Splash = ({ navigation }) => {
       // Navigate to the next screen (replace 'BottomTabScreen' with your desired destination)
       navigation.replace('SignIn');
     }
-  }, [latestProductLoading, latestProductError, latestProductData, collectionLoading, collectionError, collectionData, dispatch, navigation]);
+  }, [
+    latestProductLoading,
+    latestProductError,
+    latestProductData,
+    collectionLoading,
+    collectionError,
+    collectionData,
+    dispatch,
+    navigation,
+  ]);
 
   const checkUser = async () => {
     const timer = setTimeout(async () => {
@@ -99,7 +126,7 @@ const Splash = ({ navigation }) => {
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{
@@ -117,7 +144,9 @@ const Splash = ({ navigation }) => {
               left: 0,
               right: 0,
             }}>
-            {collectionLoading && <SkypeIndicator size={50} color={Color.white} />}
+            {collectionLoading && (
+              <SkypeIndicator size={50} color={Color.white} />
+            )}
           </View>
         </View>
       </ImageBackground>

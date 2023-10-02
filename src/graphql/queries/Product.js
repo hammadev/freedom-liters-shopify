@@ -43,3 +43,6 @@ export const GET_LATEST_PRODUCT = gql`
     }
   }
 `;
+
+
+
