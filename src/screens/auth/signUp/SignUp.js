@@ -20,23 +20,40 @@ import { useDispatch } from 'react-redux';
 import Icon from '../../../core/Icon';
 import { ChevronSvg, EmailSvg, UsernameSvg } from '../../../assets/svgs/AuthSvg';
 import TextField2 from '../../../components/TextFeild2';
+import { CREATE_CUSTOMER_ACCOUNT } from '../../../graphql/mutations/Auth';
+import { useMutation } from '@apollo/client';
+import { handleCreateAccount } from '../../../apis/auth';
 
 const SignUp = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
   const [hideConfirmPass, setHideConfirmPass] = useState(true);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState({
+    first: '',
+    last: ''
+  });
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+
+  const [createCustomerAccount, { loading, error, data }] = useMutation(
+    CREATE_CUSTOMER_ACCOUNT
+  );
 
   const handleSubmit = () => {
+
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (userName === '') {
+    if (userName.first === '') {
       showMessage({
-        message: 'Please enter username',
+        message: "First Name can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+    if (userName.last === '') {
+      showMessage({
+        message: "Last Name can't be blank",
         type: 'danger',
       });
       return;
@@ -52,17 +69,15 @@ const SignUp = ({ navigation }) => {
 
     if (password === '') {
       showMessage({
-        message: 'Please enter password',
+        message: "Password can't be blank",
         type: 'danger',
       });
       return;
     }
 
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!regex.test(password)) {
+    if (password < 5) {
       showMessage({
-        message: 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.',
+        message: "Password must contain at least 5 characters",
         type: 'danger',
       });
       return;
@@ -70,7 +85,7 @@ const SignUp = ({ navigation }) => {
 
     if (confirmPassword === '') {
       showMessage({
-        message: 'Please enter confirm password',
+        message: "Confirm Password can't be blank",
         type: 'danger',
       });
       return;
@@ -83,26 +98,26 @@ const SignUp = ({ navigation }) => {
       });
       return;
     }
-    signupReq(
-      {
-        username: userName,
-        email,
-        password,
+
+    const variables = {
+      input: {
+        acceptsMarketing: true,
+        email: email,
+        firstName: userName.first,
+        lastName: userName.last,
+        password: password,
+        phone: phone,
       },
-      navigation,
-      setLoading,
-      dispatch,
-      'BottomTabScreen',
-    );
+    }
+
+    handleCreateAccount(createCustomerAccount, variables, navigation);
+
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
         style={{ flex: 1, backgroundColor: '#021851' }}>
-
-
-
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, paddingVertical: Window.fixPadding, paddingHorizontal: Window.fixPadding * 2 }}
           keyboardShouldPersistTaps={'handled'}>
@@ -120,7 +135,14 @@ const SignUp = ({ navigation }) => {
           <View style={{ marginTop: Window.fixPadding }}>
             <TextField2
               icon={'account-circle-outline'}
-              label="Username"
+              label="First Name"
+              isDark={true}
+              onChanged={setUserName}
+              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+            />
+            <TextField2
+              icon={'account-circle-outline'}
+              label="Last Name"
               isDark={true}
               onChanged={setUserName}
               customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
@@ -132,6 +154,15 @@ const SignUp = ({ navigation }) => {
               onChanged={setEmail}
               customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             />
+
+            <TextField2
+              icon={'phone-outline'}
+              label="Phone"
+              isDark={true}
+              onChanged={setPhone}
+              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+            />
+
             <TextField2
               icon={'lock-outline'}
               label="Password"

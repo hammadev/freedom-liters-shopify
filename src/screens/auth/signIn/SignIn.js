@@ -9,68 +9,79 @@ import {
   ImageBackground,
 } from 'react-native';
 import Button from '../../../components/Button';
-import TextField from '../../../components/TextFeild';
 import { GlobalStyle, Color, Window, Font } from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { showMessage } from 'react-native-flash-message';
 import { signinReq } from '../../../apis/auth';
 import { useDispatch } from 'react-redux';
-import { EmailSvg } from '../../../assets/svgs/AuthSvg';
 import { LogoIcon, LogoSvg } from '../../../assets/svgs/Logo';
 import TextField2 from '../../../components/TextFeild2';
+import { handleCreateAccessToken } from '../../../apis/auth';
+import { CREATE_CUSTOMER_ACCESS_TOKEN } from '../../../graphql/mutations/Auth';
+import { useMutation } from '@apollo/client';
 
 const SignIn = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
-  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const [createCustomerAccessToken, { loading: tokenLoading, error: tokenError, data }] = useMutation(
+    CUSTOMER_ACCESS_TOKEN_CREATE
+  );
+
   const handleSubmit = () => {
+
     Keyboard.dismiss();
-    if (userName === '') {
+
+    if (email === '') {
       showMessage({
-        message: 'Please enter username',
+        message: "Email can't be blank",
         type: 'danger',
       });
       return;
     }
+
     if (password === '') {
       showMessage({
-        message: 'Please enter password',
+        message: "Password can't be blank",
         type: 'danger',
       });
       return;
     }
 
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!regex.test(password)) {
+    if (password < 5) {
       showMessage({
-        message: 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.',
+        message: "Password must contain at least 5 characters",
         type: 'danger',
       });
       return;
     }
 
-    signinReq(
-      {
-        username: userName,
-        password,
-      },
-      navigation,
-      setLoading,
-      dispatch,
-      'BottomTabScreen',
-    );
+    const input = {
+      email,
+      password,
+    };
+
+    handleCreateAccessToken(createCustomerAccessToken, input);
+
+    // signinReq(
+    //   {
+    //     username: userName,
+    //     password,
+    //   },
+    //   navigation,
+    //   setLoading,
+    //   dispatch,
+    //   'BottomTabScreen',
+    // );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#021851' }}>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
-
-
       <ScrollView
         contentContainerStyle={{ justifyContent: 'center', }}
         keyboardShouldPersistTaps="handled"
@@ -94,10 +105,10 @@ const SignIn = ({ navigation }) => {
 
           <View>
             <TextField2
-              icon={'account-circle-outline'}
-              label="Username"
+              icon={'email-outline'}
+              label="Email"
               isDark={true}
-              onChanged={setUserName}
+              onChanged={setEmail}
               customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             />
             <TextField2
@@ -139,14 +150,16 @@ const SignIn = ({ navigation }) => {
               loading={loading}
               onPressFunc={handleSubmit}
             />
-            <Button
-              text="Continue without login"
-              icon="mail"
-              isIcon={false}
-              theme="secondary"
-              navLink="BottomTabScreen"
-              loading={loading}
-            />
+            <View style={{ marginVertical: Window.fixPadding * 2 }}>
+              <Button
+                text="Continue without login"
+                icon="mail"
+                isIcon={false}
+                theme="secondary"
+                navLink="BottomTabScreen"
+                loading={loading}
+              />
+            </View>
           </View>
           <View style={{ ...styles.BottonContainer }}>
             <Text style={{ ...styles.TextStyle, color: Color.white }}>
