@@ -16,13 +16,12 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from '../core/Icon';
 import { useDispatch } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
-import {TouchableRipple} from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
 
 const Attribute = ({
   attribute,
   setSelectedOptions,
   selectedOptions,
-  selectedAttributePrice,
 }) => {
   // const AttributeOption = ({item, selectedOption, name}) => {
   //   return (
@@ -74,11 +73,10 @@ const Attribute = ({
   // const productId = attribute.node.id;
   // console.log('0000', productId);
   return (
-    <View style={{marginTop: Window.fixPadding}}>
+    <View style={{ marginTop: Window.fixPadding }}>
       <TouchableRipple
         onPress={() => {
-          setSelectedOptions(attribute.node.id);
-          selectedAttributePrice(attribute.node.price.amount);
+          setSelectedOptions(attribute);
         }}
         style={{
           flexDirection: 'row',
@@ -88,8 +86,9 @@ const Attribute = ({
           paddingHorizontal: 10,
           paddingVertical: 10,
           borderRadius: 12,
-          backgroundColor:
-            selectedOptions === attribute.node.id ? Color.yellow : Color.light,
+          backgroundColor: Color.light,
+          borderColor: selectedOptions.node.id === attribute.node.id ? Color.tertiary : Color.light,
+          borderWidth: 2
         }}>
         <>
           <View
@@ -98,10 +97,10 @@ const Attribute = ({
               // alignItems: 'center',
             }}>
             <Image
-              style={{width: 48, height: 48}}
-              source={{uri: attribute.node.image?.url}}
+              style={{ width: 48, height: 48 }}
+              source={{ uri: attribute.node.image?.url }}
             />
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <Text
                 style={{
                   color: Color.primary,
@@ -117,7 +116,7 @@ const Attribute = ({
                   fontSize: 14,
                   marginVertical: Window.fixPadding / 1.5,
                 }}>
-                Quantity: {attribute.node.quantityAvailable}
+                Quantity Available: {attribute.node.quantityAvailable}
               </Text>
             </View>
           </View>
@@ -137,7 +136,7 @@ const Attribute = ({
   );
 };
 
-const QtyRow = ({quantity, setQuantity}) => {
+const QtyRow = ({ quantity, setQuantity }) => {
   const decrementValue = name => {
     if (quantity === 1) {
       return;
@@ -196,27 +195,16 @@ const QtyRow = ({quantity, setQuantity}) => {
   );
 };
 
-const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
+const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
   // console.log('product.variations', product.variations);
-  const [active, setActive] = useState();
-  const [selectedAttributePrice, setSelectedAttributePrice] = useState();
-
-  const [priceAmount, setPriceAmount] = useState(
-    product.node.priceRange.minVariantPrice.amount,
-  );
 
   const [quantity, setQuantity] = useState(1);
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [selectedVariation, setSelectedVariation] = useState(null);
+  const [selectedVariation, setSelectedVariation] = useState(product.node.variants.edges[0]);
 
+  // console.log(product.node.variants.edges[0].node.id);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  useEffect(() => {
-    setPriceAmount(selectedAttributePrice);
-    setQuantity(1);
-  }, [selectedAttributePrice]);
 
   const handleAddToCart = async () => {
     if (product.type === 'variable') {
@@ -231,24 +219,26 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
       payload: {
         productId: product.node.id,
         productDetails: product,
-        totalPrice: priceAmount * quantity,
+        totalPrice: selectedVariation.node.price.amount * quantity,
         quantity: quantity,
-        ...(selectedVariation && {selectedVariation: selectedVariation}),
+        ...(selectedVariation && { selectedVariation: selectedVariation }),
       },
     });
+
     onTouchOutside();
+
     navigation.navigate('CheckOut');
   };
 
   const renderOutsideTouchable = onTouch => {
-    const view = <View style={{flex: 1, width: '100%'}} />;
+    const view = <View style={{ flex: 1, width: '100%' }} />;
     if (!onTouch) {
       return view;
     }
     return (
       <TouchableWithoutFeedback
         onPress={onTouch}
-        style={{flex: 1, width: '100%'}}>
+        style={{ flex: 1, width: '100%' }}>
         {view}
       </TouchableWithoutFeedback>
     );
@@ -296,15 +286,15 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
                 borderRadius: 16,
               }}>
               <Image
-                style={{width: 48, height: 48}}
+                style={{ width: 48, height: 48 }}
                 source={{
                   uri: selectedVariation
-                    ? selectedVariation.image
+                    ? selectedVariation.node.image.url
                     : product.node.featuredImage?.url,
                 }}
               />
             </View>
-            <View style={{paddingLeft: 24}}>
+            <View style={{ paddingLeft: 24 }}>
               <Text
                 style={{
                   color: Color.primary,
@@ -313,7 +303,7 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
                 }}>
                 {product.node.title}
               </Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={{
                     marginTop: 11,
@@ -323,25 +313,11 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
                     textAlign: 'center',
                   }}>
                   {selectedVariation
-                    ? selectedVariation.sale_price
-                    : product.node.priceRange.minVariantPrice.amount +
-                      ' ' +
-                      product.node.priceRange.minVariantPrice.currencyCode}
+                    &&
+                    selectedVariation.node.price.amount + ' ' + selectedVariation.node.price.currencyCode
+                  }
                 </Text>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    textDecorationLine: 'line-through',
-                    paddingLeft: 5,
-                    fontSize: 13,
-                    fontFamily: Font.Gilroy_Medium,
-                    color: Color.secondary,
-                  }}>
-                  $
-                  {selectedVariation
-                    ? selectedVariation.regular_price
-                    : product.regular_price}
-                </Text>
+
               </View>
             </View>
           </View>
@@ -349,22 +325,20 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
           {product.node.variants.edges.map((attribute, i) => (
             <Attribute
               attribute={attribute}
-              setSelectedOptions={setSelectedOptions}
-              selectedOptions={selectedOptions}
+              setSelectedOptions={setSelectedVariation}
+              selectedOptions={selectedVariation}
               key={i}
-              setSelectedAttributePrice={setSelectedAttributePrice}
-              selectedAttributePrice={setSelectedAttributePrice}
             />
           ))}
 
           <QtyRow
             quantity={quantity}
             setQuantity={setQuantity}
-            setPriceAmount={setPriceAmount}
+          // setPriceAmount={setPriceAmount}
           />
-          <View style={{marginTop: Window.fixPadding * 4}}>
+          <View style={{ marginTop: Window.fixPadding * 4 }}>
             <Button
-              text={`Add to Basket - $${(priceAmount * quantity).toFixed(2)}`}
+              text={`Add to Basket - ${(selectedVariation.node.price.amount * quantity).toFixed(2)} ${selectedVariation.node.price.currencyCode}`}
               theme="tertiary"
               navLink="CheckOut"
               onPressFunc={handleAddToCart}
