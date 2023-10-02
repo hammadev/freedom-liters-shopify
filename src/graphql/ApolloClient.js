@@ -24,3 +24,25 @@ const client = new ApolloClient({
 });
 
 export default client;
+
+
+
+
+
+
+// const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
+
+// const createPaymentIntent = async (amount, currency, customerEmail) => {
+//   try {
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: amount,
+//       currency: currency,
+//       description: 'Shopify Order Payment',
+//       receipt_email: customerEmail,
+//     });
+
+//     return paymentIntent.client_secret;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };

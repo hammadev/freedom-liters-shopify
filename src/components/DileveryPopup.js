@@ -24,6 +24,7 @@ const Attribute = ({
   active,
   setSelectedOptions,
   selectedOptions,
+  selectedAttributePrice,
 }) => {
   // const AttributeOption = ({item, selectedOption, name}) => {
   //   return (
@@ -77,7 +78,10 @@ const Attribute = ({
   return (
     <View style={{marginTop: Window.fixPadding}}>
       <TouchableRipple
-        onPress={() => setSelectedOptions(attribute.node.id)}
+        onPress={() => {
+          setSelectedOptions(attribute.node.id);
+          selectedAttributePrice(attribute.node.price.amount);
+        }}
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -90,31 +94,40 @@ const Attribute = ({
             selectedOptions === attribute.node.id ? Color.yellow : Color.light,
         }}>
         <>
-          <View>
-            <Text
-              style={{
-                color: Color.primary,
-                fontFamily: Font.Gilroy_Regular,
-                fontSize: 14,
-              }}>
-              {attribute.node.title}
-            </Text>
-            <Text
-              style={{
-                color: Color.primary,
-                fontFamily: Font.Gilroy_Regular,
-                fontSize: 14,
-                marginVertical: Window.fixPadding / 1.5,
-              }}>
-              Quantity: {attribute.node.quantityAvailable}
-            </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              // alignItems: 'center',
+            }}>
+            <Image
+              style={{width: 48, height: 48}}
+              source={{uri: attribute.node.image?.url}}
+            />
+            <View style={{marginLeft: 10}}>
+              <Text
+                style={{
+                  color: Color.primary,
+                  fontFamily: Font.Gilroy_Regular,
+                  fontSize: 14,
+                }}>
+                {attribute.node.title}
+              </Text>
+              <Text
+                style={{
+                  color: Color.primary,
+                  fontFamily: Font.Gilroy_Regular,
+                  fontSize: 14,
+                  marginVertical: Window.fixPadding / 1.5,
+                }}>
+                Quantity: {attribute.node.quantityAvailable}
+              </Text>
+            </View>
           </View>
           <Text
             style={{
               color: Color.primary,
               fontFamily: Font.Gilroy_Regular,
               fontSize: 15,
-              marginVertical: Window.fixPadding / 1.5,
             }}>
             {attribute.node.price.amount +
               ' ' +
@@ -188,6 +201,7 @@ const QtyRow = ({quantity, setQuantity}) => {
 const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
   // console.log('product.variations', product.variations);
   const [active, setActive] = useState();
+  const [selectedAttributePrice, setselectedAttributePrice] = useState();
 
   const [priceAmount, setPriceAmount] = useState(
     product.node.priceRange.minVariantPrice.amount,
@@ -202,9 +216,9 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    setPriceAmount(product.node.priceRange.minVariantPrice.amount);
+    setPriceAmount(selectedAttributePrice);
     setQuantity(1);
-  }, [product.node.priceRange.minVariantPrice.amount]);
+  }, [selectedAttributePrice]);
 
   const handleAddToCart = async () => {
     if (product.type === 'variable') {
@@ -213,14 +227,6 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
         return;
       }
     }
-
-    // console.log({
-    //   productId: product.node.id,
-    //   // productDetails: product,
-    //   totalPrice: priceAmount * quantity,
-    //   quantity: quantity,
-    //   ...(selectedVariation && {selectedVariation: selectedVariation}),
-    // });
 
     dispatch({
       type: 'ADD_TO_CART',
@@ -350,6 +356,8 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
               setSelectedOptions={setSelectedOptions}
               selectedOptions={selectedOptions}
               key={i}
+              setselectedAttributePrice={setselectedAttributePrice}
+              selectedAttributePrice={setselectedAttributePrice}
             />
           ))}
 

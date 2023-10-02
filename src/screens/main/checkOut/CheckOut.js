@@ -444,14 +444,11 @@ const CheckOut = ({ navigation }) => {
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={{ ...GlobalStyle.Container, paddingBottom: 10 }}>
-        <AppBar
-          theme='dark'
-          title='Checkout'
-        />
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
+        <AppBar theme="dark" title="Checkout" />
 
-        <View
+        {/* <View
           style={{
             backgroundColor: Color.white,
             padding: 15,
@@ -517,41 +514,49 @@ const CheckOut = ({ navigation }) => {
                 * Edit shipping address before proceeding to checkout
               </Text>
           }
-        </View>
+        </View> */}
 
-        <View style={{ ...GlobalStyle.borderStyle, marginBottom: Window.fixPadding * 1.5 }} />
+        <View
+          style={{
+            ...GlobalStyle.borderStyle,
+            marginBottom: Window.fixPadding * 1.5,
+          }}
+        />
 
         <Heading name="Order Items" />
-        {
-          cartData.map((item, index) => (
-            <>
-              <ProductList
-                item={item}
-                quantityFunc={quantityFunc}
-                index={index}
-                onShowPopup={onShowPopup}
-                setPopupData={setPopupData}
-                setCartItemIndex={setCartItemIndex}
-                setCartItemAmount={setCartItemAmount}
-                setCartItemQuantity={setCartItemQuantity}
-                onShowDeliveryPopup={onShowDeliveryPopup}
-              />
-              {index + 1 === cartData.length ? null : <View />}
-            </>
-          ))
-        }
-        <View style={{ ...GlobalStyle.borderStyle, marginVertical: Window.fixPadding * 2 }} />
+        {cartData.map((item, index) => (
+          <>
+            <ProductList
+              item={item}
+              quantityFunc={quantityFunc}
+              index={index}
+              onShowPopup={onShowPopup}
+              setPopupData={setPopupData}
+              setCartItemIndex={setCartItemIndex}
+              setCartItemAmount={setCartItemAmount}
+              setCartItemQuantity={setCartItemQuantity}
+              onShowDeliveryPopup={onShowDeliveryPopup}
+            />
+            {index + 1 === cartData.length ? null : <View />}
+          </>
+        ))}
+        <View
+          style={{
+            ...GlobalStyle.borderStyle,
+            marginVertical: Window.fixPadding * 2,
+          }}
+        />
         <Heading name="Payment Method" />
         <View>
-          <RadioButton.Group onValueChange={newValue => setPaymentMethod(newValue)} value={paymentMethod}>
-            {
-              generalSettings.gateways.map((item, i) => (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <RadioButton value={item.id} />
-                  <Text style={GlobalStyle.textStlye}>{item.title}</Text>
-                </View>
-              ))
-            }
+          <RadioButton.Group
+            onValueChange={newValue => setPaymentMethod(newValue)}
+            value={paymentMethod}>
+            {generalSettings.gateways.map((item, i) => (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <RadioButton value={item.id} />
+                <Text style={GlobalStyle.textStlye}>{item.title}</Text>
+              </View>
+            ))}
           </RadioButton.Group>
           {/* <RadioButton
             value="first"
@@ -560,14 +565,25 @@ const CheckOut = ({ navigation }) => {
           /> */}
         </View>
 
-        <View style={{ ...GlobalStyle.borderStyle, marginVertical: Window.fixPadding }} />
-        <View style={{ marginTop: Window.fixPadding }}>
+        <View
+          style={{
+            ...GlobalStyle.borderStyle,
+            marginVertical: Window.fixPadding,
+          }}
+        />
+        <View style={{marginTop: Window.fixPadding}}>
           <Heading name="Order Summery" />
           <OrderSummary quantity={1} subTotal={cart.total} item={cart} />
         </View>
       </ScrollView>
-      <View style={{ padding: Window.fixPadding, }}>
-        <Button loading={loading} text={`Place Order - $${cart.total + 8}`} theme="tertiary" navLink="Payment" onPressFunc={handlePlaceOrder} />
+      <View style={{padding: Window.fixPadding}}>
+        <Button
+          loading={loading}
+          text={`Place Order - $${cart.total + 8}`}
+          theme="tertiary"
+          navLink="Payment"
+          onPressFunc={handlePlaceOrder}
+        />
       </View>
 
       {popupData && (
