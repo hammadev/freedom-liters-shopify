@@ -73,6 +73,7 @@ const Home = ({navigation}) => {
     ...state,
   }));
   const dispatch = useDispatch();
+
   useEffect(() => {
     console.log(product.all.edges);
     // getAddress(dispatch, auth.user.ID);

@@ -15,3 +15,21 @@ export const GET_ORDERS = gql`
     }
   }
 `;
+
+
+export const Checkout = gql`
+ query checkoutCreate(
+      input: {
+        lineItems: {
+          quantity: 10
+          variantId: "gid://shopify/ProductVariant/40775278166203"
+        }
+      }
+    ) {
+      checkoutUserErrors {
+        code
+        message
+      }
+    }
+  
+`;

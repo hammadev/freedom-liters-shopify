@@ -72,17 +72,20 @@ const ProductList = ({
   setCartItemQuantity,
   setPopupData,
   index,
-  onShowDeliveryPopup
+  onShowDeliveryPopup,
 }) => {
-
   const [qty, setQty] = useState(item.quantity);
   const [productDetails, setProductDetails] = useState({
-    image: item.selectedVariation ? item.selectedVariation.image : item.productDetails.images[0].src,
-    price: item.selectedVariation ? item.selectedVariation.sale_price : item.productDetails.price,
+    image: item.selectedVariation
+      ? item.selectedVariation.image
+      : item.productDetails.node.featuredImage?.url,
+    price: item.selectedVariation
+      ? item.selectedVariation.sale_price
+      : item.productDetails.price,
   });
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, }}>
+    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 16}}>
       <View
         style={{
           shadowColor: 'rgba(0,0,0,0.4)',
@@ -99,19 +102,20 @@ const ProductList = ({
           height: 78,
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}>
         <Image
-          style={{ width: '80%', height: '80%', borderRadius: Window.fixPadding }}
-          source={{ uri: productDetails.image }} />
+          style={{width: '80%', height: '80%', borderRadius: Window.fixPadding}}
+          source={{uri: productDetails.url}}
+        />
       </View>
-      <View style={{ paddingLeft: 15, width: '80%' }}>
+      <View style={{paddingLeft: 15, width: '80%'}}>
         <View
           style={{
             justifyContent: 'space-between',
             alignItems: 'center',
             flexDirection: 'row',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
           }}>
           <Text
             style={{
@@ -119,16 +123,19 @@ const ProductList = ({
               fontFamily: Font.Gilroy_SemiBold,
               color: Color.primary,
             }}>
-            {item.productDetails.name}
+            {item.productDetails.node.title}
           </Text>
           <Text
             style={{
               fontSize: 15,
               fontFamily: Font.Gilroy_SemiBold,
               color: '#363B44',
-              marginLeft: Window.fixPadding
+              marginLeft: Window.fixPadding,
             }}>
-            ${productDetails.price}
+            $
+            {item.productDetails.node.priceRange.minVariantPrice.amount +
+              ' ' +
+              item.productDetails.node.priceRange.minVariantPrice.currencyCode}
           </Text>
         </View>
 
@@ -155,10 +162,9 @@ const ProductList = ({
                   item.productId,
                   qty,
                   2,
-                  productDetails.price,
-                )
-              }
-              }>
+                  item.productDetails.node.priceRange.minVariantPrice.amount,
+                );
+              }}>
               <Icon
                 iconFamily={'AntDesign'}
                 name={'minus'}
@@ -174,10 +180,9 @@ const ProductList = ({
                   item.productId,
                   qty,
                   1,
-                  productDetails.price,
-                )
-              }
-              }>
+                  item.productDetails.node.priceRange.minVariantPrice.amount,
+                );
+              }}>
               <Icon
                 iconFamily={'Ionicons'}
                 name={'md-add'}
@@ -186,7 +191,7 @@ const ProductList = ({
               />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               onPress={() => {
                 onShowPopup();
@@ -196,27 +201,14 @@ const ProductList = ({
               }}>
               <DeleteSvg />
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              style={{
-                width: 40,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {
-                setPopupData(item), onShowDeliveryPopup();
-              }}>
-              <EditSvg />
-            </TouchableOpacity> */}
           </View>
-
         </View>
       </View>
     </View>
   );
 };
 
-const CheckOut = ({ navigation }) => {
+const CheckOut = ({navigation}) => {
   const [cartItemIndex, setCartItemIndex] = useState(0);
   const [cartItemAmount, setCartItemAmount] = useState(0);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
@@ -229,7 +221,14 @@ const CheckOut = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [getProduct, setGetProduct] = useState('');
 
+  useEffect(() => {
+    console.log(input.lineItems.quantity);
+    // getAddress(dispatch, auth.user.ID);
+  }, []);
+
+  console.log('ddddd', input.lineItems.quantity);
   const dispatch = useDispatch();
 
   const onClosePopup = () => {
@@ -246,7 +245,7 @@ const CheckOut = ({ navigation }) => {
     setOpenPopup(false);
   };
 
-  const { cart, address, generalSettings } = useSelector(state => ({ ...state }));
+  const {cart, address, generalSettings} = useSelector(state => ({...state}));
 
   const removeItemFromCart = () => {
     dispatch({
@@ -293,12 +292,12 @@ const CheckOut = ({ navigation }) => {
   };
 
   const placeOrderReq = (setPaid = false) => {
-
     const filteredItems = cart.addedItems.map(item => {
-      const { productId, quantity, selectedVariation } = item;
+      const {productId, quantity, productDetails, selectedVariation} = item;
       const filteredItem = {
         product_id: productId,
-        quantity
+        quantity,
+        productDetails,
       };
 
       if (selectedVariation) {
@@ -307,47 +306,43 @@ const CheckOut = ({ navigation }) => {
 
       return filteredItem;
     });
+    console.log('sssss', productDetails);
 
-    const filteredGateways = generalSettings.gateways.find(gateway => gateway.id === paymentMethod);
+    const filteredGateways = generalSettings.gateways.find(
+      gateway => gateway.id === paymentMethod,
+    );
     console.log(filteredGateways);
 
     const formData = {
       payment_method: filteredGateways.id,
       payment_method_title: filteredGateways.title,
       set_paid: setPaid,
-      ...{ billing: address.billing },
-      ...{ shipping: address.shipping },
+      ...{billing: address.billing},
+      ...{shipping: address.shipping},
       line_items: filteredItems,
       shipping_lines: [
         {
-          method_id: "flat_rate",
-          method_title: "Flat Rate",
-          total: "8.00"
-        }
+          method_id: 'flat_rate',
+          method_title: 'Flat Rate',
+          total: '8.00',
+        },
       ],
       customer_id: address.id,
-      customer_note: ''
+      customer_note: '',
     };
 
-    placeOrder(
-      formData,
-      setLoading,
-      setShowModal,
-      dispatch,
-      navigation
-    );
+    placeOrder(formData, setLoading, setShowModal, dispatch, navigation);
 
     console.log(formData);
-  }
+  };
 
   const handlePlaceOrder = () => {
-
     // console.log('paymentMethod', paymentMethod);
 
     if (!address.shipping.address_1) {
       showMessage({
         type: 'danger',
-        message: 'Please set shipping address before proceeding to checkout'
+        message: 'Please set shipping address before proceeding to checkout',
       });
       return;
     }
@@ -355,7 +350,7 @@ const CheckOut = ({ navigation }) => {
     if (paymentMethod == '') {
       showMessage({
         type: 'danger',
-        message: 'Please select payment method'
+        message: 'Please select payment method',
       });
       return;
     }
@@ -368,23 +363,22 @@ const CheckOut = ({ navigation }) => {
     placeOrderReq(false);
 
     // alert('click');
-  }
+  };
 
   // useEffect(() => {
   //   initializePaymentSheet();
   // }, []);
 
   const initializePaymentSheet = async () => {
-    const {
-      paymentIntent,
-      ephemeralKey,
-      customer,
-      publishableKey,
-    } = await fetchPaymentSheetParams({ order_amount: cart.total + 8, user_id: address.id });
+    const {paymentIntent, ephemeralKey, customer, publishableKey} =
+      await fetchPaymentSheetParams({
+        order_amount: cart.total + 8,
+        user_id: address.id,
+      });
     // console.log(await fetchPaymentSheetParams({ order_amount: cart.total, user_id: address.id }))
 
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "Example, Inc.",
+    const {error} = await initPaymentSheet({
+      merchantDisplayName: 'Example, Inc.',
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
@@ -393,7 +387,7 @@ const CheckOut = ({ navigation }) => {
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
         name: 'Jane Doe',
-      }
+      },
     });
     // console.log(error);
     if (!error) {
@@ -403,7 +397,7 @@ const CheckOut = ({ navigation }) => {
 
   const openPaymentSheet = async () => {
     await initializePaymentSheet();
-    const { error } = await presentPaymentSheet();
+    const {error} = await presentPaymentSheet();
 
     if (error) {
       showMessage({
@@ -422,16 +416,29 @@ const CheckOut = ({ navigation }) => {
     return (
       <>
         <AppBar
-          theme='dark'
-          title='Checkout'
-          customStyle={{ paddingHorizontal: Window.fixPadding * 2 }}
+          theme="dark"
+          title="Checkout"
+          customStyle={{paddingHorizontal: Window.fixPadding * 2}}
         />
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <NoResult />
           <View>
-            <Text style={{ ...GlobalStyle.heading, textAlign: 'center', marginTop: Window.fixPadding * 2 }}>Empty</Text>
-            <Text style={{ ...GlobalStyle.textStlye, textAlign: 'center', marginVertical: Window.fixPadding }}>You do not have any item in your cart</Text>
+            <Text
+              style={{
+                ...GlobalStyle.heading,
+                textAlign: 'center',
+                marginTop: Window.fixPadding * 2,
+              }}>
+              Empty
+            </Text>
+            <Text
+              style={{
+                ...GlobalStyle.textStlye,
+                textAlign: 'center',
+                marginVertical: Window.fixPadding,
+              }}>
+              You do not have any item in your cart
+            </Text>
             <Button
               text="Explore products"
               isIcon={false}
@@ -469,51 +476,66 @@ const CheckOut = ({ navigation }) => {
               alignItems: 'center',
               flexDirection: 'row',
             }}>
-            <Text style={styles.DeliveryStyle}>
-              Shipping To :
-            </Text>
+            <Text style={styles.DeliveryStyle}>Shipping To :</Text>
             <TouchableOpacity onPress={() => navigation.navigate('AddAddress')}>
               <EditSvg />
             </TouchableOpacity>
           </View>
-          {
-            address.shipping.address_1 ?
-              <View style={{ marginTop: Window.fixPadding }}>
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: 'rgba(8, 14, 30, 0.6)',
-                    fontFamily: Font.Gilroy_Medium,
-                    lineHeight: 16,
-                  }}>
-                  Name : {address.shipping.first_name + ' ' + address.shipping.last_name}
-                </Text>
-
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: 'rgba(8, 14, 30, 0.6)',
-                    fontFamily: Font.Gilroy_Medium,
-                    lineHeight: 16,
-                  }}>
-                  Phone Number : {address.shipping.phone}
-                </Text>
-
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: 'rgba(8, 14, 30, 0.6)',
-                    fontFamily: Font.Gilroy_Medium,
-                    lineHeight: 16,
-                  }}>
-                  Address : {address.shipping.address_1 + ' ' + address.shipping.address_2 + ', ' + address.shipping.city + ', ' + address.shipping.state + ', ' + address.shipping.country + ', ' + address.shipping.postcode}
-                </Text>
-              </View>
-              :
-              <Text style={{ ...GlobalStyle.textStlye, color: 'red', fontSize: 12, marginTop: Window.fixPadding }}>
-                * Edit shipping address before proceeding to checkout
+          {address.shipping.address_1 ? (
+            <View style={{marginTop: Window.fixPadding}}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: 'rgba(8, 14, 30, 0.6)',
+                  fontFamily: Font.Gilroy_Medium,
+                  lineHeight: 16,
+                }}>
+                Name :{' '}
+                {address.shipping.first_name + ' ' + address.shipping.last_name}
               </Text>
-          }
+
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: 'rgba(8, 14, 30, 0.6)',
+                  fontFamily: Font.Gilroy_Medium,
+                  lineHeight: 16,
+                }}>
+                Phone Number : {address.shipping.phone}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: 'rgba(8, 14, 30, 0.6)',
+                  fontFamily: Font.Gilroy_Medium,
+                  lineHeight: 16,
+                }}>
+                Address :{' '}
+                {address.shipping.address_1 +
+                  ' ' +
+                  address.shipping.address_2 +
+                  ', ' +
+                  address.shipping.city +
+                  ', ' +
+                  address.shipping.state +
+                  ', ' +
+                  address.shipping.country +
+                  ', ' +
+                  address.shipping.postcode}
+              </Text>
+            </View>
+          ) : (
+            <Text
+              style={{
+                ...GlobalStyle.textStlye,
+                color: 'red',
+                fontSize: 12,
+                marginTop: Window.fixPadding,
+              }}>
+              * Edit shipping address before proceeding to checkout
+            </Text>
+          )}
         </View> */}
 
         <View
@@ -524,7 +546,7 @@ const CheckOut = ({ navigation }) => {
         />
 
         <Heading name="Order Items" />
-        {cartData.map((item, index) => (
+        {input.lineItems.map((item, index) => (
           <>
             <ProductList
               item={item}
@@ -548,7 +570,7 @@ const CheckOut = ({ navigation }) => {
         />
         <Heading name="Payment Method" />
         <View>
-          <RadioButton.Group
+          {/* <RadioButton.Group
             onValueChange={newValue => setPaymentMethod(newValue)}
             value={paymentMethod}>
             {generalSettings.gateways.map((item, i) => (
@@ -557,7 +579,7 @@ const CheckOut = ({ navigation }) => {
                 <Text style={GlobalStyle.textStlye}>{item.title}</Text>
               </View>
             ))}
-          </RadioButton.Group>
+          </RadioButton.Group> */}
           {/* <RadioButton
             value="first"
             status={paymentMethod === 'first' ? 'checked' : 'unchecked'}

@@ -20,8 +20,6 @@ import {TouchableRipple} from 'react-native-paper';
 
 const Attribute = ({
   attribute,
-  setActive,
-  active,
   setSelectedOptions,
   selectedOptions,
   selectedAttributePrice,
@@ -201,7 +199,7 @@ const QtyRow = ({quantity, setQuantity}) => {
 const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
   // console.log('product.variations', product.variations);
   const [active, setActive] = useState();
-  const [selectedAttributePrice, setselectedAttributePrice] = useState();
+  const [selectedAttributePrice, setSelectedAttributePrice] = useState();
 
   const [priceAmount, setPriceAmount] = useState(
     product.node.priceRange.minVariantPrice.amount,
@@ -350,14 +348,12 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
 
           {product.node.variants.edges.map((attribute, i) => (
             <Attribute
-              active={active}
-              setActive={setActive}
               attribute={attribute}
               setSelectedOptions={setSelectedOptions}
               selectedOptions={selectedOptions}
               key={i}
-              setselectedAttributePrice={setselectedAttributePrice}
-              selectedAttributePrice={setselectedAttributePrice}
+              setSelectedAttributePrice={setSelectedAttributePrice}
+              selectedAttributePrice={setSelectedAttributePrice}
             />
           ))}
 
