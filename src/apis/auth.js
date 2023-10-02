@@ -121,3 +121,69 @@ export const logout = async (navigation) => {
   await AsyncStorage.removeItem('auth');
   navigation.replace('SignIn');
 };
+
+// const variables = {
+//   input: {
+//     acceptsMarketing: true,
+//     email: 'example@example.com',
+//     firstName: 'John',
+//     lastName: 'Smith',
+//     password: 'Admin',
+//     phone: '+64213444048',
+//   },
+// }
+
+export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
+  try {
+    const result = await createCustomerAccount({
+      variables
+    });
+
+    console.log('result', result);
+
+    // Handle the result here (data, errors, etc.)
+    if ((result.data.customerCreate.customerUserErrors).length) {
+      showMessage({
+        message: result.data.customerCreate.customerUserErrors[0].message,
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (result.data.customerCreate.customer) {
+      await AsyncStorage.setItem('credentials', JSON.stringify(result.data.customerCreate.customer));
+      showMessage({
+        message: 'Account created successfully!',
+        type: 'success',
+      });
+
+      navigation.replace('SignIn');
+    }
+
+    console.log('Mutation result:', result);
+  } catch (error) {
+    console.error('Mutation error:', error);
+    showMessage({
+      message: 'Something went wrong! try again later',
+      type: 'danger',
+    });
+    return;
+  }
+
+};
+
+// const input = {
+//   email: variables.input.email,
+//   password: variables.input.password,
+// };
+
+export const handleCreateAccessToken = async (createCustomerAccessToken, input) => {
+  const tokenResult = await createCustomerAccessToken({
+    variables: {
+      input
+    },
+  });
+
+  // Handle the access token result here (data, errors, etc.)
+  console.log('Access Token Result:', tokenResult);
+}
