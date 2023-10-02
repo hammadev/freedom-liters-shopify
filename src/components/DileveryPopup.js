@@ -198,6 +198,11 @@ const QtyRow = ({ quantity, setQuantity }) => {
 const DileveryPopup = ({ onTouchOutside, openPopup, product }) => {
   // console.log('product.variations', product.variations);
 
+
+    useEffect(() => {
+    console.log('vvvvv', input);
+  }, []);
+
   const [quantity, setQuantity] = useState(1);
 
   const [selectedVariation, setSelectedVariation] = useState(product.node.variants.edges[0]);

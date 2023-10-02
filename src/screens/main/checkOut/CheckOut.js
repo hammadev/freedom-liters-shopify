@@ -24,6 +24,7 @@ import { RadioButton } from 'react-native-paper';
 import { fetchPaymentSheetParams } from '../../../apis/general_settings';
 import { showMessage } from 'react-native-flash-message';
 import SuccessPopup from '../../../components/SuccessPopup';
+import { Create_Cart } from '../../../graphql/mutations/Cart';
 
 const OrderSummary = ({ totalPrice, subTotal }) => {
   return (
@@ -223,12 +224,12 @@ const CheckOut = ({navigation}) => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [getProduct, setGetProduct] = useState('');
 
+
   useEffect(() => {
-    console.log(input.lineItems.quantity);
-    // getAddress(dispatch, auth.user.ID);
+    console.log('vvvvv', cartCreate.cart);
   }, []);
 
-  console.log('ddddd', input.lineItems.quantity);
+  
   const dispatch = useDispatch();
 
   const onClosePopup = () => {
@@ -258,7 +259,7 @@ const CheckOut = ({navigation}) => {
     setRefresh(!refresh);
     onClosePopup();
   };
-
+// cart.addedItems
   useEffect(() => {
     setCartData(cart.addedItems);
     setSubTotal(cart.total);
@@ -546,7 +547,7 @@ const CheckOut = ({navigation}) => {
         />
 
         <Heading name="Order Items" />
-        {input.lineItems.map((item, index) => (
+        {cartData.map((item, index) => (
           <>
             <ProductList
               item={item}

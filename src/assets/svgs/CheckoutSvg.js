@@ -1,16 +1,9 @@
 import React from 'react';
 import Svg, {
-    G,
     Path,
-    Defs,
-    LinearGradient,
-    Stop,
-    Circle,
-    ClipPath,
-    Rect,
 } from 'react-native-svg';
 
-export function EditSvg({ width, height }) {
+export function EditSvg() {
     return (
         <Svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <Path d="M10 15.1668H6C2.38 15.1668 0.833328 13.6202 0.833328 10.0002V6.00016C0.833328 2.38016 2.38 0.833496 6 0.833496H7.33333C7.60666 0.833496 7.83333 1.06016 7.83333 1.3335C7.83333 1.60683 7.60666 1.8335 7.33333 1.8335H6C2.92666 1.8335 1.83333 2.92683 1.83333 6.00016V10.0002C1.83333 13.0735 2.92666 14.1668 6 14.1668H10C13.0733 14.1668 14.1667 13.0735 14.1667 10.0002V8.66683C14.1667 8.3935 14.3933 8.16683 14.6667 8.16683C14.94 8.16683 15.1667 8.3935 15.1667 8.66683V10.0002C15.1667 13.6202 13.62 15.1668 10 15.1668Z" fill="#080E1E" />
@@ -19,7 +12,7 @@ export function EditSvg({ width, height }) {
         </Svg>
     );
 }
-export function DeleteSvg({ width, height }) {
+export function DeleteSvg() {
     return (
         <Svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <Path d="M17.5 4.98332C14.725 4.70832 11.9333 4.56665 9.15 4.56665C7.5 4.56665 5.85 4.64998 4.2 4.81665L2.5 4.98332" stroke="#080E1E" strokeOpacity="0.6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -30,7 +23,7 @@ export function DeleteSvg({ width, height }) {
         </Svg>
     );
 }
-export function BoxSvg({ width, height }) {
+export function BoxSvg() {
     return (
         <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <Path d="M11.4266 2.1221L2.40658 6.21995C2.2838 6.27573 2.18108 6.35907 2.10945 6.46102C2.03783 6.56298 1.99999 6.6797 2 6.79866V17.0851C2 17.2888 2.06594 17.4886 2.19051 17.6622C2.31509 17.8358 2.49342 17.9765 2.70574 18.0687L11.5509 21.908C11.6901 21.9684 11.8439 21.9999 11.9999 21.9999C12.1559 21.9999 12.3098 21.9684 12.4489 21.908L21.2942 18.0687C21.5065 17.9765 21.6848 17.8358 21.8094 17.6622C21.934 17.4886 21.9999 17.2888 21.9999 17.0851V6.79866C21.9999 6.67969 21.9621 6.56296 21.8904 6.46101C21.8188 6.35905 21.7161 6.27572 21.5933 6.21995L12.5733 2.1221C12.3967 2.04192 12.1999 2 12 2C11.8001 2 11.6032 2.04192 11.4266 2.1221Z" fill="#FFCE94" />
@@ -42,7 +35,3 @@ export function BoxSvg({ width, height }) {
         </Svg>
     );
 }
-
-
-
-
