@@ -205,6 +205,11 @@ const DileveryPopup = ({onTouchOutside, openPopup, product}) => {
     product.node.priceRange.minVariantPrice.amount,
   );
 
+
+    useEffect(() => {
+    console.log('vvvvv', input);
+  }, []);
+
   const [quantity, setQuantity] = useState(1);
 
   const [selectedOptions, setSelectedOptions] = useState([]);

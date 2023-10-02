@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnBoarding from '../screens/main/onBoarding/Onboarding';
 import PersonalInfo from '../screens/main/personalInfo/PersonalInfo';
 import AddressBook from '../screens/main/addressBook/AddressBook';
-import AddAddress from '../screens/main/addAddress/AddAddress';
 import OrdersReturns from '../screens/main/orders&returns/Orders&Returns';
 import ReturnRequest from '../screens/main/returnRequest/ReternRequest';
 import BottomTabScreen from './BottomTab';
@@ -18,6 +17,7 @@ import WishList from '../screens/main/wishList/WishList';
 import MyOrder from '../screens/main/myOrder/MyOrder';
 import Coupons from '../screens/main/coupons/Coupons';
 import ProductListing from '../screens/main/product/ProductListing';
+import AddAddress from '../screens/main/address/AddAddress';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
