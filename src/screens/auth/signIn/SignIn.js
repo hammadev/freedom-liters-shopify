@@ -29,7 +29,7 @@ const SignIn = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [createCustomerAccessToken, { loading: tokenLoading, error: tokenError, data }] = useMutation(
-    CUSTOMER_ACCESS_TOKEN_CREATE
+    CREATE_CUSTOMER_ACCESS_TOKEN
   );
 
   const handleSubmit = () => {
