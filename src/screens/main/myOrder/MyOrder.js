@@ -17,6 +17,7 @@ import OrderSummary from '../../../components/OrderSummary';
 import { CartEmptyIcon, CouponIcon } from '../../../assets/svgs/NotificationSvg';
 import { SkypeIndicator } from 'react-native-indicators';
 import Icon from '../../../core/Icon';
+import NotLogin from '../../../components/NotLogin';
 const formatDateTime = (dateTimeString) => {
   const dateTime = new Date(dateTimeString);
   const year = dateTime.getFullYear();
@@ -151,6 +152,14 @@ const PopularProducts = ({
 };
 
 const MyOrder = ({ item }) => {
+  const { auth } = useSelector(state => ({ ...state }));
+
+  if (!auth) {
+    return (
+      <NotLogin />
+    );
+  }
+
   const dispatch = useDispatch();
   const [orderList, setOrderList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -158,7 +167,7 @@ const MyOrder = ({ item }) => {
   const [activeBg, setActiveBg] = useState(0);
   const [activeData, setActiveData] = useState(null);
   const [visible, setVisible] = useState(false);
-  const { auth } = useSelector(state => ({ ...state }));
+
 
   const MenuItem = ({ item, setActive }) => (
     <TouchableOpacity

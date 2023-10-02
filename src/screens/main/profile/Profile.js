@@ -16,16 +16,14 @@ import {
   ChevronSvg,
   GiftSvg,
   LogoutSvg,
-  PaymentCardSvg,
   PaymentMethodSvg,
   ProfileSvg,
-  EditProfileSvg,
-  PatternBg
 } from '../../../assets/svgs/ProfileSvgs';
 import { useNavigation } from '@react-navigation/native';
 import { logout } from '../../../apis/auth';
 import { useSelector } from 'react-redux';
 import Logout from '../../../components/Logout';
+import NotLogin from '../../../components/NotLogin';
 
 const ProfilePages = ({ item, popupState }) => {
   const navigation = useNavigation();
@@ -81,6 +79,12 @@ const ProfilePages = ({ item, popupState }) => {
 
 const Profile = ({ navigation }) => {
   const { auth } = useSelector(state => ({ ...state }));
+
+  if (!auth) {
+    return (
+      <NotLogin />
+    );
+  }
 
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
 
