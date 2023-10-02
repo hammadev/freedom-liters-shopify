@@ -129,7 +129,7 @@ const Profile = ({ navigation }) => {
               marginTop: 24,
               color: Color.white,
             }}>
-            {auth.user.data.display_name}
+            {/* {auth.user.data.display_name} */}
           </Text>
         </ImageBackground>
 

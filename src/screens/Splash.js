@@ -5,13 +5,13 @@ import { LogoSvg } from '../assets/svgs/Logo';
 import { SkypeIndicator } from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signinReq } from '../apis/auth';
-import {useDispatch} from 'react-redux';
-import {gql, useQuery} from '@apollo/client';
-import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
-import {GET_COLLECTION} from '../graphql/queries/Collection';
-import {Checkout} from '../graphql/queries/Orders';
+import { useDispatch } from 'react-redux';
+import { gql, useQuery } from '@apollo/client';
+import { GET_LATEST_PRODUCT } from '../graphql/queries/Product';
+import { GET_COLLECTION } from '../graphql/queries/Collection';
+import { Checkout } from '../graphql/queries/Orders';
 
-const Splash = ({navigation}) => {
+const Splash = ({ navigation }) => {
   // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -64,8 +64,10 @@ const Splash = ({navigation}) => {
     // Check if both sets of data have been successfully fetched and stored in Redux
     if (!latestProductLoading && !collectionLoading) {
       // Navigate to the next screen (replace 'BottomTabScreen' with your desired destination)
-      navigation.replace('SignIn');
+      // navigation.replace('SignIn');
+      checkUser();
     }
+
   }, [
     latestProductLoading,
     latestProductError,
@@ -79,20 +81,16 @@ const Splash = ({navigation}) => {
 
   const checkUser = async () => {
     const timer = setTimeout(async () => {
-      await AsyncStorage.getItem('credentials').then(async res => {
+      await AsyncStorage.getItem('auth').then(async res => {
         if (res) {
           let parsedRes = JSON.parse(res);
-          signinReq(
-            {
-              username: parsedRes.username,
-              password: parsedRes.password,
-            },
-            navigation,
-            setLoading,
-            dispatch,
-            'BottomTabScreen',
-            1,
-          );
+          dispatch({
+            type: 'LOGGED_IN_USER',
+            payload: parsedRes,
+          });
+
+          navigation.replace('BottomTabScreen');
+
         } else {
           try {
             const check = await AsyncStorage.getItem('onBoardCompleted');
@@ -126,7 +124,7 @@ const Splash = ({navigation}) => {
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{
