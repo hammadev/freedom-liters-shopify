@@ -60,9 +60,6 @@ export const SEND_PASSWORD_RESET_EMAIL = gql`
         field
         message
       }
-      userErrors {
-        message
-      }
     }
   }
 `;

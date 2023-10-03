@@ -125,8 +125,41 @@ export const handleProfileUpdate = async (customerUpdate, variables, refetch) =>
   }
 };
 
+
+export const handleForgetPassword = async (sendPasswordResetEmail, variables) => {
+  try {
+    const result = await sendPasswordResetEmail({
+      variables
+    });
+
+    // Handle the result here (data, errors, etc.)
+    console.log('Password Reset Email Result:', result);
+    console.log(result.data.customerRecover.customerUserErrors);
+    if ((result.data.customerRecover.customerUserErrors).length) {
+      showMessage({
+        message: result.data.customerRecover.customerUserErrors[0].message,
+        type: 'danger',
+      });
+      return;
+    }
+
+    showMessage({
+      message: 'Forget email send successfully!',
+      type: 'success',
+    });
+
+    return;
+
+
+  } catch (error) {
+    console.error('Mutation error:', error);
+  }
+};
+
+
 export const logout = async (navigation) => {
   await AsyncStorage.removeItem('credentials');
   await AsyncStorage.removeItem('auth');
   navigation.replace('SignIn');
 };
+
