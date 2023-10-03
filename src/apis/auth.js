@@ -139,7 +139,7 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
       variables
     });
 
-    console.log('result', result);
+    // console.log('result', result);
 
     // Handle the result here (data, errors, etc.)
     if ((result.data.customerCreate.customerUserErrors).length) {

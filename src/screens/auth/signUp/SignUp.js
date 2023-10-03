@@ -27,10 +27,9 @@ import { handleCreateAccount } from '../../../apis/auth';
 const SignUp = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
   const [hideConfirmPass, setHideConfirmPass] = useState(true);
-  const [userName, setUserName] = useState({
-    first: '',
-    last: ''
-  });
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -44,14 +43,14 @@ const SignUp = ({ navigation }) => {
 
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (userName.first === '') {
+    if (firstName === '') {
       showMessage({
         message: "First Name can't be blank",
         type: 'danger',
       });
       return;
     }
-    if (userName.last === '') {
+    if (lastName === '') {
       showMessage({
         message: "Last Name can't be blank",
         type: 'danger',
@@ -103,12 +102,14 @@ const SignUp = ({ navigation }) => {
       input: {
         acceptsMarketing: true,
         email: email,
-        firstName: userName.first,
-        lastName: userName.last,
+        firstName: firstName,
+        lastName: lastName,
         password: password,
         phone: phone,
       },
     }
+    // console.log(variables);
+    // return;
 
     handleCreateAccount(createCustomerAccount, variables, navigation);
 
@@ -137,14 +138,14 @@ const SignUp = ({ navigation }) => {
               icon={'account-circle-outline'}
               label="First Name"
               isDark={true}
-              onChanged={setUserName}
+              onChanged={setFirstName}
               customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             />
             <TextField2
               icon={'account-circle-outline'}
               label="Last Name"
               isDark={true}
-              onChanged={setUserName}
+              onChanged={setLastName}
               customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             />
             <TextField2
