@@ -26,7 +26,7 @@ import { showMessage } from 'react-native-flash-message';
 import SuccessPopup from '../../../components/SuccessPopup';
 import { Create_Cart } from '../../../graphql/mutations/Cart';
 
-const OrderSummary = ({ totalPrice, subTotal }) => {
+const OrderSummary = ({ subTotal }) => {
   return (
     <View style={{ marginVertical: Window.fixPadding }}>
       <View
@@ -37,7 +37,7 @@ const OrderSummary = ({ totalPrice, subTotal }) => {
           flexDirection: 'row',
         }}>
         <Text style={styles.TextStyle}> Subtotal </Text>
-        <Text style={styles.TotalStyle}>${subTotal} </Text>
+        <Text style={styles.TotalStyle}>${subTotal.toFixed(2)} </Text>
       </View>
       <View
         style={{
@@ -58,7 +58,7 @@ const OrderSummary = ({ totalPrice, subTotal }) => {
           flexDirection: 'row',
         }}>
         <Text style={styles.TextStyle}> Total</Text>
-        <Text style={styles.TotalStyle}>${subTotal + 8}</Text>
+        <Text style={styles.TotalStyle}>${(subTotal + 8).toFixed(2)}</Text>
       </View>
     </View>
   );
@@ -225,9 +225,9 @@ const CheckOut = ({navigation}) => {
   const [getProduct, setGetProduct] = useState('');
 
 
-  useEffect(() => {
-    console.log('vvvvv', cartCreate.cart);
-  }, []);
+  // useEffect(() => {
+  //   console.log('vvvvv', cartCreate.cart);
+  // }, []);
 
   
   const dispatch = useDispatch();
@@ -265,6 +265,7 @@ const CheckOut = ({navigation}) => {
     setSubTotal(cart.total);
   }, [refresh]);
 
+  console.log('ddddd',cart.total)
   const quantityFunc = (id, quantity, type, price, total, setQty) => {
     if (type === 2 && quantity === 1) {
       return;
@@ -602,7 +603,7 @@ const CheckOut = ({navigation}) => {
       <View style={{padding: Window.fixPadding}}>
         <Button
           loading={loading}
-          text={`Place Order - $${cart.total + 8}`}
+          text={`Place Order - $${(cart.total + 8).toFixed(2)}`}
           theme="tertiary"
           navLink="Payment"
           onPressFunc={handlePlaceOrder}
