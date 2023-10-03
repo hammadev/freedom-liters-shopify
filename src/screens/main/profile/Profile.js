@@ -20,7 +20,6 @@ import {
   ProfileSvg,
 } from '../../../assets/svgs/ProfileSvgs';
 import { useNavigation } from '@react-navigation/native';
-import { logout } from '../../../apis/auth';
 import { useSelector } from 'react-redux';
 import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
@@ -146,7 +145,7 @@ const Profile = ({ navigation }) => {
       <Logout
         onTouchOutside={onClosePopup}
         openPopup={logoutAlertPopup}
-        handleLogout={() => logout(navigation)}
+        auth={auth}
       />
     </SafeAreaView>
   );

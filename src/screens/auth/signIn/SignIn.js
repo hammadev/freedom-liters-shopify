@@ -20,6 +20,7 @@ import TextField2 from '../../../components/TextFeild2';
 import { handleCreateAccessToken } from '../../../apis/auth';
 import { CREATE_CUSTOMER_ACCESS_TOKEN } from '../../../graphql/mutations/Auth';
 import { useMutation } from '@apollo/client';
+import AppBar from '../../../components/AppBar';
 
 const SignIn = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
@@ -34,10 +35,19 @@ const SignIn = ({ navigation }) => {
   const handleSubmit = () => {
 
     Keyboard.dismiss();
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (email === '') {
       showMessage({
         message: "Email can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (!email.match(mailformat)) {
+      showMessage({
+        message: 'Please enter valid email',
         type: 'danger',
       });
       return;
@@ -81,11 +91,13 @@ const SignIn = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#021851' }}>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
+
       <ScrollView
         contentContainerStyle={{ justifyContent: 'center', }}
         keyboardShouldPersistTaps="handled"
         style={{ flex: 1, paddingTop: Window.height / 10 }}
       >
+
         <ImageBackground
           style={{ ...GlobalStyle.Container, backgroundColor: '#021851', paddingVertical: Window.fixPadding * 2 }}
           source={require('../../../assets/images/pics/auth.bg.png')}>
@@ -125,7 +137,7 @@ const SignIn = ({ navigation }) => {
             style={{
               position: 'relative',
             }}
-            onPress={() => navigation.navigate('CodeVerification')}
+            onPress={() => navigation.navigate('ForgetPassword')}
           >
             <Text
               style={{
