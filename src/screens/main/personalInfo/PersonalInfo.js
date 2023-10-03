@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,55 +10,93 @@ import { Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField2 from '../../../components/TextFeild2';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateProfileReq } from '../../../apis/auth';
+import { handleProfileUpdate } from '../../../apis/auth';
 import { showMessage } from 'react-native-flash-message';
+import { SkypeIndicator } from 'react-native-indicators';
+import { FETCH_CUSTOMER_INFO } from '../../../graphql/queries/Customer';
+import { CUSTOMER_UPDATE } from '../../../graphql/mutations/Auth';
+import { useMutation, useQuery } from '@apollo/client';
 
 const PersonalInfo = ({ navigation }) => {
   const { auth, address } = useSelector(state => ({ ...state }));
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [firstName, setFirstName] = useState(auth.meta.first_name);
-  const [lastName, setLastName] = useState(auth.meta.last_name);
-  const [userName, setUserName] = useState(auth.user.data.display_name);
-  const [phone, setPhone] = useState(auth.user.data.user_phone);
-  const [email, setEmail] = useState(auth.user.data.user_email);
 
-  const handleSubmit = () => {
+  // const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
 
-    if (firstName === '') {
+  // console.log(auth.accessToken);
+  const { loading, error, data, refetch } = useQuery(FETCH_CUSTOMER_INFO, {
+    variables: {
+      customerAccessToken: auth.accessToken, // Replace with your actual customer access token
+    },
+  });
+
+  useEffect(() => {
+    if (data && data.customer) {
+      // Handle and display customer information as needed
+      console.log('Customer Info:', data.customer);
+      setFirstName(data.customer.firstName);
+      setLastName(data.customer.lastName);
+      setPhone(data.customer.phone);
+      setEmail(data.customer.email);
+      setDisplayName(data.customer.displayName);
+    }
+
+  }, [data])
+
+  if (error) {
+    console.log(error);
+  }
+
+  const [customerUpdate, { loading: updateLoading, error: updateError, data: updateData }] = useMutation(CUSTOMER_UPDATE);
+
+  const handleSubmit = async () => {
+
+    if (firstName === null) {
       showMessage({
-        message: 'Please enter First Name',
+        message: "First Name can't be blank",
         type: 'danger',
       });
       return;
     }
-    if (lastName === '') {
+    if (lastName === null) {
       showMessage({
-        message: 'Please enter First Name',
+        message: "Last Name can't be blank",
         type: 'danger',
       });
       return;
     }
-    const updatedAddress = { ...address };
-    updatedAddress.first_name = firstName;
-    updatedAddress.last_name = lastName;
-    updatedAddress.billing.first_name = firstName;
-    updatedAddress.billing.last_name = lastName;
-    updatedAddress.shipping.first_name = firstName;
-    updatedAddress.shipping.last_name = lastName;
-    updateProfileReq(
-      {
-        user_id: auth.user.data.ID,
-        user_phone: phone,
-        first_name: firstName,
-        last_name: lastName,
+    if (phone === null) {
+      showMessage({
+        message: "Phone can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+    if (email === null) {
+      showMessage({
+        message: "Email can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    const variables = {
+      customerAccessToken: auth.accessToken,
+      customer: {
+        phone,
+        firstName,
+        lastName,
+        email,
       },
-      navigation,
-      setLoading,
-      dispatch,
-      'BottomTabScreen',
-      updatedAddress
-    );
+    }
+
+    console.log('variables', variables);
+    handleProfileUpdate(customerUpdate, variables, refetch);
   };
 
   return (
@@ -67,6 +105,12 @@ const PersonalInfo = ({ navigation }) => {
         theme='dark'
         title='Personal Information'
       />
+      {
+        loading &&
+        <View style={{ flex: 1, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)', width: Window.width, height: Window.height, zIndex: 1 }}>
+          <SkypeIndicator />
+        </View>
+      }
       <Text
         style={{
           marginTop: 8,
@@ -97,12 +141,16 @@ const PersonalInfo = ({ navigation }) => {
 
         </View>
       </View>
+
       <TextField2
-        label="User Name"
-        onChanged={setUserName}
+        label="Display Name"
+        onChanged={setDisplayName}
         customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-        value={userName}
+        value={displayName}
+        // numberOfLines={4}
+        disabled
       />
+
       <TextField2
         label="Email"
         onChanged={setEmail}
@@ -118,7 +166,7 @@ const PersonalInfo = ({ navigation }) => {
 
       <View style={{ marginTop: 20 }}>
         <Button
-          loading={loading}
+          loading={updateLoading}
           text="Update Profile"
           onPressFunc={handleSubmit}
           icon="mail"
