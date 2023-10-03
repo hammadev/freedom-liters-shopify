@@ -43,14 +43,15 @@ const StackNavigator = () => {
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
       <Stack.Screen name="AddressBook" component={AddressBook} />
+<<<<<<< HEAD
+      <Stack.Screen name="MyOrder" component={MyOrder}/>
+      <Stack.Screen name="AddressListing" component={AddressListing} />
+=======
       <Stack.Screen name="AddressListing" component={AddressListing} />
       <Stack.Screen name="MyOrder" component={MyOrder} />
+>>>>>>> f76063886080ce27f92c1e637572b549d9da96c4
       <Stack.Screen name="ProductListing" component={ProductListing} />
-
-      <Stack.Screen
-        name="OrdersReturns"
-        component={OrdersReturns}
-      />
+      <Stack.Screen name="OrdersReturns" component={OrdersReturns} />
       <Stack.Screen name="ReturnRequest" component={ReturnRequest} />
       <Stack.Screen name="Coupons" component={Coupons} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
