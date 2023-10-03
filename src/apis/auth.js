@@ -134,7 +134,7 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 
     // Handle the result here (data, errors, etc.)
     console.log('Password Reset Email Result:', result);
-    console.log(result.data.customerRecover.customerUserErrors);
+    // console.log(result.data.customerRecover.customerUserErrors);
     if ((result.data.customerRecover.customerUserErrors).length) {
       showMessage({
         message: result.data.customerRecover.customerUserErrors[0].message,
@@ -156,10 +156,32 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
   }
 };
 
+// variables: {
+//   customerAccessToken: customerAccessToken,
+// },
+export const logout = async (deleteAccessToken, variables, navigation, onTouchOutside) => {
+  try {
+    const result = await deleteAccessToken({
+      variables
+    });
 
-export const logout = async (navigation) => {
-  await AsyncStorage.removeItem('credentials');
-  await AsyncStorage.removeItem('auth');
-  navigation.replace('SignIn');
+    // Handle the result here (data, errors, etc.)
+    console.log('Delete Access Token Result:', result);
+    if (result) {
+      await AsyncStorage.removeItem('credentials');
+      await AsyncStorage.removeItem('auth');
+      onTouchOutside();
+      navigation.replace('SignIn');
+    }
+  } catch (error) {
+    console.error('Mutation error:', error);
+    showMessage({
+      message: 'Error in logout! try again later',
+      type: 'success',
+    });
+
+    return;
+  }
+
 };
 
