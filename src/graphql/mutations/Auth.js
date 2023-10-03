@@ -51,3 +51,18 @@ export const CUSTOMER_UPDATE = gql`
     }
   }
 `;
+
+export const SEND_PASSWORD_RESET_EMAIL = gql`
+  mutation SendPasswordResetEmail($email: String!) {
+    customerRecover(email: $email) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+      userErrors {
+        message
+      }
+    }
+  }
+`;
