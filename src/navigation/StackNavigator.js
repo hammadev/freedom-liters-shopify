@@ -18,6 +18,7 @@ import MyOrder from '../screens/main/myOrder/MyOrder';
 import Coupons from '../screens/main/coupons/Coupons';
 import ProductListing from '../screens/main/product/ProductListing';
 import AddAddress from '../screens/main/address/AddAddress';
+import AddressListing from '../screens/main/address/AddressListing';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -43,7 +44,8 @@ const StackNavigator = () => {
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
       <Stack.Screen name="AddressBook" component={AddressBook} />
       <Stack.Screen name="AddAddress" component={AddAddress} />
-      <Stack.Screen name="MyOrder" component={MyOrder} />
+      <Stack.Screen name="AddressListing" component={AddressListing}/>
+      <Stack.Screen name="MyOrder" component={MyOrder}/>
       <Stack.Screen name="ProductListing" component={ProductListing} />
 
       <Stack.Screen
