@@ -202,8 +202,46 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
       payload: token,
     });
 
+    showMessage({
+      message: 'Login successfull!',
+      type: 'success',
+    });
+
     navigation.replace('BottomTabScreen');
   }
 
 
 }
+
+export const handleProfileUpdate = async (customerUpdate, variables, refetch) => {
+  try {
+    const result = await customerUpdate({
+      variables
+    });
+
+    // Handle the result here (data, errors, etc.)
+    console.log('Update Phone Result:', result);
+
+    if ((result.data.customerUpdate.customerUserErrors).length) {
+      showMessage({
+        message: result.data.customerUpdate.customerUserErrors[0].message,
+        type: 'danger',
+      });
+      return;
+    }
+    refetch();
+    showMessage({
+      message: 'Profile updated successfully!',
+      type: 'success',
+    });
+    return;
+
+  } catch (error) {
+    console.error('Mutation error:', error);
+    showMessage({
+      message: 'Something went wrong! try again later',
+      type: 'danger',
+    });
+    return;
+  }
+};
