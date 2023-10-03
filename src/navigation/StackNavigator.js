@@ -35,7 +35,6 @@ const StackNavigator = () => {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="CodeVerification" component={CodeVerification} />
-
       <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="CheckOut" component={CheckOut} />
@@ -43,13 +42,8 @@ const StackNavigator = () => {
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
       <Stack.Screen name="AddressBook" component={AddressBook} />
-<<<<<<< HEAD
-      <Stack.Screen name="MyOrder" component={MyOrder}/>
-      <Stack.Screen name="AddressListing" component={AddressListing} />
-=======
-      <Stack.Screen name="AddressListing" component={AddressListing} />
       <Stack.Screen name="MyOrder" component={MyOrder} />
->>>>>>> f76063886080ce27f92c1e637572b549d9da96c4
+      <Stack.Screen name="AddressListing" component={AddressListing} />
       <Stack.Screen name="ProductListing" component={ProductListing} />
       <Stack.Screen name="OrdersReturns" component={OrdersReturns} />
       <Stack.Screen name="ReturnRequest" component={ReturnRequest} />
