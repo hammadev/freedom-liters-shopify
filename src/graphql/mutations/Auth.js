@@ -62,6 +62,27 @@ export const SEND_PASSWORD_RESET_EMAIL = gql`
   }
 `;
 
+export const CUSTOMER_ADDRESS_CREATE = gql`
+  mutation CustomerAddressCreate(
+    $customerAccessToken: String!
+    $address: MailingAddressInput!
+  ) {
+    customerAddressCreate(
+      customerAccessToken: $customerAccessToken
+      address: $address
+    ) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+      customerAddress {
+        id
+      }
+    }
+  }
+`;
+
 export const DELETE_ACCESS_TOKEN = gql`
   mutation DeleteAccessToken($customerAccessToken: String!) {
     customerAccessTokenDelete(customerAccessToken: $customerAccessToken) {
