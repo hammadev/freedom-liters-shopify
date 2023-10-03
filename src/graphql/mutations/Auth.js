@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 
-
 export const CREATE_CUSTOMER_ACCOUNT = gql`
 mutation createCustomerAccount($input: CustomerCreateInput!) {
     customerCreate(input: $input) {
@@ -19,7 +18,6 @@ mutation createCustomerAccount($input: CustomerCreateInput!) {
     }
   }
 `;
-
 
 export const CREATE_CUSTOMER_ACCESS_TOKEN = gql`
   mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
@@ -60,6 +58,14 @@ export const SEND_PASSWORD_RESET_EMAIL = gql`
         field
         message
       }
+    }
+  }
+`;
+
+export const DELETE_ACCESS_TOKEN = gql`
+  mutation DeleteAccessToken($customerAccessToken: String!) {
+    customerAccessTokenDelete(customerAccessToken: $customerAccessToken) {
+      deletedAccessToken
     }
   }
 `;
