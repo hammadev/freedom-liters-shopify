@@ -23,6 +23,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
+import BottomPopupHOC from '../../../components/BottomPopupHOC';
 
 const ProfilePages = ({ item, popupState }) => {
   const navigation = useNavigation();
@@ -87,10 +88,6 @@ const Profile = ({ navigation }) => {
 
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
 
-  const onClosePopup = () => {
-    setLogoutAlertPopup(false);
-  };
-
   return (
     <SafeAreaView style={{ backgroundColor: Color.light, flex: 1 }}>
       {/* <StatusBar barStyle={'light-content'} backgroundColor={Color.tertiary} /> */}
@@ -142,11 +139,14 @@ const Profile = ({ navigation }) => {
           ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
         />
       </ScrollView>
-      <Logout
-        onTouchOutside={onClosePopup}
-        openPopup={logoutAlertPopup}
-        auth={auth}
+
+      <BottomPopupHOC
+        title="Alert"
+        PopupBody={<Logout auth={auth} setVisible={setLogoutAlertPopup} />}
+        visible={logoutAlertPopup}
+        setVisible={setLogoutAlertPopup}
       />
+
     </SafeAreaView>
   );
 };

@@ -159,7 +159,7 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const logout = async (deleteAccessToken, variables, navigation, onTouchOutside) => {
+export const logout = async (deleteAccessToken, variables, navigation, setVisible) => {
   try {
     const result = await deleteAccessToken({
       variables
@@ -170,7 +170,7 @@ export const logout = async (deleteAccessToken, variables, navigation, onTouchOu
     if (result) {
       await AsyncStorage.removeItem('credentials');
       await AsyncStorage.removeItem('auth');
-      onTouchOutside();
+      setVisible(false);
       navigation.replace('SignIn');
     }
   } catch (error) {
