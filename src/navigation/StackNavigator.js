@@ -18,6 +18,7 @@ import MyOrder from '../screens/main/myOrder/MyOrder';
 import Coupons from '../screens/main/coupons/Coupons';
 import ProductListing from '../screens/main/product/ProductListing';
 import AddAddress from '../screens/main/address/AddAddress';
+import ForgetPassword from '../screens/auth/forgetPassword/ForgetPassword';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -52,6 +53,8 @@ const StackNavigator = () => {
       />
       <Stack.Screen name="ReturnRequest" component={ReturnRequest} />
       <Stack.Screen name="Coupons" component={Coupons} />
+      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+
     </Stack.Navigator>
   );
 };
