@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -7,14 +7,14 @@ import {
   StatusBar,
   StyleSheet,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AppBar from '../../../components/AppBar';
-import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
+import { GlobalStyle, Font, Window, Color } from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
-import {RadioButton} from 'react-native-paper';
-import {SkypeIndicator} from 'react-native-indicators';
-import {useRef} from 'react';
-import {useBackButton} from '../../../hooks';
+import { RadioButton } from 'react-native-paper';
+import { SkypeIndicator } from 'react-native-indicators';
+import { useRef } from 'react';
+import { useBackButton } from '../../../hooks';
 import EditAddress from '../../../components/EditAddress';
 import Button from '../../../components/Button';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
@@ -60,7 +60,7 @@ const DeliverTo = ({
           margin: 20,
         }}>
         <View
-          style={{flexDirection: 'row', alignItems: 'center', width: '65%'}}>
+          style={{ flexDirection: 'row', alignItems: 'center', width: '65%' }}>
           <View
             style={{
               backgroundColor: 'rgba(239, 127, 1, 0.08)',
@@ -89,8 +89,8 @@ const DeliverTo = ({
             </View>
           </View>
           <View style={{}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{...styles.Heading}}>{item.name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...styles.Heading }}>{item.name}</Text>
 
               <View
                 style={{
@@ -112,7 +112,7 @@ const DeliverTo = ({
                 </Text>
               </View>
             </View>
-            <Text style={{...styles.TextStyle, marginTop: 5}} numberOfLines={2}>
+            <Text style={{ ...styles.TextStyle, marginTop: 5 }} numberOfLines={2}>
               {item.address}
             </Text>
           </View>
@@ -140,12 +140,21 @@ const DeliverTo = ({
   );
 };
 
-const AddressListing = ({navigation}) => {
+const AddressListing = ({ navigation }) => {
   const [radioCheck, setRadioCheck] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [editIcon, setEditIcon] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibeleAddress, setVisibeleAddress] = useState(false);
+
+  // address form states
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [address1, setAddress1] = useState('');
+  const [province, setProvince] = useState('');
+  const [country, setCountry] = useState('');
+  const [zip, setZip] = useState('');
+  const [city, setCity] = useState('');
+
 
   const onBackPress = () => {
     navigation.goBack();
@@ -154,30 +163,19 @@ const AddressListing = ({navigation}) => {
 
   useBackButton(navigation, onBackPress);
 
-  const hideModal = () => {
-    setVisibeleAddress(false);
-  };
   const showModal = () => {
     setVisibeleAddress(true);
   };
 
-  // const addressHideModal = () => {
-  //   setVisible(false);
-  // };
-  // const addressShowModal = () => {
-  //   setVisible(true);
-  // };
-
-  // const [loading, setLoading] = useState();
   return (
-    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: Color.light, flex: 1 }}>
       <StatusBar
         animated={true}
         backgroundColor={Color.light}
         barStyle={'dark-content'}
         showHideTransition={'fade'}
       />
-      <View style={{paddingHorizontal: Window.fixPadding * 2}}>
+      <View style={{ paddingHorizontal: Window.fixPadding * 2 }}>
         <AppBar theme="dark" header="solid" />
       </View>
       <View
@@ -197,7 +195,7 @@ const AddressListing = ({navigation}) => {
         </Text>
         <TouchableOpacity
           onPress={() => setEditIcon(!editIcon)}
-          style={{width: 50, alignItems: 'center'}}>
+          style={{ width: 50, alignItems: 'center' }}>
           <Text
             style={{
               fontSize: 16,
@@ -210,8 +208,8 @@ const AddressListing = ({navigation}) => {
       </View>
 
       <ScrollView
-        style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20 }}>
         {Data.map((item, i) => (
           <DeliverTo
             item={item}
@@ -228,7 +226,7 @@ const AddressListing = ({navigation}) => {
       <View
         style={[
           styles.BottomButtonContainer,
-          {paddingHorizontal: Window.fixPadding * 2},
+          { paddingHorizontal: Window.fixPadding * 2 },
         ]}>
         <Button
           text="Add New Address"
@@ -241,13 +239,43 @@ const AddressListing = ({navigation}) => {
         title="Update Address"
         visible={visibeleAddress}
         setVisible={setVisibeleAddress}
-        PopupBody={<UpdateAddress />}
+        PopupBody={<AddressForm
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          address1={address1}
+          setAddress1={setAddress1}
+          province={province}
+          setProvince={setProvince}
+          country={country}
+          setCountry={setCountry}
+          zip={zip}
+          setZip={setZip}
+          city={city}
+          setCity={setCity}
+        />}
       />
       <BottomPopupHOC
         title="Add Address"
         visible={visible}
         setVisible={setVisible}
-        PopupBody={<AddAddress />}
+        PopupBody={<AddressForm
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          address1={address1}
+          setAddress1={setAddress1}
+          province={province}
+          setProvince={setProvince}
+          country={country}
+          setCountry={setCountry}
+          zip={zip}
+          setZip={setZip}
+          city={city}
+          setCity={setCity}
+        />}
       />
     </SafeAreaView>
   );
@@ -318,14 +346,24 @@ const Data = [
             )} */
 }
 
-const UpdateAddress = () => {
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [address1, setAddress1] = useState();
-  const [province, setProvince] = useState();
-  const [country, setCountry] = useState();
-  const [zip, setZip] = useState();
-  const [city, setCity] = useState();
+
+const AddressForm = ({
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  address1,
+  setAddress1,
+  province,
+  setProvince,
+  country,
+  setCountry,
+  zip,
+  setZip,
+  city,
+  setCity,
+}) => {
+
   return (
     <View style={{}}>
       <View
@@ -335,19 +373,19 @@ const UpdateAddress = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
-            label="firstName"
+            label="first Name"
             onChanged={setFirstName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={firstName}
           />
         </View>
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
             label="lastName"
             onChanged={setLastName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={lastName}
           />
         </View>
@@ -356,7 +394,7 @@ const UpdateAddress = () => {
       <TextField2
         label="address1"
         onChanged={setAddress1}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
+        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
         value={address1}
       />
       <View
@@ -366,20 +404,20 @@ const UpdateAddress = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
             label="province"
             onChanged={setProvince}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={province}
           />
         </View>
 
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
             label="country"
             onChanged={setCountry}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={country}
           />
         </View>
@@ -391,135 +429,31 @@ const UpdateAddress = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
             label="zip"
             onChanged={setZip}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={zip}
           />
         </View>
-        <View style={{width: '48%'}}>
+        <View style={{ width: '48%' }}>
           <TextField2
             label="city"
             onChanged={setCity}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={city}
           />
         </View>
       </View>
-      <View style={{paddingTop: 10}}>
-        <Button
-          text="Update Address"
-          isIcon={false}
-          theme="tertiary"
-          navLink="Profile"
-          // loading={loading}
-          // onPressFunc={handleSubmit}
-        />
-      </View>
-    </View>
-  );
-};
-
-const AddAddress = () => {
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [address1, setAddress1] = useState();
-  const [province, setProvince] = useState();
-  const [country, setCountry] = useState();
-  const [zip, setZip] = useState();
-  const [city, setCity] = useState();
-  return (
-    <View style={{}}>
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="firstName"
-            onChanged={setFirstName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={firstName}
-          />
-        </View>
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="lastName"
-            onChanged={setLastName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={lastName}
-          />
-        </View>
-      </View>
-
-      <TextField2
-        label="address1"
-        onChanged={setAddress1}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
-        value={address1}
-      />
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="province"
-            onChanged={setProvince}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={province}
-          />
-        </View>
-
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="country"
-            onChanged={setCountry}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={country}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="zip"
-            onChanged={setZip}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={zip}
-          />
-        </View>
-        <View style={{width: '48%'}}>
-          <TextField2
-            label="city"
-            onChanged={setCity}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={city}
-          />
-        </View>
-      </View>
-      <View style={{paddingTop: 10}}>
+      <View style={{ paddingTop: 10 }}>
         <Button
           text="Add Address"
           isIcon={false}
           theme="tertiary"
           navLink="Profile"
-          // loading={loading}
-          // onPressFunc={handleSubmit}
+        // loading={loading}
+        // onPressFunc={handleSubmit}
         />
       </View>
     </View>
