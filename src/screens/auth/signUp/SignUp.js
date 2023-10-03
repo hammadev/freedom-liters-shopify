@@ -41,7 +41,7 @@ const SignUp = ({ navigation }) => {
 
   const handleSubmit = () => {
 
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (firstName === '') {
       showMessage({

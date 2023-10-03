@@ -35,10 +35,19 @@ const SignIn = ({ navigation }) => {
   const handleSubmit = () => {
 
     Keyboard.dismiss();
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (email === '') {
       showMessage({
         message: "Email can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (!email.match(mailformat)) {
+      showMessage({
+        message: 'Please enter valid email',
         type: 'danger',
       });
       return;
