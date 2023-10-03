@@ -49,7 +49,6 @@ const StackNavigator = () => {
       <Stack.Screen name="ReturnRequest" component={ReturnRequest} />
       <Stack.Screen name="Coupons" component={Coupons} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-
     </Stack.Navigator>
   );
 };
