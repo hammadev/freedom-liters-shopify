@@ -9,13 +9,15 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppBar from '../../../components/AppBar';
-import Button from '../../../components/Button';
 import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
 import {RadioButton} from 'react-native-paper';
 import {SkypeIndicator} from 'react-native-indicators';
 import {useRef} from 'react';
 import {useBackButton} from '../../../hooks';
+import EditAddress from '../../../components/EditAddress';
+import AddAddress from '../../../components/AddAddress';
+import Button from '../../../components/Button';
 
 const DeliverTo = ({
   item,
@@ -23,62 +25,14 @@ const DeliverTo = ({
   radioState,
   deleteHandler,
   navigation,
-  active,
-  setActive,
-  editIcon
+  editIcon,
+  showModal,
 }) => {
   const swipeRef = useRef(null);
   const RadioClick = itemID => {
     setRadioState(itemID);
   };
-  const leftButtons = [
-    <View style={{flexDirection: 'column', flex: 1}}>
-      <TouchableOpacity
-        onPress={() => {
-          swipeRef.current.recenter();
-          navigation.navigate('SetLocation', {
-            edit: true,
-            item: item,
-          });
-        }}
-        style={{
-          backgroundColor: Color.primary,
-          flex: 1,
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-        }}>
-        <View style={{width: 50, alignItems: 'center'}}>
-          <Icon
-            iconFamily={'MaterialCommunityIcons'}
-            name="pencil-minus"
-            size={20}
-            color={Color.light}
-          />
-        </View>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => {
-          swipeRef.current.recenter();
-          deleteHandler(item.id);
-        }}
-        style={{
-          backgroundColor: '#F6F4F4',
-          flex: 1,
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-        }}>
-        <View style={{width: 50, alignItems: 'center'}}>
-          <Icon
-            iconFamily={'MaterialCommunityIcons'}
-            name="trash-can-outline"
-            size={20}
-            color={Color.brightRed}
-          />
-        </View>
-      </TouchableOpacity>
-    </View>,
-  ];
   return (
     <View
       onPress={() => RadioClick(item.id)}
@@ -124,7 +78,6 @@ const DeliverTo = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 100,
-                // padding: 10,
               }}>
               <Icon
                 iconFamily={'Ionicons'}
@@ -164,9 +117,7 @@ const DeliverTo = ({
           </View>
         </View>
         {editIcon ? (
-          <TouchableOpacity
-            onPress={() => setActive(item.name)}
-            style={{}}>
+          <TouchableOpacity onPress={() => showModal()} style={{}}>
             <Icon
               iconFamily={'MaterialCommunityIcons'}
               name="pencil-minus"
@@ -192,14 +143,33 @@ const AddressListing = ({navigation}) => {
   const [radioCheck, setRadioCheck] = useState(0);
   const [loading, setLoading] = useState(true);
   const [editIcon, setEditIcon] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [visibeleAddress, setVisibeleAddress] = useState(false);
 
   const onBackPress = () => {
     navigation.goBack();
     return true;
   };
+
   useBackButton(navigation, onBackPress);
+
+  const hideModal = () => {
+    setVisibeleAddress(false);
+  };
+  const showModal = () => {
+    setVisibeleAddress(true);
+  };
+
+  const addressHideModal = () => {
+    setVisible(false);
+  };
+  const addressShowModal = () => {
+    setVisible(true);
+  };
+
   return (
-    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
+    
+     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
       <StatusBar
         animated={true}
         backgroundColor={Color.light}
@@ -207,7 +177,7 @@ const AddressListing = ({navigation}) => {
         showHideTransition={'fade'}
       />
       <View style={{paddingHorizontal: Window.fixPadding * 2}}>
-        <AppBar theme="dark" header='solid'  />
+        <AppBar theme="dark" header="solid" />
       </View>
       <View
         style={{
@@ -227,11 +197,14 @@ const AddressListing = ({navigation}) => {
         <TouchableOpacity
           onPress={() => setEditIcon(!editIcon)}
           style={{width: 50, alignItems: 'center'}}>
-          <Text  style={{
-            fontSize: 16,
-            fontFamily: Font.Gilroy_SemiBold,
-            color: Color.tertiary,
-          }}>{editIcon ? 'Done' : 'Edit'}</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: Font.Gilroy_SemiBold,
+              color: Color.tertiary,
+            }}>
+            {editIcon ? 'Done' : 'Edit'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -246,6 +219,7 @@ const AddressListing = ({navigation}) => {
             setRadioState={setRadioCheck}
             navigation={navigation}
             editIcon={editIcon}
+            showModal={showModal}
           />
         ))}
       </ScrollView>
@@ -255,7 +229,7 @@ const AddressListing = ({navigation}) => {
           styles.BottomButtonContainer,
           {paddingHorizontal: Window.fixPadding * 2},
         ]}>
-        <Button text="Add New Address" theme="tertiary" navLink='AddAddress' />
+        <Button text="Add New Address" theme="tertiary" onPressFunc={addressShowModal} />
       </View>
 
       {/* {loading && (
@@ -271,7 +245,21 @@ const AddressListing = ({navigation}) => {
               <SkypeIndicator size={50} color={Color.grey} />
               </View>
             )} */}
+      <EditAddress
+        ref={target => (popupRef = target)}
+        onTouchOutside={hideModal}
+        visibeleAddress={visibeleAddress}
+        showModal={showModal}
+      />
+        <AddAddress
+          ref={target => (popupRef = target)}
+          onTouchOutside={addressHideModal}
+          visible={visible}
+          addressShowModal={addressShowModal}
+        />
     </SafeAreaView>
+
+     
   );
 };
 

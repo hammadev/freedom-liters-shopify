@@ -17,8 +17,11 @@ import WishList from '../screens/main/wishList/WishList';
 import MyOrder from '../screens/main/myOrder/MyOrder';
 import Coupons from '../screens/main/coupons/Coupons';
 import ProductListing from '../screens/main/product/ProductListing';
+<<<<<<< HEAD
+=======
 import AddAddress from '../screens/main/address/AddAddress';
 import ForgetPassword from '../screens/auth/forgetPassword/ForgetPassword';
+>>>>>>> 1ba5a45a9327d633056d72464dd4656c6a81fba1
 import AddressListing from '../screens/main/address/AddressListing';
 
 const StackNavigator = () => {
@@ -44,9 +47,14 @@ const StackNavigator = () => {
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
       <Stack.Screen name="AddressBook" component={AddressBook} />
+<<<<<<< HEAD
+      <Stack.Screen name="AddressListing" component={AddressListing}/>
+      <Stack.Screen name="MyOrder" component={MyOrder}/>
+=======
       <Stack.Screen name="AddAddress" component={AddAddress} />
       <Stack.Screen name="AddressListing" component={AddressListing} />
       <Stack.Screen name="MyOrder" component={MyOrder} />
+>>>>>>> 1ba5a45a9327d633056d72464dd4656c6a81fba1
       <Stack.Screen name="ProductListing" component={ProductListing} />
 
       <Stack.Screen
