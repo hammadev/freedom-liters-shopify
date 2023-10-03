@@ -15,7 +15,6 @@ import { RadioButton } from 'react-native-paper';
 import { SkypeIndicator } from 'react-native-indicators';
 import { useRef } from 'react';
 import { useBackButton } from '../../../hooks';
-import EditAddress from '../../../components/EditAddress';
 import Button from '../../../components/Button';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import TextField2 from '../../../components/TextFeild2';
@@ -329,23 +328,6 @@ const Data = [
     id: 4,
   },
 ];
-
-{
-  /* {loading && (
-              <View
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: '#000000AA',
-              }}>
-              <SkypeIndicator size={50} color={Color.grey} />
-              </View>
-            )} */
-}
-
 
 const AddressForm = ({
   firstName,
