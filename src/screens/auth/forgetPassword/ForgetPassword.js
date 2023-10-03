@@ -14,7 +14,7 @@ import { showMessage } from 'react-native-flash-message';
 import { useDispatch } from 'react-redux';
 import { LogoIcon, LogoSvg } from '../../../assets/svgs/Logo';
 import TextField2 from '../../../components/TextFeild2';
-import { handleCreateAccessToken } from '../../../apis/auth';
+import { handleForgetPassword } from '../../../apis/auth';
 import { SEND_PASSWORD_RESET_EMAIL } from '../../../graphql/mutations/Auth';
 import { useMutation } from '@apollo/client';
 import AppBar from '../../../components/AppBar';
@@ -29,6 +29,7 @@ const ForgetPassword = ({ navigation }) => {
     const handleSubmit = async () => {
 
         Keyboard.dismiss();
+        const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
         if (email === '') {
             showMessage({
@@ -38,20 +39,19 @@ const ForgetPassword = ({ navigation }) => {
             return;
         }
 
-
-        try {
-            const result = await sendPasswordResetEmail({
-                variables: {
-                    email: email,
-                },
+        if (!email.match(mailformat)) {
+            showMessage({
+                message: 'Please enter valid email',
+                type: 'danger',
             });
-
-            // Handle the result here (data, errors, etc.)
-            console.log('Password Reset Email Result:', result);
-        } catch (error) {
-            console.error('Mutation error:', error);
+            return;
         }
 
+        const variables = {
+            email,
+        }
+
+        handleForgetPassword(sendPasswordResetEmail, variables);
     };
 
     return (
