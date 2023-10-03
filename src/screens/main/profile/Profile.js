@@ -165,7 +165,7 @@ const ProfileData = [
     icon: <AddressSvg />,
     name: 'Address',
     chevron: <ChevronSvg />,
-    navlink: 'AddAddress',
+    navlink: 'AddressListing',
   },
   {
     icon: <AddressSvg />,

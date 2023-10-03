@@ -270,6 +270,7 @@ const CheckOut = ({navigation}) => {
     if (type === 2 && quantity === 1) {
       return;
     }
+    
     const tempArr = [...cart.addedItems];
     // const tempAmount = cart.total;
     const filtered = tempArr.filter(x => {
