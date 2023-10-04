@@ -10,11 +10,11 @@ import Svg, {
   Rect,
 } from 'react-native-svg';
 
-export function ChevronSvg({ color = 'white', height }) {
+export function ChevronSvg({ color = 'white' }) {
   return (
     <Svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

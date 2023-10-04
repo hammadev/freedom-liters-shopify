@@ -92,6 +92,8 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
 
 }
 
+
+
 export const handleProfileUpdate = async (customerUpdate, variables, refetch) => {
   try {
     const result = await customerUpdate({

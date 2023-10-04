@@ -9,15 +9,17 @@ import {
   FlatList,
   ScrollView,
   StyleSheet,
+  Platform,
+  SafeAreaView
 } from 'react-native';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {CartSvg, ManuSvg} from '../../../assets/svgs/HomePage';
 import Icon from '../../../core/Icon';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAddress} from '../../../apis/profile';
 import Heading from '../../../components/Heading';
 import ProductBox from '../product/_partials/ProductBox';
+import {hasNotch} from 'react-native-device-info';
 
 const CatBox = ({item, navigation}) => {
   return (
@@ -75,32 +77,44 @@ const Home = ({navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(product.all.edges);
+    console.log(product.all.edges.node);
     // getAddress(dispatch, auth.user.ID);
   }, []);
 
-  return (
-    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={Color.white} />
 
+  return (
+    <SafeAreaView
+     style={{backgroundColor: Color.light, flex: 1}}
+      edges={{
+        top: 'maximum',
+        right: 'maximum',
+        left: 'maximum',
+        bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
+      }}>
+      <StatusBar
+        animated={true}
+        showHideTransition={'fade'}
+        barStyle={'light-content'}
+        backgroundColor={'transparent'}
+        translucent
+      />
       <ScrollView>
         <ImageBackground
           resizeMode="cover"
           style={{
-            height: 268,
-            paddingHorizontal: 20,
+            height: Window.height / 3,
+            paddingHorizontal:20,
             backgroundColor: Color.tertiary,
-            paddingVertical: 20,
+            paddingVertical: 35,
           }}
           source={require('../../../assets/images/products/homeBg.png')}>
+            <View style={styles.overlay}/>
           <View
             style={{
-              justifyContent: 'space-between',
+              justifyContent: 'flex-end',
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            {/* <ManuSvg /> */}
-            <View />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity style={{paddingRight: 10}}>
                 <Icon
@@ -151,7 +165,6 @@ const Home = ({navigation}) => {
               marginLeft: 140,
               width: 98,
               height: 10,
-              // background: Color.tertiart,
             }}
             source={require('../../../assets/images/products/Vector2.png')}
           />
@@ -233,9 +246,7 @@ const Home = ({navigation}) => {
                       ? product.all.edges
                       : product
                   }
-                  // renderItem={({ item, index }) => {
-                  //   console.log("item", item);
-                  // }}
+               
                   renderItem={({item, index}) => (
                     <ProductBox
                       wishlist={wishlist}
@@ -260,3 +271,14 @@ const Home = ({navigation}) => {
 };
 
 export default Home;
+
+const styles = StyleSheet.create({
+overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+})

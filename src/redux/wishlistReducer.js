@@ -32,7 +32,7 @@ export const wishlistReducer = (state = initState, action) => {
       return {
         ...state,
         addedItems: state.addedItems.filter(
-          (item, i) => item.id !== action.payload,
+          (item, i) => item.node.id !== action.payload,
         ),
       };
 

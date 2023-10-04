@@ -280,7 +280,6 @@ const MyOrder = ({ item }) => {
       </View>
       {activeData && (
         <OrderSummary
-          ref={target => (popupRef = target)}
           onTouchOutside={hideModal}
           visible={visible}
           summaryData={activeData}

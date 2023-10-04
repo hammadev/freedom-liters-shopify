@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -227,7 +234,7 @@ const CheckOut = ({navigation}) => {
   const onOpenDeleteCart = () => {
     setRemoveCart(true);
   };
-    const onOpenSuccessOrder = () => {
+  const onOpenSuccessOrder = () => {
     setSuccessOrder(true);
   };
 
@@ -319,7 +326,7 @@ const CheckOut = ({navigation}) => {
       customer_note: '',
     };
 
-    placeOrder(formData, setLoading,setSuccessOrder, dispatch, navigation);
+    placeOrder(formData, setLoading, setSuccessOrder, dispatch, navigation);
 
     console.log(formData);
   };
@@ -440,6 +447,13 @@ const CheckOut = ({navigation}) => {
   }
   return (
     <SafeAreaView style={{flex: 1}}>
+      <StatusBar
+        animated={true}
+        backgroundColor={Color.light}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
         <AppBar theme="dark" title="Checkout" />
 
@@ -496,8 +510,7 @@ const CheckOut = ({navigation}) => {
             marginVertical: Window.fixPadding,
           }}
         />
-        <View 
-        style={{marginTop: Window.fixPadding}}>
+        <View style={{marginTop: Window.fixPadding}}>
           <Heading name="Order Summery" />
           <OrderSummary quantity={1} subTotal={cart.total} item={cart} />
         </View>
@@ -512,8 +525,7 @@ const CheckOut = ({navigation}) => {
         />
       </View>
 
-
-       {/* Delete cart Popup  */}
+      {/* Delete cart Popup  */}
 
       <BottomPopupHOC
         title="Remove"
@@ -528,8 +540,8 @@ const CheckOut = ({navigation}) => {
         }
       />
 
-        {/* Success order Popup */}
-      
+      {/* Success order Popup */}
+
       <BottomPopupHOC
         title="Order Placed"
         visible={successOrder}
@@ -598,7 +610,7 @@ const SuccessOrder = () => {
           color={Color.tertiary}
         />
       </View>
-      
+
       <Text
         style={{
           ...GlobalStyle.textStlye,

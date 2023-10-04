@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-
+  StatusBar,
 } from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
-import { Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
+import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField2 from '../../../components/TextFeild2';
 import { useDispatch, useSelector } from 'react-redux';
@@ -101,6 +101,8 @@ const PersonalInfo = ({ navigation }) => {
 
   return (
     <SafeAreaView style={GlobalStyle.Container}>
+            <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
+
       <AppBar
         theme='dark'
         title='Personal Information'
@@ -138,7 +140,6 @@ const PersonalInfo = ({ navigation }) => {
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={lastName}
           />
-
         </View>
       </View>
 
@@ -157,6 +158,7 @@ const PersonalInfo = ({ navigation }) => {
         customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
         value={email}
       />
+
       <TextField2
         label="Phone"
         onChanged={setPhone}
