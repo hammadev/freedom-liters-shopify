@@ -13,11 +13,16 @@ import { GlobalStyle, Font, Window, Color } from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
 import { RadioButton } from 'react-native-paper';
 import { SkypeIndicator } from 'react-native-indicators';
-import { useRef } from 'react';
 import { useBackButton } from '../../../hooks';
 import Button from '../../../components/Button';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import TextField2 from '../../../components/TextFeild2';
+import { CUSTOMER_ADDRESS_CREATE, CUSTOMER_ADDRESS_UPDATE } from '../../../graphql/mutations/Auth';
+import { useMutation, useQuery } from '@apollo/client';
+import { FETCH_CUSTOMER_ADDRESS } from '../../../graphql/queries/Customer';
+import { useSelector } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
+import { handleCreateAddress } from '../../../apis/profile';
 
 const DeliverTo = ({
   item,
@@ -26,6 +31,7 @@ const DeliverTo = ({
   navigation,
   editIcon,
   showModal,
+  defaultAddressId
 }) => {
   const RadioClick = itemID => {
     setRadioState(itemID);
@@ -87,35 +93,42 @@ const DeliverTo = ({
           </View>
           <View style={{}}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ ...styles.Heading }}>{item.name}</Text>
+              <Text style={{ ...styles.Heading }}>{item.firstName + ' ' + item.lastName}</Text>
 
-              <View
-                style={{
-                  backgroundColor: Color.grey,
-                  marginLeft: 15,
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  width: 70,
-                }}>
-                <Text
+              {
+                defaultAddressId == item.id &&
+                <View
                   style={{
-                    color: Color.primary,
-                    fontSize: 10,
-                    paddingVertical: 5,
-                    fontFamily: Font.Urbanist_SemiBold,
-                    lineHeight: 12,
+                    backgroundColor: Color.grey,
+                    marginLeft: 15,
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    width: 70,
                   }}>
-                  {item.default}
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      color: Color.primary,
+                      fontSize: 10,
+                      paddingVertical: 5,
+                      fontFamily: Font.Urbanist_SemiBold,
+                      lineHeight: 12,
+                    }}>
+                    Default
+                  </Text>
+                </View>
+              }
+
             </View>
-            <Text style={{ ...styles.TextStyle, marginTop: 5 }} numberOfLines={2}>
-              {item.address}
+            <Text style={{ ...GlobalStyle.textStlye, marginVertical: 5 }}>{item.phone}</Text>
+
+            <Text style={{ ...styles.TextStyle, }} numberOfLines={2}>
+              {item.address1 + ', ' + item.address2 + ', '}
+              {item.zip + ', ' + item.city + ', ' + item.province}
             </Text>
           </View>
         </View>
         {editIcon ? (
-          <TouchableOpacity onPress={() => showModal()} >
+          <TouchableOpacity onPress={() => showModal(item)} >
             <Icon
               iconFamily={'MaterialCommunityIcons'}
               name="pencil-minus"
@@ -128,7 +141,7 @@ const DeliverTo = ({
             value="first"
             uncheckedColor={Color.primary}
             color={Color.primary}
-            status={radioState == item.id ? 'checked' : 'unchecked'}
+            status={defaultAddressId == item.id ? 'checked' : 'unchecked'}
             onPress={() => RadioClick(item.id)}
           />
         )}
@@ -138,20 +151,53 @@ const DeliverTo = ({
 };
 
 const AddressListing = ({ navigation }) => {
+
+  const { auth } = useSelector(state => ({ ...state }));
+
   const [radioCheck, setRadioCheck] = useState(1);
   const [editIcon, setEditIcon] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [visibeleAddress, setVisibeleAddress] = useState(false);
+  const [visibleAddress, setVisibleAddress] = useState(false);
 
   // address form states
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
   const [address1, setAddress1] = useState('');
-  const [province, setProvince] = useState('');
-  const [country, setCountry] = useState('');
+  const [address2, setAddress2] = useState('');
+  const [company, setCompany] = useState('');
   const [zip, setZip] = useState('');
+  const [province, setProvince] = useState('');
   const [city, setCity] = useState('');
+  const [activeAddressId, setActiveAddressId] = useState(null);
 
+  const [createCustomerAddress, { loading: createAddressLoading, error: createAddressError, data: createAddressData }] = useMutation(
+    CUSTOMER_ADDRESS_CREATE
+  );
+
+  const [updateCustomerAddress, { loading: updateAddressLoading, error: updateAddressError, data: updateAddressData }] = useMutation(
+    CUSTOMER_ADDRESS_UPDATE
+  );
+
+  const { loading, error, data, refetch } = useQuery(FETCH_CUSTOMER_ADDRESS, {
+    variables: {
+      customerAccessToken: auth.accessToken,
+    },
+  });
+
+  // console.log(data);
+
+  const resetState = () => {
+    setFirstName('');
+    setLastName('');
+    setPhone('');
+    setAddress1('');
+    setAddress2('');
+    setCompany('');
+    setZip('');
+    setProvince('');
+    setCity('');
+  }
 
   const onBackPress = () => {
     navigation.goBack();
@@ -160,21 +206,118 @@ const AddressListing = ({ navigation }) => {
 
   useBackButton(navigation, onBackPress);
 
-  const showModal = () => {
-    setVisibeleAddress(true);
+  const showModal = (item) => {
+    setFirstName(item.firstName);
+    setLastName(item.lastName);
+    setPhone(item.phone);
+    setAddress1(item.address1);
+    setAddress2(item.address2);
+    setCompany(item.company);
+    setZip(item.zip);
+    setProvince(item.province);
+    setCity(item.city);
+    setActiveAddressId(item.id);
+    setVisibleAddress(true);
   };
+
+  const handleSubmit = (isUpdate) => {
+
+    // console.log(isUpdate);
+
+    if (firstName === '') {
+      showMessage({
+        message: "First Name can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (lastName === '') {
+      showMessage({
+        message: "Last Name can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (phone === '') {
+      showMessage({
+        message: "Phone can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (address1 === '') {
+      showMessage({
+        message: "Address can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (province === '') {
+      showMessage({
+        message: "Province can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (city === '') {
+      showMessage({
+        message: "City can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    const variables = {
+      customerAccessToken: auth.accessToken,
+      address: {
+        firstName,
+        lastName,
+        phone,
+        address1,
+        address2,
+        country: 'United States',
+        company,
+        province,
+        zip,
+        city,
+      },
+    };
+
+    if (!isUpdate)
+      handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible);
+    else {
+      variables.addressId = activeAddressId;
+      // console.log(variables);
+      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress);
+    }
+  }
 
   return (
     <SafeAreaView style={{ backgroundColor: Color.light, flex: 1 }}>
+
       <StatusBar
         animated={true}
         backgroundColor={Color.light}
         barStyle={'dark-content'}
         showHideTransition={'fade'}
       />
+
       <View style={{ paddingHorizontal: Window.fixPadding * 2 }}>
         <AppBar theme="dark" header="solid" />
       </View>
+
+      {
+        loading &&
+        <View style={{ flex: 1, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)', width: Window.width, height: Window.height, zIndex: 1 }}>
+          <SkypeIndicator />
+        </View>
+      }
+
       <View
         style={{
           paddingHorizontal: Window.fixPadding * 2,
@@ -207,17 +350,21 @@ const AddressListing = ({ navigation }) => {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20 }}>
-        {Data.map((item, i) => (
-          <DeliverTo
-            item={item}
-            key={i}
-            radioState={radioCheck}
-            setRadioState={setRadioCheck}
-            navigation={navigation}
-            editIcon={editIcon}
-            showModal={showModal}
-          />
-        ))}
+        {
+          !loading && data &&
+          data.customer.addresses.edges.map((item, i) => (
+            <DeliverTo
+              item={item.node}
+              key={i}
+              radioState={radioCheck}
+              setRadioState={setRadioCheck}
+              navigation={navigation}
+              editIcon={editIcon}
+              showModal={showModal}
+              defaultAddressId={data.customer.defaultAddress.id}
+            />
+          ))
+        }
       </ScrollView>
 
       <View
@@ -228,31 +375,43 @@ const AddressListing = ({ navigation }) => {
         <Button
           text="Add New Address"
           theme="tertiary"
-          onPressFunc={() => setVisible()}
+          onPressFunc={() => {
+            resetState();
+            setVisible()
+          }
+          }
         />
       </View>
 
       <BottomPopupHOC
         title="Update Address"
-        visible={visibeleAddress}
-        setVisible={setVisibeleAddress}
+        visible={visibleAddress}
+        setVisible={setVisibleAddress}
         PopupBody={<AddressForm
           firstName={firstName}
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
+          phone={phone}
+          setPhone={setPhone}
           address1={address1}
           setAddress1={setAddress1}
+          address2={address2}
+          setAddress2={setAddress2}
           province={province}
           setProvince={setProvince}
-          country={country}
-          setCountry={setCountry}
+          company={company}
+          setCompany={setCompany}
           zip={zip}
           setZip={setZip}
           city={city}
           setCity={setCity}
+          handleSubmit={handleSubmit}
+          isUpdate={1}
+          loading={updateAddressLoading}
         />}
       />
+
       <BottomPopupHOC
         title="Add Address"
         visible={visible}
@@ -262,20 +421,26 @@ const AddressListing = ({ navigation }) => {
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
+          phone={phone}
+          setPhone={setPhone}
           address1={address1}
           setAddress1={setAddress1}
           province={province}
           setProvince={setProvince}
-          country={country}
-          setCountry={setCountry}
+          company={company}
+          setCompany={setCompany}
           zip={zip}
           setZip={setZip}
           city={city}
           setCity={setCity}
+          handleSubmit={handleSubmit}
+          loading={createAddressLoading}
         />}
       />
+
     </SafeAreaView>
   );
+
 };
 
 export default AddressListing;
@@ -302,31 +467,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const Data = [
-  {
-    name: 'Home',
-    address: '21833 Clyde Gallagher, PC 4662',
-    default: 'default',
-    id: 1,
-  },
-  {
-    name: 'Office',
-    address: '6993 Meadow Valley Terra, PC 36',
-    id: 2,
-  },
-  {
-    name: 'Collage',
-    address: '21833 Clyde Gallagher, PC 4662',
-    id: 3,
-  },
-  {
-    name: 'Apartment',
-    address: '6993 Meadow Valley Terra, PC 36',
-    default: 'default',
-    id: 4,
-  },
-];
-
 const AddressForm = ({
   firstName,
   setFirstName,
@@ -334,14 +474,21 @@ const AddressForm = ({
   setLastName,
   address1,
   setAddress1,
+  address2,
+  setAddress2,
   province,
   setProvince,
-  country,
-  setCountry,
+  company,
+  setCompany,
   zip,
   setZip,
   city,
   setCity,
+  phone,
+  setPhone,
+  handleSubmit,
+  isUpdate = 0,
+  loading
 }) => {
 
   return (
@@ -355,7 +502,7 @@ const AddressForm = ({
         }}>
         <View style={{ width: '48%' }}>
           <TextField2
-            label="first Name"
+            label="First Name"
             onChanged={setFirstName}
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={firstName}
@@ -363,7 +510,7 @@ const AddressForm = ({
         </View>
         <View style={{ width: '48%' }}>
           <TextField2
-            label="lastName"
+            label="Last Name"
             onChanged={setLastName}
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={lastName}
@@ -372,10 +519,24 @@ const AddressForm = ({
       </View>
 
       <TextField2
-        label="address1"
+        label="Phone"
+        onChanged={setPhone}
+        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+        value={phone}
+      />
+
+      <TextField2
+        label="Address1"
         onChanged={setAddress1}
         customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
         value={address1}
+      />
+
+      <TextField2
+        label="Address2"
+        onChanged={setAddress2}
+        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+        value={address2}
       />
       <View
         style={{
@@ -384,21 +545,24 @@ const AddressForm = ({
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <View style={{ width: '48%' }}>
-          <TextField2
-            label="province"
-            onChanged={setProvince}
-            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-            value={province}
-          />
-        </View>
 
         <View style={{ width: '48%' }}>
           <TextField2
-            label="country"
-            onChanged={setCountry}
+            label="Company"
+            onChanged={setCompany}
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-            value={country}
+            value={company}
+          />
+        </View>
+
+
+
+        <View style={{ width: '48%' }}>
+          <TextField2
+            label="Zip"
+            onChanged={setZip}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+            value={zip}
           />
         </View>
       </View>
@@ -411,15 +575,15 @@ const AddressForm = ({
         }}>
         <View style={{ width: '48%' }}>
           <TextField2
-            label="zip"
-            onChanged={setZip}
+            label="Province"
+            onChanged={setProvince}
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-            value={zip}
+            value={province}
           />
         </View>
         <View style={{ width: '48%' }}>
           <TextField2
-            label="city"
+            label="City"
             onChanged={setCity}
             customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
             value={city}
@@ -428,12 +592,12 @@ const AddressForm = ({
       </View>
       <View style={{ paddingTop: 10 }}>
         <Button
-          text="Add Address"
+          text={!isUpdate ? "Add Address" : "Update Address"}
           isIcon={false}
           theme="tertiary"
-          navLink="Profile"
-        // loading={loading}
-        // onPressFunc={handleSubmit}
+          // navLink="Profile"
+          loading={loading}
+          onPressFunc={() => handleSubmit(isUpdate)}
         />
       </View>
     </View>
