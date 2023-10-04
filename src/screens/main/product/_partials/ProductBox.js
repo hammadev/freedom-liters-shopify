@@ -1,6 +1,5 @@
 import {
   Image,
-  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,7 +10,6 @@ import Icon from '../../../../core/Icon';
 import { Color, Font, GlobalStyle, Window } from '../../../../globalStyle/Theme';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { Chip } from 'react-native-paper';
 
 const ChipComponent = ({ type }) => (
   type === 'featured' ?
@@ -36,7 +34,6 @@ const ChipComponent = ({ type }) => (
 const ProductBox = ({ item, customStyle, wishlist }) => {
 
   const navigation = useNavigation();
-
   const dispatch = useDispatch();
   return (
     <TouchableOpacity
@@ -60,10 +57,10 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
       <TouchableOpacity
         style={style.heartIconContainer}
         onPress={() => {
-          if (wishlist.addedItems.some(e => e.id === item.id)) {
+          if (wishlist.addedItems.some(e => e.node.id === item.node.id)) {
             dispatch({
               type: 'REMOVE_SINGLE_FROM_WISHLIST',
-              payload: item.id,
+              payload: item.node.id,
             });
           } else {
             dispatch({
@@ -77,12 +74,12 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
           iconFamily={'AntDesign'}
           style={{ fontSize: 18 }}
           color={
-            wishlist.addedItems.some(e => e.id === item.id)
+            wishlist.addedItems.some(e => e.node.id === item.node.id)
               ? '#F91212'
               : Color.secondary
           }
           name={
-            wishlist.addedItems.some(e => e.id === item.id)
+            wishlist.addedItems.some(e => e.node.id === item.node.id)
               ? 'heart'
               : 'hearto'
           }

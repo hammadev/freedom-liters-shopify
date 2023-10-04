@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
-  Image,
   ScrollView,
   StatusBar,
   Platform,
@@ -14,23 +12,20 @@ import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
-import {ShareIcon, CartSvg} from '../../../assets/svgs/SocialIconsSvgs';
+import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 import PopularProducts from './_partials/PopularProducts';
 import Heading from '../../../components/Heading';
 import RenderHtml from 'react-native-render-html';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import VariationsDetails from '../../../components/VariationsDetails';
 import {hasNotch} from 'react-native-device-info';
+import {StyleSheet} from 'react-native';
 
-const ProductDetail = ({route, navigation}) => {
+const ProductDetail = ({route}) => {
   const {product} = route.params;
   const [visible, setVisible] = useState(false);
 
-  const onShowPopup = () => {
-    setVisible(true);
-  };
-
-  return (
+    return (
     <SafeAreaView
       style={{backgroundColor: Color.white, flex: 1}}
       edges={{
@@ -42,33 +37,26 @@ const ProductDetail = ({route, navigation}) => {
       <StatusBar
         animated={true}
         backgroundColor={'transparent'}
-        barStyle={'dark-content'}
+        barStyle={'light-content'}
         showHideTransition={'fade'}
+        translucent
       />
       <ScrollView
+      showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
         style={{backgroundColor: Color.white, flex: 1}}>
         <ImageBackground
+                  resizeMode="cover"
+
           source={{uri: product.node.featuredImage?.url}}
           style={{
             width: '100%',
-            paddingVertical: Window.fixPadding,
-            borderBottomRightRadius: Window.fixPadding * 2,
-            borderBottomLeftRadius: Window.fixPadding * 2,
+            paddingVertical: Window.fixPadding * 2,
+            height: Window.height / 3,
           }}>
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0,0,0,0.2)',
-            }}
-          />
-
+          <View style={styles.overlay} />
           <AppBar
-            theme="dark"
+            theme="#fff"
             header="solid"
             customStyle={{paddingHorizontal: Window.fixPadding * 2}}
             right={
@@ -77,17 +65,10 @@ const ProductDetail = ({route, navigation}) => {
               </View>
             }
           />
-          <View
-            style={{alignItems: 'center', width: Window.width, height: 200}}>
-            {/* <Image
-              style={{}}
-             
-            /> */}
-          </View>
         </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
-          <View
+          {/* <View
             style={{
               paddingHorizontal: 20,
               flexDirection: 'row',
@@ -112,7 +93,7 @@ const ProductDetail = ({route, navigation}) => {
                 {product.rating_count + ' Reviews'})
               </Text>
             </View>
-          </View>
+          </View> */}
           <View
             style={{
               paddingHorizontal: 20,
@@ -196,6 +177,7 @@ const ProductDetail = ({route, navigation}) => {
             visible={visible}
             setVisible={setVisible}
             product={product}
+
             PopupBody={<VariationsDetails product={product} />}
           />
         </View>
@@ -209,7 +191,7 @@ const ProductDetail = ({route, navigation}) => {
           marginTop: Window.fixPadding * 1.6,
         }}>
         <Button
-          onPressFunc={onShowPopup}
+          onPressFunc={() => setVisible()}
           type="tertiary"
           theme="tertiary"
           text="Add to Cart"
@@ -220,3 +202,14 @@ const ProductDetail = ({route, navigation}) => {
 };
 
 export default ProductDetail;
+
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+});

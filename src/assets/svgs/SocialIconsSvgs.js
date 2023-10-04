@@ -154,52 +154,52 @@ export function ManuIcon({width, height}) {
   );
 }
 
-export function ShareIcon({width, height}) {
+export function ShareIcon() {
   return (
     <Svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M14.1333 5.1416C15.8 6.29993 16.95 8.1416 17.1833 10.2666"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M2.90833 10.3081C3.12499 8.19144 4.25833 6.34977 5.90833 5.18311"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M6.82495 17.4502C7.79162 17.9419 8.89162 18.2169 10.05 18.2169C11.1666 18.2169 12.2166 17.9669 13.1583 17.5085"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M10.0499 6.41654C11.3294 6.41654 12.3666 5.37933 12.3666 4.09987C12.3666 2.82041 11.3294 1.7832 10.0499 1.7832C8.77048 1.7832 7.73328 2.82041 7.73328 4.09987C7.73328 5.37933 8.77048 6.41654 10.0499 6.41654Z"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M4.02504 16.6001C5.3045 16.6001 6.34171 15.5629 6.34171 14.2835C6.34171 13.004 5.3045 11.9668 4.02504 11.9668C2.74558 11.9668 1.70837 13.004 1.70837 14.2835C1.70837 15.5629 2.74558 16.6001 4.02504 16.6001Z"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M15.975 16.6001C17.2545 16.6001 18.2917 15.5629 18.2917 14.2835C18.2917 13.004 17.2545 11.9668 15.975 11.9668C14.6955 11.9668 13.6583 13.004 13.6583 14.2835C13.6583 15.5629 14.6955 16.6001 15.975 16.6001Z"
-        stroke="#363B44"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
