@@ -60,3 +60,35 @@ export const getAddress = async (dispatch, user_id) => {
 
     };
 }
+
+export const handleCreateAddress = async (createCustomerAddress, variables, resetState, refetch, setVisible) => {
+    try {
+        const result = await createCustomerAddress({
+            variables
+        });
+
+        // Handle the result here (data, errors, etc.)
+        console.log('Create Address Result:', result);
+
+        if ((result.data.customerAddressCreate.customerUserErrors).length) {
+            showMessage({
+                message: result.data.customerAddressCreate.customerUserErrors[0].message,
+                type: 'danger',
+            });
+            return;
+        }
+        setVisible(false);
+        showMessage({
+            message: 'Address Added Successfully!',
+            type: 'success',
+        });
+
+        refetch();
+        resetState();
+
+        return;
+
+    } catch (error) {
+        console.error('Mutation error:', error);
+    }
+};
