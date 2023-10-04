@@ -23,12 +23,10 @@ const DeliverTo = ({
   item,
   setRadioState,
   radioState,
-  deleteHandler,
   navigation,
   editIcon,
   showModal,
 }) => {
-  const swipeRef = useRef(null);
   const RadioClick = itemID => {
     setRadioState(itemID);
   };
@@ -117,7 +115,7 @@ const DeliverTo = ({
           </View>
         </View>
         {editIcon ? (
-          <TouchableOpacity onPress={() => showModal()} style={{}}>
+          <TouchableOpacity onPress={() => showModal()} >
             <Icon
               iconFamily={'MaterialCommunityIcons'}
               name="pencil-minus"

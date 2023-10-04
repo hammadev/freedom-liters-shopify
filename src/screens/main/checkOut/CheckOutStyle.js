@@ -2,6 +2,12 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { GlobalStyle, Font, Color, Window } from '../../../globalStyle/Theme';
 const styles = StyleSheet.create({
+  text: {
+    fontFamily: Font.Gilroy_Medium,
+    fontSize: 20,
+    color: Color.tertiary,
+    textAlign: 'center',
+  },
   TextStyle: {
     fontSize: 15,
     color: Color.primary,

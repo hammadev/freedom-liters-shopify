@@ -1,34 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import AppBar from '../../../components/AppBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
 import Button from '../../../components/Button';
 import styles from './CheckOutStyle';
-import { DeleteSvg, EditSvg } from '../../../assets/svgs/CheckoutSvg';
-import { useDispatch, useSelector } from 'react-redux';
-import BottomPopupRemoveFromCart from '../../../components/BottomPopupRemoveFromCart';
-import EditPopup from '../../../components/EditPopup';
+import {DeleteSvg} from '../../../assets/svgs/CheckoutSvg';
+import {useDispatch, useSelector} from 'react-redux';
 import Heading from '../../../components/Heading';
-import { NoResult } from '../../../assets/svgs/NotificationSvg';
-import { placeOrder } from '../../../apis/order';
-import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
-import { RadioButton } from 'react-native-paper';
-import { fetchPaymentSheetParams } from '../../../apis/general_settings';
-import { showMessage } from 'react-native-flash-message';
-import SuccessPopup from '../../../components/SuccessPopup';
-import { Create_Cart } from '../../../graphql/mutations/Cart';
+import {NoResult} from '../../../assets/svgs/NotificationSvg';
+import {placeOrder} from '../../../apis/order';
+import {
+  initPaymentSheet,
+  presentPaymentSheet,
+} from '@stripe/stripe-react-native';
+import {RadioButton} from 'react-native-paper';
+import {fetchPaymentSheetParams} from '../../../apis/general_settings';
+import {showMessage} from 'react-native-flash-message';
+import BottomPopupHOC from '../../../components/BottomPopupHOC';
+import {useNavigation} from '@react-navigation/native';
 
-const OrderSummary = ({ subTotal }) => {
+const OrderSummary = ({subTotal}) => {
   return (
-    <View style={{ marginVertical: Window.fixPadding }}>
+    <View style={{marginVertical: Window.fixPadding}}>
       <View
         style={{
           justifyContent: 'space-between',
@@ -49,7 +44,12 @@ const OrderSummary = ({ subTotal }) => {
         <Text style={styles.TextStyle}> Shipping charges </Text>
         <Text style={styles.TotalStyle}>$8</Text>
       </View>
-      <View style={{ ...GlobalStyle.borderStyle, marginVertical: Window.fixPadding / 1.5, marginTop: Window.fixPadding / 2 }}></View>
+      <View
+        style={{
+          ...GlobalStyle.borderStyle,
+          marginVertical: Window.fixPadding / 1.5,
+          marginTop: Window.fixPadding / 2,
+        }}></View>
       <View
         style={{
           justifyContent: 'space-between',
@@ -66,14 +66,12 @@ const OrderSummary = ({ subTotal }) => {
 
 const ProductList = ({
   quantityFunc,
-  onShowPopup,
+  onOpenDeleteCart,
   item,
   setCartItemIndex,
   setCartItemAmount,
   setCartItemQuantity,
-  setPopupData,
   index,
-  onShowDeliveryPopup,
 }) => {
   const [qty, setQty] = useState(item.quantity);
   const [productDetails, setProductDetails] = useState({
@@ -195,7 +193,7 @@ const ProductList = ({
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               onPress={() => {
-                onShowPopup();
+                onOpenDeleteCart();
                 setCartItemIndex(index);
                 setCartItemAmount(productDetails.price);
                 setCartItemQuantity(qty);
@@ -216,34 +214,21 @@ const CheckOut = ({navigation}) => {
   const [cartData, setCartData] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [refresh, setRefresh] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [popupData, setPopupData] = useState(null);
-  const [popupRemoveFromCart, setPopupRemoveFromCart] = useState(false);
+  const [removeCart, setRemoveCart] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [successOrder, setSuccessOrder] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [getProduct, setGetProduct] = useState('');
 
-
-  // useEffect(() => {
-  //   console.log('vvvvv', cartCreate.cart);
-  // }, []);
-
-  
   const dispatch = useDispatch();
 
-  const onClosePopup = () => {
-    setPopupRemoveFromCart(false);
+  const closeDeleteCart = () => {
+    setRemoveCart(false);
   };
-  const onShowPopup = () => {
-    setPopupRemoveFromCart(true);
+  const onOpenDeleteCart = () => {
+    setRemoveCart(true);
   };
-
-  const onShowDeliveryPopup = () => {
-    setOpenPopup(true);
-  };
-  const onCloseDeliveryPopup = () => {
-    setOpenPopup(false);
+    const onOpenSuccessOrder = () => {
+    setSuccessOrder(true);
   };
 
   const {cart, address, generalSettings} = useSelector(state => ({...state}));
@@ -257,20 +242,20 @@ const CheckOut = ({navigation}) => {
       },
     });
     setRefresh(!refresh);
-    onClosePopup();
+    closeDeleteCart();
   };
-// cart.addedItems
+
   useEffect(() => {
     setCartData(cart.addedItems);
     setSubTotal(cart.total);
   }, [refresh]);
 
-  console.log('ddddd',cart.total)
+  console.log('ddddd', cart.total);
   const quantityFunc = (id, quantity, type, price, total, setQty) => {
     if (type === 2 && quantity === 1) {
       return;
     }
-    
+
     const tempArr = [...cart.addedItems];
     // const tempAmount = cart.total;
     const filtered = tempArr.filter(x => {
@@ -334,7 +319,7 @@ const CheckOut = ({navigation}) => {
       customer_note: '',
     };
 
-    placeOrder(formData, setLoading, setShowModal, dispatch, navigation);
+    placeOrder(formData, setLoading,setSuccessOrder, dispatch, navigation);
 
     console.log(formData);
   };
@@ -458,89 +443,6 @@ const CheckOut = ({navigation}) => {
       <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
         <AppBar theme="dark" title="Checkout" />
 
-        {/* <View
-          style={{
-            backgroundColor: Color.white,
-            padding: 15,
-            marginTop: Window.fixPadding,
-            borderRadius: 16,
-            shadowColor: 'rgba(0,0,0,0.1)',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: 4.84,
-            elevation: 22,
-          }}>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Text style={styles.DeliveryStyle}>Shipping To :</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('AddAddress')}>
-              <EditSvg />
-            </TouchableOpacity>
-          </View>
-          {address.shipping.address_1 ? (
-            <View style={{marginTop: Window.fixPadding}}>
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: 'rgba(8, 14, 30, 0.6)',
-                  fontFamily: Font.Gilroy_Medium,
-                  lineHeight: 16,
-                }}>
-                Name :{' '}
-                {address.shipping.first_name + ' ' + address.shipping.last_name}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: 'rgba(8, 14, 30, 0.6)',
-                  fontFamily: Font.Gilroy_Medium,
-                  lineHeight: 16,
-                }}>
-                Phone Number : {address.shipping.phone}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: 'rgba(8, 14, 30, 0.6)',
-                  fontFamily: Font.Gilroy_Medium,
-                  lineHeight: 16,
-                }}>
-                Address :{' '}
-                {address.shipping.address_1 +
-                  ' ' +
-                  address.shipping.address_2 +
-                  ', ' +
-                  address.shipping.city +
-                  ', ' +
-                  address.shipping.state +
-                  ', ' +
-                  address.shipping.country +
-                  ', ' +
-                  address.shipping.postcode}
-              </Text>
-            </View>
-          ) : (
-            <Text
-              style={{
-                ...GlobalStyle.textStlye,
-                color: 'red',
-                fontSize: 12,
-                marginTop: Window.fixPadding,
-              }}>
-              * Edit shipping address before proceeding to checkout
-            </Text>
-          )}
-        </View> */}
-
         <View
           style={{
             ...GlobalStyle.borderStyle,
@@ -555,12 +457,10 @@ const CheckOut = ({navigation}) => {
               item={item}
               quantityFunc={quantityFunc}
               index={index}
-              onShowPopup={onShowPopup}
-              setPopupData={setPopupData}
+              onOpenDeleteCart={onOpenDeleteCart}
               setCartItemIndex={setCartItemIndex}
               setCartItemAmount={setCartItemAmount}
               setCartItemQuantity={setCartItemQuantity}
-              onShowDeliveryPopup={onShowDeliveryPopup}
             />
             {index + 1 === cartData.length ? null : <View />}
           </>
@@ -596,7 +496,8 @@ const CheckOut = ({navigation}) => {
             marginVertical: Window.fixPadding,
           }}
         />
-        <View style={{marginTop: Window.fixPadding}}>
+        <View 
+        style={{marginTop: Window.fixPadding}}>
           <Heading name="Order Summery" />
           <OrderSummary quantity={1} subTotal={cart.total} item={cart} />
         </View>
@@ -611,27 +512,117 @@ const CheckOut = ({navigation}) => {
         />
       </View>
 
-      {popupData && (
-        <EditPopup
-          ref={target => (popupRef = target)}
-          onTouchOutside={onCloseDeliveryPopup}
-          openPopup={openPopup}
-          product={popupData}
-          // totalPrice={totalPrice}
-          onShowDeliveryPopup={onShowDeliveryPopup}
-        />
-      )}
 
-      <SuccessPopup visible={showModal} />
+       {/* Delete cart Popup  */}
 
-      <BottomPopupRemoveFromCart
-        ref={target => (popupRef = target)}
-        onTouchOutside={onClosePopup}
-        openPopup={popupRemoveFromCart}
-        removeItemFromCart={removeItemFromCart}
+      <BottomPopupHOC
+        title="Remove"
+        visible={removeCart}
+        setVisible={setRemoveCart}
+        onTouchOutside={setRemoveCart}
+        PopupBody={
+          <RemoveProduct
+            closeDeleteCart={closeDeleteCart}
+            removeItemFromCart={removeItemFromCart}
+          />
+        }
+      />
+
+        {/* Success order Popup */}
+      
+      <BottomPopupHOC
+        title="Order Placed"
+        visible={successOrder}
+        setVisible={setSuccessOrder}
+        PopupBody={<SuccessOrder />}
       />
     </SafeAreaView>
   );
 };
 
 export default CheckOut;
+
+const RemoveProduct = ({closeDeleteCart, removeItemFromCart}) => {
+  return (
+    <View style={{}}>
+      <Text style={styles.text}>
+        Are you sure you want to remove this product?
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginTop: 24,
+          alignItems: 'center',
+        }}>
+        <View style={{flex: 1}}>
+          <Button
+            text="Cancel"
+            isIcon={false}
+            theme="alternate"
+            onPressFunc={() => closeDeleteCart()}
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <Button
+            text="Yes, Remove"
+            isIcon={false}
+            theme="tertiary"
+            onPressFunc={removeItemFromCart}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const SuccessOrder = () => {
+  const navigation = useNavigation();
+  return (
+    <View>
+      <View
+        style={{
+          backgroundColor: 'rgb(235,251,253)',
+          height: 90,
+          width: 90,
+          borderRadius: 90 / 2,
+          alignSelf: 'center',
+          marginBottom: Window.fixPadding,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Icon
+          iconFamily={'Feather'}
+          name={'check-square'}
+          size={45}
+          color={Color.tertiary}
+        />
+      </View>
+      
+      <Text
+        style={{
+          ...GlobalStyle.textStlye,
+          textAlign: 'center',
+          marginBottom: Window.fixPadding * 2,
+        }}>
+        Thank you for choosing our products! {'\n'}Happy Shoping
+      </Text>
+
+      <Button
+        text="Continue Shopping"
+        theme="tertiary"
+        navLink="BottomTabScreen"
+      />
+      <TouchableOpacity onPress={() => navigation.replace('MyOrder')}>
+        <Text
+          style={{
+            ...GlobalStyle.textStlye,
+            textAlign: 'center',
+            marginTop: Window.fixPadding * 1.5,
+          }}>
+          Track Order
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};

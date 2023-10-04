@@ -1,48 +1,72 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
   ScrollView,
+  StatusBar,
+  Platform,
+  SafeAreaView,
+  ImageBackground,
 } from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
-import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
-import { ShareIcon, CartSvg } from '../../../assets/svgs/SocialIconsSvgs';
-import DileveryPopup from '../../../components/DileveryPopup';
-import ReadMoreText from '../../../components/ReadMoreText';
+import {ShareIcon, CartSvg} from '../../../assets/svgs/SocialIconsSvgs';
 import PopularProducts from './_partials/PopularProducts';
 import Heading from '../../../components/Heading';
 import RenderHtml from 'react-native-render-html';
+import BottomPopupHOC from '../../../components/BottomPopupHOC';
+import VariationsDetails from '../../../components/VariationsDetails';
+import {hasNotch} from 'react-native-device-info';
 
-const ProductDetail = ({ route, navigation }) => {
-
-  const { product } = route.params;
-
-  const [openPopup, setOpenPopup] = useState(false);
+const ProductDetail = ({route, navigation}) => {
+  const {product} = route.params;
+  const [visible, setVisible] = useState(false);
 
   const onShowPopup = () => {
-    setOpenPopup(true);
-  };
-  const onClosePopup = () => {
-    setOpenPopup(false);
+    setVisible(true);
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: Color.white, flex: 1}}>
+    <SafeAreaView
+      style={{backgroundColor: Color.white, flex: 1}}
+      edges={{
+        top: 'maximum',
+        right: 'maximum',
+        left: 'maximum',
+        bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
+      }}>
+      <StatusBar
+        animated={true}
+        backgroundColor={'transparent'}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <ScrollView
         contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
         style={{backgroundColor: Color.white, flex: 1}}>
-        <View
+        <ImageBackground
+          source={{uri: product.node.featuredImage?.url}}
           style={{
-            backgroundColor: '#F6F4F0',
+            width: '100%',
             paddingVertical: Window.fixPadding,
             borderBottomRightRadius: Window.fixPadding * 2,
             borderBottomLeftRadius: Window.fixPadding * 2,
           }}>
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.2)',
+            }}
+          />
+
           <AppBar
             theme="dark"
             header="solid"
@@ -55,12 +79,12 @@ const ProductDetail = ({ route, navigation }) => {
           />
           <View
             style={{alignItems: 'center', width: Window.width, height: 200}}>
-            <Image
-              style={{width: '100%', height: '100%', resizeMode: 'contain'}}
-              source={{uri: product.node.featuredImage?.url}}
-            />
+            {/* <Image
+              style={{}}
+             
+            /> */}
           </View>
-        </View>
+        </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
           <View
@@ -153,20 +177,6 @@ const ProductDetail = ({ route, navigation }) => {
               contentWidth={Window.width}
               source={{html: product.node.descriptionHtml}}
             />
-            {/* <ReadMoreText
-              text={product.node.descriptionHtml}
-              textStyle={{
-                lineHeight: 20,
-                fontFamily: Font.Gilroy_Regular,
-                fontSize: 13,
-                color: 'rgba(8, 14, 30, 0.4)',
-              }}
-              readMoreStyle={{
-                fontFamily: Font.Gilroy_Medium,
-                fontSize: 13,
-                color: Color.primary,
-              }}
-            /> */}
           </View>
 
           <View style={GlobalStyle.borderStyle} />
@@ -179,11 +189,14 @@ const ProductDetail = ({ route, navigation }) => {
             }}
           />
           <PopularProducts />
-          <DileveryPopup
-            ref={target => (popupRef = target)}
-            onTouchOutside={onClosePopup}
-            openPopup={openPopup}
+
+          {/* Select Vatiations Popup */}
+          <BottomPopupHOC
+            title="Select Varaition"
+            visible={visible}
+            setVisible={setVisible}
             product={product}
+            PopupBody={<VariationsDetails product={product} />}
           />
         </View>
       </ScrollView>
@@ -202,24 +215,8 @@ const ProductDetail = ({ route, navigation }) => {
           text="Add to Cart"
         />
       </View>
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 20,
-          backgroundColor: Color.white,
-          paddingVertical: 20,
-        }}>
-        <View style={{ width: '50%', paddingRight: 5 }}>
-
-        </View>
-        <View style={{ width: '50%', paddingLeft: 5 }}>
-          <Button onPressFunc={onShowPopup} theme="tertiary" text="Buy Now" />
-        </View>
-      </View> */}
     </SafeAreaView>
   );
 };
 
 export default ProductDetail;
-
-

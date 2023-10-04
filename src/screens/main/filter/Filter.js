@@ -133,12 +133,10 @@ const Filter = ({ }) => {
                     ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                 />
                 <FilterPopup
-                    ref={target => (popupRef = target)}
                     onTouchOutside={onFilterClosePopup}
                     openFilterPopup={openFilterPopup}
                 />
                 <SortPopup
-                    ref={target => (popupRef = target)}
                     onTouchOutside={onClosePopup}
                     openPopup={openPopup}
                 />

@@ -9,6 +9,7 @@ import React from 'react';
 import {GlobalStyle} from '../globalStyle/Theme';
 
 const BottomPopupHOC = ({PopupBody, title, visible, setVisible}) => {
+    
   const onTouchOutside = () => {
     setVisible(false);
   };
