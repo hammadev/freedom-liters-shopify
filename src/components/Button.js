@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Color, Font, Window } from '../globalStyle/Theme';
-import { SkypeIndicator } from 'react-native-indicators';
+import {Color, Font, Window} from '../globalStyle/Theme';
+import {SkypeIndicator} from 'react-native-indicators';
 
 const Button = props => {
   let navigation = useNavigation();
@@ -74,10 +74,12 @@ const Button = props => {
           ? props.onPressFunc
           : () => navigation.navigate(props.navLink)
       }
-      disabled={props.loading ? true : false}
-    >
+      disabled={props.loading ? true : false}>
       {props.loading ? (
-        <SkypeIndicator size={25} color={props.theme == 'white' ? Color.tertiary : Color.white} />
+        <SkypeIndicator
+          size={25}
+          color={props.theme == 'white' ? Color.tertiary : Color.white}
+        />
       ) : (
         <>
           {props.isIcon !== false ? (
@@ -91,7 +93,7 @@ const Button = props => {
               name={props.icon}
             />
           ) : null}
-          <Text style={{ ...Style.btnTextStyle, color: activeThemeTextColor() }}>
+          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>
             {props.text}
           </Text>
         </>

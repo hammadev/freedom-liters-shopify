@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client';
+import {gql} from '@apollo/client';
 
 export const CREATE_CUSTOMER_ACCOUNT = gql`
-mutation createCustomerAccount($input: CustomerCreateInput!) {
+  mutation createCustomerAccount($input: CustomerCreateInput!) {
     customerCreate(input: $input) {
       customer {
         id
@@ -36,8 +36,14 @@ export const CREATE_CUSTOMER_ACCESS_TOKEN = gql`
 `;
 
 export const CUSTOMER_UPDATE = gql`
-  mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
-    customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
+  mutation customerUpdate(
+    $customerAccessToken: String!
+    $customer: CustomerUpdateInput!
+  ) {
+    customerUpdate(
+      customerAccessToken: $customerAccessToken
+      customer: $customer
+    ) {
       customer {
         id
       }
@@ -85,24 +91,23 @@ export const CUSTOMER_ADDRESS_CREATE = gql`
 
 export const CUSTOMER_ADDRESS_UPDATE = gql`
   mutation UpdateAddress(
-    $addressId: ID!,
-    $customerAccessToken: String!, 
-    $address: MailingAddressInput!,
+    $addressId: ID!
+    $customerAccessToken: String!
+    $address: MailingAddressInput!
   ) {
-  customerAddressUpdate(
-    id: $addressId,
-    customerAccessToken: $customerAccessToken,
-    address: $address  
-  ) { 
-        customerAddress {
-            id
-        }
-        customerUserErrors {
-            code
-            field
-            message
-        }
-
+    customerAddressUpdate(
+      id: $addressId
+      customerAccessToken: $customerAccessToken
+      address: $address
+    ) {
+      customerAddress {
+        id
+      }
+      customerUserErrors {
+        code
+        field
+        message
+      }
     }
   }
 `;

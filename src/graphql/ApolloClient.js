@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import {ApolloClient, InMemoryCache, createHttpLink} from '@apollo/client';
 
 // Load the access token as per your instructions
 const storefrontAccessToken = 'bd2caaa540b72d513b488db6e9235c78';
@@ -10,25 +10,20 @@ const apiBaseUrl = `https://${shop}/api/${api_version}/graphql.json`;
 
 // Create an HTTP link
 const httpLink = createHttpLink({
-    uri: apiBaseUrl,
-    headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
-    },
+  uri: apiBaseUrl,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+  },
 });
 
 // Create the Apollo Client
 const client = new ApolloClient({
-    link: httpLink,
-    cache: new InMemoryCache(),
+  link: httpLink,
+  cache: new InMemoryCache(),
 });
 
 export default client;
-
-
-
-
-
 
 // const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
 

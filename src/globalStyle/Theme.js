@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 const Color = {
   primary: '#231F20',
   secondary: '#656872',
@@ -17,7 +17,8 @@ const Font = {
   Gilroy_Black: 'Gilroy-Black',
   Gilroy_ExtraBold: 'Gilroy-ExtraBold',
   Gilroy_Light: 'Gilroy-Light',
-  Automove_Personal: Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
+  Automove_Personal:
+    Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
 };
 
 const Window = {
@@ -36,7 +37,7 @@ const GlobalStyle = {
     fontSize: 16,
     fontFamily: Font.Automove_Personal,
     color: Color.primary,
-    lineHeight: Window.fixPadding * 2
+    lineHeight: Window.fixPadding * 2,
   },
   textStlye: {
     fontSize: 15,
@@ -61,4 +62,4 @@ const GlobalStyle = {
   },
 };
 
-export { Color, Font, Window, GlobalStyle };
+export {Color, Font, Window, GlobalStyle};

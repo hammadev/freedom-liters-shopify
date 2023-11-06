@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OnBoarding from '../screens/main/onBoarding/Onboarding';
 import PersonalInfo from '../screens/main/personalInfo/PersonalInfo';
 import AddressBook from '../screens/main/addressBook/AddressBook';

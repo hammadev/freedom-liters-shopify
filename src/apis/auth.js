@@ -1,4 +1,4 @@
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const variables = {
@@ -12,16 +12,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //   },
 // }
 
-export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
+export const handleCreateAccount = async (
+  createCustomerAccount,
+  variables,
+  navigation,
+) => {
   try {
     const result = await createCustomerAccount({
-      variables
+      variables,
     });
 
-    // console.log('result', result);
+    console.log('result', result);
 
     // Handle the result here (data, errors, etc.)
-    if ((result.data.customerCreate.customerUserErrors).length) {
+    if (result.data.customerCreate.customerUserErrors.length) {
       showMessage({
         message: result.data.customerCreate.customerUserErrors[0].message,
         type: 'danger',
@@ -30,7 +34,10 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
     }
 
     if (result.data.customerCreate.customer) {
-      await AsyncStorage.setItem('credentials', JSON.stringify(result.data.customerCreate.customer));
+      await AsyncStorage.setItem(
+        'credentials',
+        JSON.stringify(result.data.customerCreate.customer),
+      );
       showMessage({
         message: 'Account created successfully!',
         type: 'success',
@@ -48,7 +55,6 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
     });
     return;
   }
-
 };
 
 // const input = {
@@ -56,16 +62,23 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
 //   password: variables.input.password,
 // };
 
-export const handleCreateAccessToken = async (createCustomerAccessToken, input, dispatch, navigation) => {
+export const handleCreateAccessToken = async (
+  createCustomerAccessToken,
+  input,
+  dispatch,
+  navigation,
+) => {
   const tokenResult = await createCustomerAccessToken({
     variables: {
-      input
+      input,
     },
   });
 
-  if ((tokenResult.data.customerAccessTokenCreate.customerUserErrors).length) {
+  if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
     showMessage({
-      message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
+      message:
+        tokenResult.data.customerAccessTokenCreate.customerUserErrors[0]
+          .message,
       type: 'danger',
     });
     return;
@@ -88,22 +101,22 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
 
     navigation.replace('BottomTabScreen');
   }
+};
 
-
-}
-
-
-
-export const handleProfileUpdate = async (customerUpdate, variables, refetch) => {
+export const handleProfileUpdate = async (
+  customerUpdate,
+  variables,
+  refetch,
+) => {
   try {
     const result = await customerUpdate({
-      variables
+      variables,
     });
 
     // Handle the result here (data, errors, etc.)
     console.log('Update Phone Result:', result);
 
-    if ((result.data.customerUpdate.customerUserErrors).length) {
+    if (result.data.customerUpdate.customerUserErrors.length) {
       showMessage({
         message: result.data.customerUpdate.customerUserErrors[0].message,
         type: 'danger',
@@ -116,7 +129,6 @@ export const handleProfileUpdate = async (customerUpdate, variables, refetch) =>
       type: 'success',
     });
     return;
-
   } catch (error) {
     console.error('Mutation error:', error);
     showMessage({
@@ -127,17 +139,19 @@ export const handleProfileUpdate = async (customerUpdate, variables, refetch) =>
   }
 };
 
-
-export const handleForgetPassword = async (sendPasswordResetEmail, variables) => {
+export const handleForgetPassword = async (
+  sendPasswordResetEmail,
+  variables,
+) => {
   try {
     const result = await sendPasswordResetEmail({
-      variables
+      variables,
     });
 
     // Handle the result here (data, errors, etc.)
     console.log('Password Reset Email Result:', result);
     // console.log(result.data.customerRecover.customerUserErrors);
-    if ((result.data.customerRecover.customerUserErrors).length) {
+    if (result.data.customerRecover.customerUserErrors.length) {
       showMessage({
         message: result.data.customerRecover.customerUserErrors[0].message,
         type: 'danger',
@@ -151,8 +165,6 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
     });
 
     return;
-
-
   } catch (error) {
     console.error('Mutation error:', error);
   }
@@ -161,10 +173,15 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const logout = async (deleteAccessToken, variables, navigation, setVisible) => {
+export const logout = async (
+  deleteAccessToken,
+  variables,
+  navigation,
+  setVisible,
+) => {
   try {
     const result = await deleteAccessToken({
-      variables
+      variables,
     });
 
     // Handle the result here (data, errors, etc.)
@@ -184,6 +201,4 @@ export const logout = async (deleteAccessToken, variables, navigation, setVisibl
 
     return;
   }
-
 };
-

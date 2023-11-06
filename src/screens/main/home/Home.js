@@ -10,18 +10,19 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {CartSvg, ManuSvg} from '../../../assets/svgs/HomePage';
-import Icon from '../../../core/Icon';
+// import Icon from '../../../core/Icon';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAddress} from '../../../apis/profile';
+// import {getAddress} from '../../../apis/profile';
 import Heading from '../../../components/Heading';
 import ProductBox from '../product/_partials/ProductBox';
 import {hasNotch} from 'react-native-device-info';
+import Search from '../../../components/Search';
 
-const CatBox = ({item, navigation}) => {
+export const CatBox = ({item, navigation}) => {
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
@@ -81,10 +82,9 @@ const Home = ({navigation}) => {
     // getAddress(dispatch, auth.user.ID);
   }, []);
 
-
   return (
     <SafeAreaView
-     style={{backgroundColor: Color.light, flex: 1}}
+      style={{backgroundColor: Color.light, flex: 1}}
       edges={{
         top: 'maximum',
         right: 'maximum',
@@ -103,12 +103,12 @@ const Home = ({navigation}) => {
           resizeMode="cover"
           style={{
             height: Window.height / 3,
-            paddingHorizontal:20,
+            paddingHorizontal: 20,
             backgroundColor: Color.tertiary,
             paddingVertical: 35,
           }}
           source={require('../../../assets/images/products/homeBg.png')}>
-            <View style={styles.overlay}/>
+          <View style={styles.overlay} />
           <View
             style={{
               justifyContent: 'flex-end',
@@ -117,12 +117,19 @@ const Home = ({navigation}) => {
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity style={{paddingRight: 10}}>
-                <Icon
+                {/* <Icon
                   iconFamily={'Feather'}
                   size={20}
                   style={{}}
                   name={'search'}
                   color={Color.white}
+                /> */}
+                <Search
+                  setScrollActive={setScrollActive}
+                  focus={focus}
+                  setFocus={setFocus}
+                  expand={expand}
+                  setExpand={setExpand}
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('CheckOut')}>
@@ -229,6 +236,7 @@ const Home = ({navigation}) => {
           ].map((item, i) => (
             <>
               <Heading
+                key={i}
                 containerStyle={{marginTop: Window.fixPadding * 1.5}}
                 name={item.heading}
                 showMore={true}
@@ -246,7 +254,6 @@ const Home = ({navigation}) => {
                       ? product.all.edges
                       : product
                   }
-               
                   renderItem={({item, index}) => (
                     <ProductBox
                       wishlist={wishlist}
@@ -273,7 +280,7 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-overlay: {
+  overlay: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -281,4 +288,4 @@ overlay: {
     bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
-})
+});
