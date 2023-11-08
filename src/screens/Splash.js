@@ -1,17 +1,26 @@
-import { ImageBackground, SafeAreaView, StatusBar, View, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Color, GlobalStyle, Window } from '../globalStyle/Theme';
-import { LogoSvg } from '../assets/svgs/Logo';
-import { SkypeIndicator } from 'react-native-indicators';
+import {
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  View,
+  Text,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
+import {LogoSvg} from '../assets/svgs/Logo';
+import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { signinReq } from '../apis/auth';
-import { useDispatch } from 'react-redux';
-import { gql, useQuery } from '@apollo/client';
-import { GET_LATEST_PRODUCT } from '../graphql/queries/Product';
-import { GET_COLLECTION } from '../graphql/queries/Collection';
-import { Checkout } from '../graphql/queries/Orders';
+import {signinReq} from '../apis/auth';
+import {useDispatch} from 'react-redux';
+import {gql, useQuery} from '@apollo/client';
+import {
+  GET_FEATURED_PRODUCT,
+  GET_LATEST_PRODUCT,
+} from '../graphql/queries/Product';
+import {GET_COLLECTION} from '../graphql/queries/Collection';
+import {Checkout} from '../graphql/queries/Orders';
 
-const Splash = ({ navigation }) => {
+const Splash = ({navigation}) => {
   // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -21,6 +30,13 @@ const Splash = ({ navigation }) => {
     error: latestProductError,
     data: latestProductData,
   } = useQuery(GET_LATEST_PRODUCT);
+
+  // Fetch the first query (GET_LATEST_PRODUCT)
+  const {
+    loading: FeaturedProductLoading,
+    error: FeaturedProductError,
+    data: FeaturedProductData,
+  } = useQuery(GET_FEATURED_PRODUCT);
 
   // Fetch the second query (GET_COLLECTION)
   const {
@@ -45,11 +61,22 @@ const Splash = ({ navigation }) => {
   // } = useQuery(Checkout);
 
   useEffect(() => {
-    if (!latestProductLoading && !latestProductError && latestProductData) {
+    // if (!latestProductLoading && !latestProductError && latestProductData) {
+    //   // Dispatch an action to store the latest product data in Redux
+    //   dispatch({
+    //     type: 'PRODUCTS',
+    //     Payload: latestProductData.products,
+    //   });
+    // }
+    if (
+      !FeaturedProductLoading &&
+      !FeaturedProductError &&
+      FeaturedProductData
+    ) {
       // Dispatch an action to store the latest product data in Redux
       dispatch({
-        type: 'PRODUCTS',
-        Payload: latestProductData.products,
+        type: 'FEATURED_PRODUCTS',
+        Payload: FeaturedProductData.products,
       });
     }
 
@@ -67,11 +94,10 @@ const Splash = ({ navigation }) => {
       // navigation.replace('SignIn');
       checkUser();
     }
-
   }, [
-    latestProductLoading,
-    latestProductError,
-    latestProductData,
+    FeaturedProductLoading,
+    FeaturedProductError,
+    FeaturedProductData,
     collectionLoading,
     collectionError,
     collectionData,
@@ -90,7 +116,6 @@ const Splash = ({ navigation }) => {
           });
 
           navigation.replace('BottomTabScreen');
-
         } else {
           try {
             const check = await AsyncStorage.getItem('onBoardCompleted');
@@ -124,7 +149,7 @@ const Splash = ({ navigation }) => {
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{

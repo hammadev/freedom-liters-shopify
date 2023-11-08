@@ -1,19 +1,13 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useState } from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
 import Icon from '../../../../core/Icon';
-import { Color, Font, GlobalStyle, Window } from '../../../../globalStyle/Theme';
-import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 
-const ChipComponent = ({ type }) => (
-  type === 'featured' ?
-    <View style={{ ...style.heartIconContainer, top: 50 }}>
+const ChipComponent = ({type}) =>
+  type === 'featured' ? (
+    <View style={{...style.heartIconContainer, top: 50}}>
       <Icon
         iconFamily={'Fontisto'}
         name={'star'}
@@ -21,39 +15,40 @@ const ChipComponent = ({ type }) => (
         color={Color.yellow}
       />
     </View>
-    :
-    type === 'onsale' ?
-      <View style={{ width: 'auto', borderColor: Color.primary, position: 'absolute', zIndex: 2, borderRadius: 8, borderWidth: 1, paddingHorizontal: Window.fixPadding, backgroundColor: Color.white, left: 10, top: 10 }}>
-        <Text style={{ ...GlobalStyle.textStlye, fontSize: 11 }}>
-          On Sale
-        </Text>
-      </View>
-      : null
-);
+  ) : type === 'onsale' ? (
+    <View
+      style={{
+        width: 'auto',
+        borderColor: Color.primary,
+        position: 'absolute',
+        zIndex: 2,
+        borderRadius: 8,
+        borderWidth: 1,
+        paddingHorizontal: Window.fixPadding,
+        backgroundColor: Color.white,
+        left: 10,
+        top: 10,
+      }}>
+      <Text style={{...GlobalStyle.textStlye, fontSize: 11}}>On Sale</Text>
+    </View>
+  ) : null;
 
-const ProductBox = ({ item, customStyle, wishlist }) => {
-
+const ProductBox = ({item, customStyle, wishlist}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
     <TouchableOpacity
       style={{
         ...customStyle,
-        ...style.container
+        ...style.container,
       }}
       onPress={() =>
         navigation.navigate('ProductDetail', {
           product: item,
         })
       }>
-      {
-        item.featured &&
-        <ChipComponent type='featured' />
-      }
-      {
-        item.on_sale &&
-        <ChipComponent type='onsale' />
-      }
+      {item.featured && <ChipComponent type="featured" />}
+      {item.on_sale && <ChipComponent type="onsale" />}
       <TouchableOpacity
         style={style.heartIconContainer}
         onPress={() => {
@@ -68,11 +63,10 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
               payload: item,
             });
           }
-        }}
-      >
+        }}>
         <Icon
           iconFamily={'AntDesign'}
-          style={{ fontSize: 18 }}
+          style={{fontSize: 18}}
           color={
             wishlist.addedItems.some(e => e.node.id === item.node.id)
               ? '#F91212'
@@ -87,7 +81,7 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
       </TouchableOpacity>
       <Image
         style={style.proImg}
-        source={{ uri: item.node.featuredImage?.url }}
+        source={{uri: item.node.featuredImage?.url}}
       />
       <Text
         numberOfLines={1}
@@ -106,7 +100,10 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
           fontFamily: Font.Gilroy_Medium,
           fontSize: 11,
         }}>
-        FROM {item.node.priceRange.minVariantPrice.amount + ' ' + item.node.priceRange.minVariantPrice.currencyCode}
+        FROM{' '}
+        {item.node.priceRange.minVariantPrice.amount +
+          ' ' +
+          item.node.priceRange.minVariantPrice.currencyCode}
       </Text>
       <View
         style={{
@@ -129,7 +126,7 @@ const ProductBox = ({ item, customStyle, wishlist }) => {
             }
           })} */}
         </Text>
-        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+        <View style={{alignItems: 'center', flexDirection: 'row'}}>
           {/* <View style={{ paddingRight: 5 }}>
             <Icon
               iconFamily={'Fontisto'}
@@ -169,7 +166,7 @@ const style = StyleSheet.create({
     elevation: 5,
     borderRadius: 16,
     position: 'relative',
-    padding: Window.fixPadding * 1.5
+    padding: Window.fixPadding * 1.5,
   },
   proImg: {
     width: '100%',
@@ -177,10 +174,12 @@ const style = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   heartIconContainer: {
-    position: 'absolute', right: 10, top: 12, zIndex: 2,
+    position: 'absolute',
+    right: 10,
+    top: 12,
+    zIndex: 2,
     backgroundColor: Color.white,
     width: 32,
     height: 32,
@@ -195,5 +194,5 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  }
-})
+  },
+});

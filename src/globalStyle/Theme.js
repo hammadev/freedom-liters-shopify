@@ -60,6 +60,11 @@ const GlobalStyle = {
     height: 0.7,
     borderColor: 'rgba(0,0,0,0.1)',
   },
+  showMoreStyle: {
+    fontSize: 14,
+    fontFamily: Font.Gilroy_Medium,
+    color: 'rgba(8, 14, 30, 0.4)',
+  },
 };
 
 export {Color, Font, Window, GlobalStyle};
