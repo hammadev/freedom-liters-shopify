@@ -19,6 +19,7 @@ import Coupons from '../screens/main/coupons/Coupons';
 import ProductListing from '../screens/main/product/ProductListing';
 import ForgetPassword from '../screens/auth/forgetPassword/ForgetPassword';
 import AddressListing from '../screens/main/address/AddressListing';
+import Cart from '../screens/main/cart/Cart';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ const StackNavigator = () => {
         animation: 'slide_from_right',
       }}>
       <Stack.Screen name="Splash" component={Splash} />
+      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="OnBoarding" component={OnBoarding} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />

@@ -43,23 +43,6 @@ const Button = props => {
         return Color.primary;
     }
   };
-  //   const activeThemeBc = () => {
-  //    switch (props.theme) {
-  //   case 'secondary':
-  //     return Color.light;
-  //   case 'primary':
-  //     return Color.light;
-  //   case 'tertiary':
-  //     return Color.light;
-  //   case 'white':
-  //     return Color.tertiary;
-  //   case 'light':
-  //     return Color.tertiary;
-  //   default:
-  //     return Color.primary;
-  // }
-
-  //   }
 
   return (
     <TouchableOpacity
@@ -69,33 +52,22 @@ const Button = props => {
         borderWidth: props.type === 'primary' ? 1 : 0,
         borderColor: props.type === 'primary' ? Color.white : 'transparent',
       }}
-      onPress={
-        props.onPressFunc
-          ? props.onPressFunc
-          : () => navigation.navigate(props.navLink)
-      }
+      onPress={props.onPressFunc ? props.onPressFunc : () => navigation.navigate(props.navLink)}
       disabled={props.loading ? true : false}>
       {props.loading ? (
-        <SkypeIndicator
-          size={25}
-          color={props.theme == 'white' ? Color.tertiary : Color.white}
-        />
+        <SkypeIndicator size={25} color={props.theme == 'white' ? Color.tertiary : Color.white} />
       ) : (
         <>
           {props.isIcon !== false ? (
             <Ionicons
               style={{
-                ...(props.iconSet === 'secondary'
-                  ? Style.iconSetStyle
-                  : Style.IconStyle),
+                ...(props.iconSet === 'secondary' ? Style.iconSetStyle : Style.IconStyle),
                 color: activeThemeTextColor(),
               }}
               name={props.icon}
             />
           ) : null}
-          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>
-            {props.text}
-          </Text>
+          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>{props.text}</Text>
         </>
       )}
     </TouchableOpacity>

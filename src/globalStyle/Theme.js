@@ -17,8 +17,7 @@ const Font = {
   Gilroy_Black: 'Gilroy-Black',
   Gilroy_ExtraBold: 'Gilroy-ExtraBold',
   Gilroy_Light: 'Gilroy-Light',
-  Automove_Personal:
-    Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
+  Automove_Personal: Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
 };
 
 const Window = {

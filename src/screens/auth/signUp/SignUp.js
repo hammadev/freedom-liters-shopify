@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,23 +8,17 @@ import {
   ImageBackground,
 } from 'react-native';
 import Button from '../../../components/Button';
-import TextField from '../../../components/TextFeild';
-import { GlobalStyle, Color, Window, Font } from '../../../globalStyle/Theme';
+import {GlobalStyle, Color, Window, Font} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
 import AppBar from '../../../components/AppBar';
-import Data from '../AuthData';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { signupReq } from '../../../apis/auth';
-import { showMessage } from 'react-native-flash-message';
-import { useDispatch } from 'react-redux';
-import Icon from '../../../core/Icon';
-import { ChevronSvg, EmailSvg, UsernameSvg } from '../../../assets/svgs/AuthSvg';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {showMessage} from 'react-native-flash-message';
 import TextField2 from '../../../components/TextFeild2';
-import { CREATE_CUSTOMER_ACCOUNT } from '../../../graphql/mutations/Auth';
-import { useMutation } from '@apollo/client';
-import { handleCreateAccount } from '../../../apis/auth';
+import {CREATE_CUSTOMER_ACCOUNT} from '../../../graphql/mutations/Auth';
+import {useMutation} from '@apollo/client';
+import {handleCreateAccount} from '../../../apis/auth';
 
-const SignUp = ({ navigation }) => {
+const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
   const [hideConfirmPass, setHideConfirmPass] = useState(true);
 
@@ -35,12 +29,11 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createCustomerAccount, { loading, error, data }] = useMutation(
-    CREATE_CUSTOMER_ACCOUNT
+  const [createCustomerAccount, {loading, error, data}] = useMutation(
+    CREATE_CUSTOMER_ACCOUNT,
   );
 
   const handleSubmit = () => {
-
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (firstName === '') {
@@ -76,7 +69,7 @@ const SignUp = ({ navigation }) => {
 
     if (password < 5) {
       showMessage({
-        message: "Password must contain at least 5 characters",
+        message: 'Password must contain at least 5 characters',
         type: 'danger',
       });
       return;
@@ -107,53 +100,54 @@ const SignUp = ({ navigation }) => {
         password: password,
         phone: phone,
       },
-    }
+    };
     // console.log(variables);
     // return;
 
     handleCreateAccount(createCustomerAccount, variables, navigation);
-
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ImageBackground
-        style={{ flex: 1, backgroundColor: '#021851' }}>
+    <SafeAreaView style={{flex: 1}}>
+      <ImageBackground style={{flex: 1, backgroundColor: '#021851'}}>
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1, paddingVertical: Window.fixPadding, paddingHorizontal: Window.fixPadding * 2 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingVertical: Window.fixPadding,
+            paddingHorizontal: Window.fixPadding * 2,
+          }}
           keyboardShouldPersistTaps={'handled'}>
-          <AppBar
-          />
+          <AppBar />
           <Text
             style={{
               ...GlobalStyle.heading,
               color: Color.white,
-              marginVertical: Window.fixPadding * 2
+              marginVertical: Window.fixPadding * 2,
             }}>
             Sign Up
           </Text>
 
-          <View style={{ marginTop: Window.fixPadding }}>
+          <View style={{marginTop: Window.fixPadding}}>
             <TextField2
               icon={'account-circle-outline'}
               label="First Name"
               isDark={true}
               onChanged={setFirstName}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
             <TextField2
               icon={'account-circle-outline'}
               label="Last Name"
               isDark={true}
               onChanged={setLastName}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
             <TextField2
               icon={'email-outline'}
               label="Email"
               isDark={true}
               onChanged={setEmail}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
 
             <TextField2
@@ -161,7 +155,7 @@ const SignUp = ({ navigation }) => {
               label="Phone"
               isDark={true}
               onChanged={setPhone}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
 
             <TextField2
@@ -172,7 +166,7 @@ const SignUp = ({ navigation }) => {
               passwordFeild={true}
               setHidePass={setHidePass}
               hidePass={hidePass}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
             <TextField2
               icon={'lock-outline'}
@@ -182,12 +176,11 @@ const SignUp = ({ navigation }) => {
               passwordFeild={true}
               setHidePass={setHideConfirmPass}
               hidePass={hideConfirmPass}
-              customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
-
           </View>
 
-          <View style={{ marginVertical: Window.fixPadding * 2 }}>
+          <View style={{marginVertical: Window.fixPadding * 2}}>
             <Button
               loading={loading}
               text="Register"
@@ -199,7 +192,7 @@ const SignUp = ({ navigation }) => {
             />
           </View>
           <View style={styles.BottonContainer}>
-            <Text style={{ ...styles.TextStyle, color: Color.white }}>
+            <Text style={{...styles.TextStyle, color: Color.white}}>
               Don’t have an account?
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>

@@ -10,15 +10,10 @@ import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
 import {LogoSvg} from '../assets/svgs/Logo';
 import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {signinReq} from '../apis/auth';
 import {useDispatch} from 'react-redux';
 import {gql, useQuery} from '@apollo/client';
-import {
-  GET_FEATURED_PRODUCT,
-  GET_LATEST_PRODUCT,
-} from '../graphql/queries/Product';
+import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
 import {GET_COLLECTION} from '../graphql/queries/Collection';
-import {Checkout} from '../graphql/queries/Orders';
 
 const Splash = ({navigation}) => {
   // const [loading, setLoading] = useState(true);
@@ -30,13 +25,6 @@ const Splash = ({navigation}) => {
     error: latestProductError,
     data: latestProductData,
   } = useQuery(GET_LATEST_PRODUCT);
-
-  // Fetch the first query (GET_LATEST_PRODUCT)
-  const {
-    loading: FeaturedProductLoading,
-    error: FeaturedProductError,
-    data: FeaturedProductData,
-  } = useQuery(GET_FEATURED_PRODUCT);
 
   // Fetch the second query (GET_COLLECTION)
   const {
@@ -61,22 +49,11 @@ const Splash = ({navigation}) => {
   // } = useQuery(Checkout);
 
   useEffect(() => {
-    // if (!latestProductLoading && !latestProductError && latestProductData) {
-    //   // Dispatch an action to store the latest product data in Redux
-    //   dispatch({
-    //     type: 'PRODUCTS',
-    //     Payload: latestProductData.products,
-    //   });
-    // }
-    if (
-      !FeaturedProductLoading &&
-      !FeaturedProductError &&
-      FeaturedProductData
-    ) {
+    if (!latestProductLoading && !latestProductError && latestProductData) {
       // Dispatch an action to store the latest product data in Redux
       dispatch({
-        type: 'FEATURED_PRODUCTS',
-        Payload: FeaturedProductData.products,
+        type: 'PRODUCTS',
+        Payload: latestProductData.products,
       });
     }
 
@@ -95,9 +72,9 @@ const Splash = ({navigation}) => {
       checkUser();
     }
   }, [
-    FeaturedProductLoading,
-    FeaturedProductError,
-    FeaturedProductData,
+    latestProductLoading,
+    latestProductError,
+    latestProductData,
     collectionLoading,
     collectionError,
     collectionData,

@@ -1,12 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableOpacity, StatusBar} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -18,15 +11,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import Heading from '../../../components/Heading';
 import {NoResult} from '../../../assets/svgs/NotificationSvg';
 import {placeOrder} from '../../../apis/order';
-import {
-  initPaymentSheet,
-  presentPaymentSheet,
-} from '@stripe/stripe-react-native';
+import {initPaymentSheet, presentPaymentSheet} from '@stripe/stripe-react-native';
 import {RadioButton} from 'react-native-paper';
 import {fetchPaymentSheetParams} from '../../../apis/general_settings';
 import {showMessage} from 'react-native-flash-message';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {useNavigation} from '@react-navigation/native';
+import {useQuery} from '@apollo/client';
+import {GET_CART_DATA} from '../../../graphql/queries/Checkout';
+import {CART_ID} from '../../../graphql/ApolloClient';
 
 const OrderSummary = ({subTotal}) => {
   return (
@@ -85,9 +78,7 @@ const ProductList = ({
     image: item.selectedVariation
       ? item.selectedVariation.image
       : item.productDetails.node.featuredImage?.url,
-    price: item.selectedVariation
-      ? item.selectedVariation.sale_price
-      : item.productDetails.price,
+    price: item.selectedVariation ? item.selectedVariation.sale_price : item.productDetails.price,
   });
 
   return (
@@ -168,14 +159,10 @@ const ProductList = ({
                   item.productId,
                   qty,
                   2,
-                  item.productDetails.node.priceRange.minVariantPrice.amount,
+                  item.productDetails.node.priceRange.minVariantPrice.amount
                 );
               }}>
-              <Icon
-                iconFamily={'AntDesign'}
-                name={'minus'}
-                style={styles.MinusStyle}
-              />
+              <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
             </TouchableOpacity>
             <Text style={styles.NumStyle}>{qty}</Text>
             <TouchableOpacity
@@ -186,7 +173,7 @@ const ProductList = ({
                   item.productId,
                   qty,
                   1,
-                  item.productDetails.node.priceRange.minVariantPrice.amount,
+                  item.productDetails.node.priceRange.minVariantPrice.amount
                 );
               }}>
               <Icon
@@ -251,13 +238,23 @@ const CheckOut = ({navigation}) => {
     setRefresh(!refresh);
     closeDeleteCart();
   };
-
+  const {
+    data: cartItem,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery(GET_CART_DATA, {
+    variables: {
+      cartId: CART_ID,
+    },
+  });
+  console.log('Cart Data', cartItem);
+  const {data, loading: CartLoader, error} = useQuery(GET_CART_DATA);
   useEffect(() => {
     setCartData(cart.addedItems);
     setSubTotal(cart.total);
   }, [refresh]);
 
-  console.log('ddddd', cart.total);
+  // console.log('ddddd', cart.total);
   const quantityFunc = (id, quantity, type, price, total, setQty) => {
     if (type === 2 && quantity === 1) {
       return;
@@ -303,9 +300,7 @@ const CheckOut = ({navigation}) => {
     });
     console.log('sssss', productDetails);
 
-    const filteredGateways = generalSettings.gateways.find(
-      gateway => gateway.id === paymentMethod,
-    );
+    const filteredGateways = generalSettings.gateways.find(gateway => gateway.id === paymentMethod);
     console.log(filteredGateways);
 
     const formData = {
@@ -365,11 +360,10 @@ const CheckOut = ({navigation}) => {
   // }, []);
 
   const initializePaymentSheet = async () => {
-    const {paymentIntent, ephemeralKey, customer, publishableKey} =
-      await fetchPaymentSheetParams({
-        order_amount: cart.total + 8,
-        user_id: address.id,
-      });
+    const {paymentIntent, ephemeralKey, customer, publishableKey} = await fetchPaymentSheetParams({
+      order_amount: cart.total + 8,
+      user_id: address.id,
+    });
     // console.log(await fetchPaymentSheetParams({ order_amount: cart.total, user_id: address.id }))
 
     const {error} = await initPaymentSheet({
@@ -557,9 +551,7 @@ export default CheckOut;
 const RemoveProduct = ({closeDeleteCart, removeItemFromCart}) => {
   return (
     <View style={{}}>
-      <Text style={styles.text}>
-        Are you sure you want to remove this product?
-      </Text>
+      <Text style={styles.text}>Are you sure you want to remove this product?</Text>
       <View
         style={{
           flexDirection: 'row',
@@ -603,12 +595,7 @@ const SuccessOrder = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Icon
-          iconFamily={'Feather'}
-          name={'check-square'}
-          size={45}
-          color={Color.tertiary}
-        />
+        <Icon iconFamily={'Feather'} name={'check-square'} size={45} color={Color.tertiary} />
       </View>
 
       <Text
@@ -620,11 +607,7 @@ const SuccessOrder = () => {
         Thank you for choosing our products! {'\n'}Happy Shoping
       </Text>
 
-      <Button
-        text="Continue Shopping"
-        theme="tertiary"
-        navLink="BottomTabScreen"
-      />
+      <Button text="Continue Shopping" theme="tertiary" navLink="BottomTabScreen" />
       <TouchableOpacity onPress={() => navigation.replace('MyOrder')}>
         <Text
           style={{
