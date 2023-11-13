@@ -8,11 +8,10 @@ import styles from './CartStyle';
 import Icon from '../../../core/Icon';
 import Button from '../../../components/Button';
 import {useQuery} from '@apollo/client';
-import {GET_CART_DATA} from '../../../graphql/queries/Checkout';
-import {CART_ID} from '../../../graphql/ApolloClient';
 import StatusBar from '../../../components/AppStatusBar';
-import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import ActivityLoader from '../../../components/ActivityLoader';
+import {GET_CART} from '../../../graphql/queries/Cart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PaymentDetails = ({}) => {
   return (
@@ -57,14 +56,26 @@ const Cart = () => {
   const [adultCount, setAdultCount] = useState(0);
   const [childCount, setChildCount] = useState(0);
   const [CartData, setCartData] = useState([]);
+  const [CartId, setCartId] = useState();
 
-  const {loading, error, data} = useQuery(GET_CART_DATA, {
+  const {
+    data: cartItem,
+    loading,
+    error,
+  } = useQuery(GET_CART, {
     variables: {
-      cartId: CART_ID,
+      cartId: CartId,
     },
   });
-  console.log(data);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    Get_Cart_Id();
+  }, []);
+  const Get_Cart_Id = async () => {
+    let CART_ID = await AsyncStorage.getItem('CART_ID');
+    setCartId(CART_ID);
+    console.log(CART_ID);
+  };
+  console.log(cartItem.cart.lines.edges);
 
   const decrementValue = name => {
     if (name == 'child') {
@@ -90,10 +101,7 @@ const Cart = () => {
         <SafeAreaView style={{flex: 1}}>
           <StatusBar />
           <View style={{backgroundColor: Color.white, paddingHorizontal: 20, paddingVertical: 20}}>
-            <AppBar
-              center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>}
-              right={<Text></Text>}
-            />
+            <AppBar center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>} right={<Text></Text>} />
           </View>
           {/* ITEM VIEW */}
           <ScrollView style={{backgroundColor: Color.white}} contentContainerStyle={{flexGrow: 1}}>
@@ -120,78 +128,80 @@ const Cart = () => {
                 </Text>{' '}
               </Text>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 24,
-                paddingHorizontal: 20,
-              }}>
+            {cartItem ? (
               <View
                 style={{
-                  shadowColor: 'rgba(0,0,0,0.4)',
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                  elevation: 22,
-                  backgroundColor: '#FAF7F1',
-                  borderRadius: 16,
-                  width: 88,
-                  height: 88,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 24,
+                  paddingHorizontal: 20,
                 }}>
-                <Image source={require('../../../assets/images/products/flannelShirt.png')} />
-              </View>
-              <View style={{paddingLeft: 15, width: Window.width / 1.47}}>
-                <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
-                  <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: Color.primary}}>Mens Flannel Shirt</Text>
-                  <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: '#363B44'}}>$120.00</Text>
-                </View>
                 <View
                   style={{
-                    marginTop: 4,
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
+                    shadowColor: 'rgba(0,0,0,0.4)',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 22,
+                    backgroundColor: '#FAF7F1',
+                    borderRadius: 16,
+                    width: 88,
+                    height: 88,
                   }}>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      fontFamily: Font.Gilroy_Medium,
-                      color: 'rgba(8, 14, 30, 0.6)',
-                    }}>
-                    Men’s T-Shirt
-                  </Text>
-                  <Text style={{fontSize: 11, fontFamily: Font.Gilroy_Medium, color: Color.tertiary}}>$200.00</Text>
+                  <Image source={require('../../../assets/images/products/flannelShirt.png')} />
                 </View>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    marginTop: 18.25,
-                  }}>
+                <View style={{paddingLeft: 15, width: Window.width / 1.47}}>
+                  <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
+                    <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: Color.primary}}>Mens Flannel Shirt</Text>
+                    <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: '#363B44'}}>$120.00</Text>
+                  </View>
                   <View
                     style={{
+                      marginTop: 4,
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
                     }}>
-                    <TouchableOpacity style={styles.cartStyle} onPress={() => decrementValue('adult')}>
-                      <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
-                    </TouchableOpacity>
-                    <Text style={styles.NumStyle}>{adultCount}</Text>
-                    <TouchableOpacity
-                      style={{...styles.cartStyle, borderColor: Color.tertiary}}
-                      onPress={() => incrementValue('adult')}>
-                      <Icon iconFamily={'Ionicons'} name={'md-add'} color={Color.light} style={styles.AddStyle} />
-                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontFamily: Font.Gilroy_Medium,
+                        color: 'rgba(8, 14, 30, 0.6)',
+                      }}>
+                      Men’s T-Shirt
+                    </Text>
+                    <Text style={{fontSize: 11, fontFamily: Font.Gilroy_Medium, color: Color.tertiary}}>$200.00</Text>
                   </View>
-                  <DeleteSvg />
+                  <View
+                    style={{
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      marginTop: 18.25,
+                    }}>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      <TouchableOpacity style={styles.cartStyle} onPress={() => decrementValue('adult')}>
+                        <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
+                      </TouchableOpacity>
+                      <Text style={styles.NumStyle}>{adultCount}</Text>
+                      <TouchableOpacity style={{...styles.cartStyle, borderColor: Color.tertiary}} onPress={() => incrementValue('adult')}>
+                        <Icon iconFamily={'Ionicons'} name={'md-add'} color={Color.light} style={styles.AddStyle} />
+                      </TouchableOpacity>
+                    </View>
+                    <DeleteSvg />
+                  </View>
                 </View>
               </View>
-            </View>
+            ) : (
+              <ActivityLoader />
+            )}
           </ScrollView>
           {/* BOTTOM VIEW */}
           <View

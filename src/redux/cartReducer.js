@@ -39,9 +39,7 @@ export const cartReducer = (state = initState, action) => {
     case 'REMOVE_ITEM':
       return {
         ...state,
-        addedItems: state.addedItems.filter(
-          (item, i) => i !== action.payload.index,
-        ),
+        addedItems: state.addedItems.filter((item, i) => i !== action.payload.index),
         total: state.total - action.payload.amount,
       };
 

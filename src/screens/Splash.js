@@ -1,37 +1,22 @@
-import {
-  ImageBackground,
-  SafeAreaView,
-  StatusBar,
-  View,
-  Text,
-} from 'react-native';
+import {ImageBackground, SafeAreaView, StatusBar, View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
 import {LogoSvg} from '../assets/svgs/Logo';
 import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {gql, useQuery} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
 import {GET_COLLECTION} from '../graphql/queries/Collection';
 
 const Splash = ({navigation}) => {
-  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   // Fetch the first query (GET_LATEST_PRODUCT)
-  const {
-    loading: latestProductLoading,
-    error: latestProductError,
-    data: latestProductData,
-  } = useQuery(GET_LATEST_PRODUCT);
+  const {loading: latestProductLoading, error: latestProductError, data: latestProductData} = useQuery(GET_LATEST_PRODUCT);
 
   // Fetch the second query (GET_COLLECTION)
-  const {
-    loading: collectionLoading,
-    error: collectionError,
-    data: collectionData,
-  } = useQuery(GET_COLLECTION);
+  const {loading: collectionLoading, error: collectionError, data: collectionData} = useQuery(GET_COLLECTION);
   // const { loading, error, data } = useQuery(GET_COLLECTION);
 
   // Fetch the third query (GET_COLLECTION)
@@ -125,9 +110,7 @@ const Splash = ({navigation}) => {
     // <SafeAreaView style={{...GlobalStyle.Container}}>
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
-      <ImageBackground
-        style={{flex: 1}}
-        source={require('../assets/images/pics/splash_bg.png')}>
+      <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{
             flex: 0.9,
@@ -144,9 +127,7 @@ const Splash = ({navigation}) => {
               left: 0,
               right: 0,
             }}>
-            {collectionLoading && (
-              <SkypeIndicator size={50} color={Color.white} />
-            )}
+            {collectionLoading && <SkypeIndicator size={50} color={Color.white} />}
           </View>
         </View>
       </ImageBackground>

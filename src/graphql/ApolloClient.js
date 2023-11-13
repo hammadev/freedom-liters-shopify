@@ -4,7 +4,6 @@ import {ApolloClient, InMemoryCache, createHttpLink} from '@apollo/client';
 const storefrontAccessToken = 'bd2caaa540b72d513b488db6e9235c78';
 const api_version = '2023-01';
 const shop = 'irongearclothing.myshopify.com';
-export const CART_ID = 'gid://shopify/Cart/c1-2b679811e1ee2f50168b4edb7a811992';
 // Shopify Storefront API URL
 const apiBaseUrl = `https://${shop}/api/${api_version}/graphql.json`;
 

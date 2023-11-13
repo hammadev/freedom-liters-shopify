@@ -17,9 +17,6 @@ import {fetchPaymentSheetParams} from '../../../apis/general_settings';
 import {showMessage} from 'react-native-flash-message';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {useNavigation} from '@react-navigation/native';
-import {useQuery} from '@apollo/client';
-import {GET_CART_DATA} from '../../../graphql/queries/Checkout';
-import {CART_ID} from '../../../graphql/ApolloClient';
 
 const OrderSummary = ({subTotal}) => {
   return (
@@ -64,20 +61,10 @@ const OrderSummary = ({subTotal}) => {
   );
 };
 
-const ProductList = ({
-  quantityFunc,
-  onOpenDeleteCart,
-  item,
-  setCartItemIndex,
-  setCartItemAmount,
-  setCartItemQuantity,
-  index,
-}) => {
+const ProductList = ({quantityFunc, onOpenDeleteCart, item, setCartItemIndex, setCartItemAmount, setCartItemQuantity, index}) => {
   const [qty, setQty] = useState(item.quantity);
   const [productDetails, setProductDetails] = useState({
-    image: item.selectedVariation
-      ? item.selectedVariation.image
-      : item.productDetails.node.featuredImage?.url,
+    image: item.selectedVariation ? item.selectedVariation.image : item.productDetails.node.featuredImage?.url,
     price: item.selectedVariation ? item.selectedVariation.sale_price : item.productDetails.price,
   });
 
@@ -101,10 +88,7 @@ const ProductList = ({
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Image
-          style={{width: '80%', height: '80%', borderRadius: Window.fixPadding}}
-          source={{uri: productDetails.url}}
-        />
+        <Image style={{width: '80%', height: '80%', borderRadius: Window.fixPadding}} source={{uri: productDetails.url}} />
       </View>
       <View style={{paddingLeft: 15, width: '80%'}}>
         <View
@@ -155,12 +139,7 @@ const ProductList = ({
               onPress={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
-                quantityFunc(
-                  item.productId,
-                  qty,
-                  2,
-                  item.productDetails.node.priceRange.minVariantPrice.amount
-                );
+                quantityFunc(item.productId, qty, 2, item.productDetails.node.priceRange.minVariantPrice.amount);
               }}>
               <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
             </TouchableOpacity>
@@ -169,19 +148,9 @@ const ProductList = ({
               style={styles.cartStyle}
               onPress={() => {
                 setQty(qty + 1);
-                quantityFunc(
-                  item.productId,
-                  qty,
-                  1,
-                  item.productDetails.node.priceRange.minVariantPrice.amount
-                );
+                quantityFunc(item.productId, qty, 1, item.productDetails.node.priceRange.minVariantPrice.amount);
               }}>
-              <Icon
-                iconFamily={'Ionicons'}
-                name={'md-add'}
-                color={Color.light}
-                style={styles.AddStyle}
-              />
+              <Icon iconFamily={'Ionicons'} name={'md-add'} color={Color.light} style={styles.AddStyle} />
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -238,17 +207,7 @@ const CheckOut = ({navigation}) => {
     setRefresh(!refresh);
     closeDeleteCart();
   };
-  const {
-    data: cartItem,
-    loading: cartLoading,
-    error: cartError,
-  } = useQuery(GET_CART_DATA, {
-    variables: {
-      cartId: CART_ID,
-    },
-  });
-  console.log('Cart Data', cartItem);
-  const {data, loading: CartLoader, error} = useQuery(GET_CART_DATA);
+
   useEffect(() => {
     setCartData(cart.addedItems);
     setSubTotal(cart.total);
@@ -404,11 +363,7 @@ const CheckOut = ({navigation}) => {
   if (cartData.length <= 0) {
     return (
       <>
-        <AppBar
-          theme="dark"
-          title="Checkout"
-          customStyle={{paddingHorizontal: Window.fixPadding * 2}}
-        />
+        <AppBar theme="dark" title="Checkout" customStyle={{paddingHorizontal: Window.fixPadding * 2}} />
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <NoResult />
           <View>
@@ -428,12 +383,7 @@ const CheckOut = ({navigation}) => {
               }}>
               You do not have any item in your cart
             </Text>
-            <Button
-              text="Explore products"
-              isIcon={false}
-              theme="tertiary"
-              navLink="ProductListing"
-            />
+            <Button text="Explore products" isIcon={false} theme="tertiary" navLink="ProductListing" />
           </View>
         </View>
       </>
@@ -441,13 +391,7 @@ const CheckOut = ({navigation}) => {
   }
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar
-        animated={true}
-        backgroundColor={Color.light}
-        barStyle={'dark-content'}
-        showHideTransition={'fade'}
-        translucent
-      />
+      <StatusBar animated={true} backgroundColor={Color.light} barStyle={'dark-content'} showHideTransition={'fade'} translucent />
       <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
         <AppBar theme="dark" title="Checkout" />
 
@@ -526,22 +470,10 @@ const CheckOut = ({navigation}) => {
         visible={removeCart}
         setVisible={setRemoveCart}
         onTouchOutside={setRemoveCart}
-        PopupBody={
-          <RemoveProduct
-            closeDeleteCart={closeDeleteCart}
-            removeItemFromCart={removeItemFromCart}
-          />
-        }
+        PopupBody={<RemoveProduct closeDeleteCart={closeDeleteCart} removeItemFromCart={removeItemFromCart} />}
       />
-
       {/* Success order Popup */}
-
-      <BottomPopupHOC
-        title="Order Placed"
-        visible={successOrder}
-        setVisible={setSuccessOrder}
-        PopupBody={<SuccessOrder />}
-      />
+      <BottomPopupHOC title="Order Placed" visible={successOrder} setVisible={setSuccessOrder} PopupBody={<SuccessOrder />} />
     </SafeAreaView>
   );
 };
@@ -560,20 +492,10 @@ const RemoveProduct = ({closeDeleteCart, removeItemFromCart}) => {
           alignItems: 'center',
         }}>
         <View style={{flex: 1}}>
-          <Button
-            text="Cancel"
-            isIcon={false}
-            theme="alternate"
-            onPressFunc={() => closeDeleteCart()}
-          />
+          <Button text="Cancel" isIcon={false} theme="alternate" onPressFunc={() => closeDeleteCart()} />
         </View>
         <View style={{flex: 1}}>
-          <Button
-            text="Yes, Remove"
-            isIcon={false}
-            theme="tertiary"
-            onPressFunc={removeItemFromCart}
-          />
+          <Button text="Yes, Remove" isIcon={false} theme="tertiary" onPressFunc={removeItemFromCart} />
         </View>
       </View>
     </View>
