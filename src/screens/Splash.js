@@ -6,63 +6,61 @@ import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
+import {GET_FEATURED_PRODUCT, GET_LATEST_PRODUCT, GET_ONSALE_PRODUCT} from '../graphql/queries/Product';
 import {GET_COLLECTION} from '../graphql/queries/Collection';
 
 const Splash = ({navigation}) => {
   const dispatch = useDispatch();
 
+  // Fetch the second query (GET_FEATURED_PRODUCT)
+  const {loading: featuredProductLoading, error: featuredProductError, data: featuredProductData} = useQuery(GET_FEATURED_PRODUCT);
+
   // Fetch the first query (GET_LATEST_PRODUCT)
   const {loading: latestProductLoading, error: latestProductError, data: latestProductData} = useQuery(GET_LATEST_PRODUCT);
 
-  // Fetch the second query (GET_COLLECTION)
-  const {loading: collectionLoading, error: collectionError, data: collectionData} = useQuery(GET_COLLECTION);
-  // const { loading, error, data } = useQuery(GET_COLLECTION);
-
-  // Fetch the third query (GET_COLLECTION)
-
-  // const {
-  //   loading: checkoutLoading,
-  //   error: checkoutError,
-  //   data: checkoutData,
-  // } = useQuery(Checkout);
-
-  // const {
-  //   loading: checkoutLoading,
-  //   error: checkoutError,
-  //   data: checkoutData,
-  // } = useQuery(Checkout);
+  // Fetch the first query (GET_LATEST_PRODUCT)
+  const {loading: onsaleProductLoading, error: onsaleProductError, data: onsaleProductData} = useQuery(GET_ONSALE_PRODUCT);
 
   useEffect(() => {
+    if (!featuredProductLoading && !featuredProductError && featuredProductData) {
+      // Dispatch an action to store the latest product data in Redux
+      dispatch({
+        type: 'FEATURED_PRODUCTS',
+        Payload: featuredProductData.products,
+      });
+    }
     if (!latestProductLoading && !latestProductError && latestProductData) {
       // Dispatch an action to store the latest product data in Redux
       dispatch({
-        type: 'PRODUCTS',
+        type: 'LATEST_PRODUCTS',
         Payload: latestProductData.products,
       });
     }
 
-    if (!collectionLoading && !collectionError && collectionData) {
+    if (!onsaleProductLoading && !onsaleProductError && onsaleProductData) {
       // Dispatch an action to store the collection data in Redux
       dispatch({
-        type: 'CATEGORIES',
-        Payload: collectionData.collections,
+        type: 'ONSALE_PRODUCTS',
+        Payload: onsaleProductData.products,
       });
     }
 
     // Check if both sets of data have been successfully fetched and stored in Redux
-    if (!latestProductLoading && !collectionLoading) {
+    if (!latestProductLoading && !onsaleProductLoading && !featuredProductLoading) {
       // Navigate to the next screen (replace 'BottomTabScreen' with your desired destination)
       // navigation.replace('SignIn');
       checkUser();
     }
   }, [
+    featuredProductLoading,
+    featuredProductError,
+    featuredProductData,
     latestProductLoading,
     latestProductError,
     latestProductData,
-    collectionLoading,
-    collectionError,
-    collectionData,
+    onsaleProductLoading,
+    onsaleProductError,
+    onsaleProductData,
     dispatch,
     navigation,
   ]);
@@ -76,7 +74,6 @@ const Splash = ({navigation}) => {
             type: 'LOGGED_IN_USER',
             payload: parsedRes,
           });
-
           navigation.replace('BottomTabScreen');
         } else {
           try {
@@ -95,19 +92,7 @@ const Splash = ({navigation}) => {
     return () => clearTimeout(timer);
   };
 
-  // if (loading) {
-  //   return <Text>Loading...</Text>;
-  // }
-
-  // if (error) {
-  //   return <Text>Error: {error.message}</Text>;
-  // }
-
-  // const product  s = data.products.edges;
-  // console.log('Fetched products:', data.products.edges);
-
   return (
-    // <SafeAreaView style={{...GlobalStyle.Container}}>
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
@@ -121,18 +106,15 @@ const Splash = ({navigation}) => {
           <View
             style={{
               position: 'absolute',
-              // justifyContent: 'center',
               top: Window.height / 1.8,
-              // alignItems: 'center',
               left: 0,
               right: 0,
             }}>
-            {collectionLoading && <SkypeIndicator size={50} color={Color.white} />}
+            {featuredProductLoading && latestProductLoading && onsaleProductLoading && <SkypeIndicator size={50} color={Color.white} />}
           </View>
         </View>
       </ImageBackground>
     </>
-    // </SafeAreaView>
   );
 };
 

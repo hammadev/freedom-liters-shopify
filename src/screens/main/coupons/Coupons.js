@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 
 import AppBar from '../../../components/AppBar';
-import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { CouponsnApply } from '../../../apis/coupons';
-import { useEffect } from 'react';
-import { CouponIcon } from '../../../assets/svgs/NotificationSvg';
-const OfferVoucher = ({ item }) => {
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {CouponsnApply} from '../../../apis/coupons';
+import {useEffect} from 'react';
+import {CouponIcon} from '../../../assets/svgs/NotificationSvg';
+const OfferVoucher = ({item}) => {
   return (
     <View
       style={{
@@ -18,15 +18,10 @@ const OfferVoucher = ({ item }) => {
         borderRadius: 16,
         alignItems: 'center',
       }}>
-      <Image
-        style={{ width: 104, height: 92 }}
-        source={require('../../../assets/images/products/cashBack.png')}
-      />
+      <Image style={{width: 104, height: 92}} source={require('../../../assets/images/products/cashBack.png')} />
 
-      <View style={{ paddingLeft: 16, flex: 1 }}>
-        <Text style={{ ...GlobalStyle.heading, fontFamily: Font.Gilroy_Bold }}>
-          {item.code}
-        </Text>
+      <View style={{paddingLeft: 16, flex: 1}}>
+        <Text style={{...GlobalStyle.heading, fontFamily: Font.Gilroy_Bold}}>{item.code}</Text>
         <View
           style={{
             justifyContent: 'space-between',
@@ -75,7 +70,7 @@ const OfferVoucher = ({ item }) => {
   );
 };
 
-const Coupons = ({ }) => {
+const Coupons = ({}) => {
   const [couponsData, setCouponsData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -87,22 +82,17 @@ const Coupons = ({ }) => {
   console.log('couponsData', couponsData);
   return (
     <SafeAreaView style={GlobalStyle.Container}>
-      <AppBar
-        theme='dark'
-        title='Vouchers'
-      />
+      <AppBar theme="dark" title="Vouchers" />
 
-      <View style={{ marginTop: 40 }}>
+      <View style={{marginTop: 40}}>
         {couponsData.length > 0 ? (
-          couponsData.map((item, index) => (
-            <OfferVoucher item={item} key={index} />
-          ))
+          couponsData.map((item, index) => <OfferVoucher item={item} key={index} />)
         ) : (
-          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '20%' }}>
+          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: '20%'}}>
             <CouponIcon />
             <View>
-              <Text style={{ ...GlobalStyle.heading, textAlign: 'center', marginTop: Window.fixPadding * 2 }}>Empty</Text>
-              <Text style={{ ...GlobalStyle.textStlye, textAlign: 'center' }}>Coupon not found</Text>
+              <Text style={{...GlobalStyle.heading, textAlign: 'center', marginTop: Window.fixPadding * 2}}>Empty</Text>
+              <Text style={{...GlobalStyle.textStlye, textAlign: 'center'}}>Coupon not found</Text>
             </View>
           </View>
         )}

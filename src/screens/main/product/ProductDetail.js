@@ -140,16 +140,15 @@ const ProductDetail = ({route, navigation}) => {
               {product.node.priceRange.minVariantPrice.amount + ' ' + product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
-          {product.sku && product.categories && (
+          {product.latest && (
             <View
               style={{
                 paddingHorizontal: Window.fixPadding * 2,
                 marginTop: Window.fixPadding,
               }}>
-              <Text style={{...GlobalStyle.textStlye}}>SKU: {product.sku}</Text>
               <Text style={{...GlobalStyle.textStlye}}>
                 Category:{' '}
-                {product?.categories.map((item, i) => {
+                {product?.latest.map((item, i) => {
                   if (i === 0) {
                     return item.name;
                   } else {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -13,18 +13,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import {CartSvg, ManuSvg} from '../../../assets/svgs/HomePage';
-import Icon from '../../../core/Icon';
-import {useDispatch, useSelector} from 'react-redux';
-// import {getAddress} from '../../../apis/profile';
-import Heading from '../../../components/Heading';
+import {CartSvg} from '../../../assets/svgs/HomePage';
+import {useSelector} from 'react-redux';
 import {hasNotch} from 'react-native-device-info';
-import {
-  GET_FEATURED_PRODUCT,
-  GET_LATEST_PRODUCT,
-  GET_ONSALE_PRODUCT,
-} from '../../../graphql/queries/Product';
-import {useQuery} from '@apollo/client';
 import SearchBar from '../../../components/SearchBar';
 import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
@@ -32,7 +23,6 @@ import ProductBox from '../product/_partials/ProductBox';
 export const CatBox = ({item, navigation}) => {
   return (
     <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
-      {/* item.image ? { uri: item.image } : require('../../../assets/images/products/review.png') */}
       <ImageBackground
         style={{
           width: Window.width / 2.3,
@@ -40,9 +30,7 @@ export const CatBox = ({item, navigation}) => {
           flexDirection: 'row',
           marginTop: Window.fixPadding,
         }}
-        source={
-          item.image ? {uri: item.image.src} : require('../../../assets/images/products/review.png')
-        }>
+        source={item.image ? {uri: item.image.src} : require('../../../assets/images/products/review.png')}>
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
@@ -81,27 +69,7 @@ const Home = ({navigation}) => {
   }));
 
   const [SearchVale, setSearcValue] = useState(false);
-  // Fetch Latest Product
-  const {
-    loading: loadinglatestProduct,
-    error: errorLatestProduct,
-    data: dataLatestProduct,
-  } = useQuery(GET_LATEST_PRODUCT);
-  // // Fetch Featured Product
-  // const {
-  //   loading: loadingFeaturedProduct,
-  //   error: errorFeaturedProduct,
-  //   data: dataFeaturedProduct,
-  // } = useQuery(GET_FEATURED_PRODUCT);
-  // // Fetch On Sale Product
-  // const {
-  //   loading: loadingOnSaleProduct,
-  //   error: errorOnSaleProduct,
-  //   data: dataOnSaleProduct,
-  // } = useQuery(GET_ONSALE_PRODUCT);
-  useEffect(() => {
-    // getAddress(dispatch, auth.user.ID);
-  }, []);
+
   const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
   subscription.remove();
   const onBackPress = () => {
@@ -120,13 +88,7 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusBar
-        animated={true}
-        showHideTransition={'fade'}
-        barStyle={'light-content'}
-        backgroundColor={'transparent'}
-        translucent
-      />
+      <StatusBar animated={true} showHideTransition={'fade'} barStyle={'light-content'} backgroundColor={'transparent'} translucent />
       {SearchVale ? (
         <SearchBar />
       ) : (
@@ -134,10 +96,11 @@ const Home = ({navigation}) => {
           <ImageBackground
             resizeMode="cover"
             style={{
-              height: Window.height / 3,
+              height: Window.height / 2.9,
               paddingHorizontal: 20,
               backgroundColor: Color.tertiary,
               paddingVertical: 35,
+              justifyContent: 'center',
             }}
             source={require('../../../assets/images/products/homeBg.png')}>
             <View style={styles.overlay} />
@@ -148,16 +111,10 @@ const Home = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TouchableOpacity style={{paddingRight: 10}} onPress={() => Goto_Search()}>
-                  <Icon
-                    iconFamily={'Feather'}
-                    size={20}
-                    style={{}}
-                    name={'search'}
-                    color={Color.white}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+                {/* <TouchableOpacity style={{paddingRight: 10}} onPress={() => Goto_Search()}>
+                  <Icon iconFamily={'Feather'} size={20} style={{}} name={'search'} color={Color.white} />
+                </TouchableOpacity> */}
+                <TouchableOpacity style={{marginTop: 20}} onPress={() => navigation.navigate('Cart')}>
                   <View
                     style={{
                       zIndex: 1,
@@ -235,86 +192,86 @@ const Home = ({navigation}) => {
               padding: Window.fixPadding * 2,
               marginVertical: Window.fixPadding,
             }}>
-            {categories && categories[0] && (
-              <FlatList
-                contentContainerStyle={{marginBottom: Window.fixPadding}}
-                columnWrapperStyle={{justifyContent: 'space-between'}}
-                data={categories[0].slice(0, 4)}
-                renderItem={({item}) => <CatBox item={item} navigation={navigation} />}
-                numColumns={2}
-                ListHeaderComponent={() => (
-                  <Heading name={'Category'} showMore={true} showMoreLink={'Category'} />
-                )}
-              />
-            )}
-
-            {[
-              {heading: 'Featured', data_key: 'featured'},
-              {heading: 'Latest', data_key: 'latest'},
-              {heading: 'On Sale', data_key: 'onsale'},
-            ].map((item, i) => (
-              <>
-                <Heading
-                  key={i}
-                  containerStyle={{marginTop: Window.fixPadding * 1.5}}
-                  name={item.heading}
-                  showMore={true}
-                  showMoreLink={'ProductListing'}
+            {/* Featured Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Featured</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.featured.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
                 />
-                {product && (
-                  <FlatList
-                    contentContainerStyle={{marginVertical: Window.fixPadding}}
-                    data={product.all.edges}
-                    renderItem={({item, index}) => (
-                      <ProductBox
-                        wishlist={wishlist}
-                        customStyle={{width: Window.width / 2.3}}
-                        item={item}
-                        index={index}
-                      />
-                    )}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={() => (
-                      <View style={{width: Window.fixPadding * 1.5}}></View>
-                    )}
-                  />
-                )}
-              </>
-            ))}
-            {/* Featured Product
-          <View
-            style={{
-              marginTop: Window.fixPadding * 1.5,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={GlobalStyle.heading}>Featured</Text>
-            <TouchableOpacity>
-              <Text style={GlobalStyle.showMoreStyle}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            {product && (
-              <FlatList
-                contentContainerStyle={{marginVertical: Window.fixPadding}}
-                data={product.all.edges}
-                renderItem={({item, index}) => (
-                  <ProductBox
-                    wishlist={wishlist}
-                    customStyle={{width: Window.width / 2.3}}
-                    item={item}
-                    index={index}
-                  />
-                )}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => (
-                  <View style={{width: Window.fixPadding * 1.5}}></View>
-                )}
-              />
-            )}
-          </View> */}
+              )}
+            </View>
+
+            {/* Latest Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Latest</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.latest.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+                />
+              )}
+            </View>
+
+            {/* On Sale Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>ONSALE</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.onsale.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+                />
+              )}
+            </View>
           </View>
         </ScrollView>
       )}

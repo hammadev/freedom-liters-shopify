@@ -13,11 +13,20 @@ export const GET_CART = gql`
           node {
             id
             quantity
-
+            cost {
+              totalAmount {
+                amount
+              }
+              amountPerQuantity {
+                amount
+              }
+            }
             merchandise {
               ... on ProductVariant {
                 id
-
+                product {
+                  title
+                }
                 image {
                   url
                 }

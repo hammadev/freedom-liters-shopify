@@ -7,6 +7,7 @@ const Color = {
   white: '#fff',
   yellow: '#FBBC05',
   black: '#000',
+  gryLight: '#A0A0A0',
 };
 
 const Font = {

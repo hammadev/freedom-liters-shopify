@@ -8,12 +8,7 @@ import {useDispatch} from 'react-redux';
 const ChipComponent = ({type}) =>
   type === 'featured' ? (
     <View style={{...style.heartIconContainer, top: 50}}>
-      <Icon
-        iconFamily={'Fontisto'}
-        name={'star'}
-        size={15}
-        color={Color.yellow}
-      />
+      <Icon iconFamily={'Fontisto'} name={'star'} size={15} color={Color.yellow} />
     </View>
   ) : type === 'onsale' ? (
     <View
@@ -67,22 +62,11 @@ const ProductBox = ({item, customStyle, wishlist}) => {
         <Icon
           iconFamily={'AntDesign'}
           style={{fontSize: 18}}
-          color={
-            wishlist.addedItems.some(e => e.node.id === item.node.id)
-              ? '#F91212'
-              : Color.secondary
-          }
-          name={
-            wishlist.addedItems.some(e => e.node.id === item.node.id)
-              ? 'heart'
-              : 'hearto'
-          }
+          color={wishlist.addedItems.some(e => e.node.id === item.node.id) ? '#F91212' : Color.secondary}
+          name={wishlist.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
         />
       </TouchableOpacity>
-      <Image
-        style={style.proImg}
-        source={{uri: item.node.featuredImage?.url}}
-      />
+      <Image style={style.proImg} source={{uri: item.node.featuredImage?.url}} />
       <Text
         numberOfLines={1}
         style={{
@@ -100,10 +84,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           fontFamily: Font.Gilroy_Medium,
           fontSize: 11,
         }}>
-        FROM{' '}
-        {item.node.priceRange.minVariantPrice.amount +
-          ' ' +
-          item.node.priceRange.minVariantPrice.currencyCode}
+        FROM {item.node.priceRange.minVariantPrice.amount + ' ' + item.node.priceRange.minVariantPrice.currencyCode}
       </Text>
       <View
         style={{

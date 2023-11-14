@@ -20,3 +20,16 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
     console.error('Mutation Error:', error);
   }
 };
+
+export const handleCouponCode = async (cart, variables) => {
+  try {
+    const response = await cart({
+      variables,
+    });
+    if (response) {
+      console.log('COUPON APPLIED', response);
+    }
+  } catch (error) {
+    console.error('Mutation Error:', error);
+  }
+};
