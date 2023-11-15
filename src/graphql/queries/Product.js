@@ -7,6 +7,7 @@ export const GET_LATEST_PRODUCT = gql`
         node {
           id
           title
+          descriptionHtml
           featuredImage {
             url
           }
@@ -29,6 +30,7 @@ export const GET_FEATURED_PRODUCT = gql`
         node {
           id
           title
+          descriptionHtml
           featuredImage {
             url
           }
@@ -51,6 +53,7 @@ export const GET_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          descriptionHtml
           featuredImage {
             url
           }

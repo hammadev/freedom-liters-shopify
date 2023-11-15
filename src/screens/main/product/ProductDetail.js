@@ -3,7 +3,6 @@ import {View, Text, ScrollView, StatusBar, Platform, SafeAreaView, ImageBackgrou
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import Icon from '../../../core/Icon';
 import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 import PopularProducts from './_partials/PopularProducts';
 import Heading from '../../../components/Heading';
@@ -22,6 +21,8 @@ const ProductDetail = ({route, navigation}) => {
   const [visible, setVisible] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
+
+  console.log(product.node);
 
   const Add_To_Card = async () => {
     // AsyncStorage.clear();
@@ -79,7 +80,7 @@ const ProductDetail = ({route, navigation}) => {
           style={{
             width: '100%',
             paddingVertical: Window.fixPadding * 2,
-            height: Window.height / 3,
+            height: Window.height / 2.8,
           }}>
           <View style={styles.overlay} />
           <AppBar
@@ -103,12 +104,7 @@ const ProductDetail = ({route, navigation}) => {
               justifyContent: 'space-between',
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Icon
-                iconFamily={'Fontisto'}
-                name={'star'}
-                size={15}
-                color={Color.tertiary}
-              />
+              <Icon iconFamily={'Fontisto'} name={'star'} size={15} color={Color.tertiary} />
               <Text
                 style={{
                   paddingLeft: 5.5,
@@ -116,8 +112,7 @@ const ProductDetail = ({route, navigation}) => {
                   fontFamily: Font.Gilroy_Medium,
                   color: Color.primary,
                 }}>
-                {product.average_rating + ' '}(
-                {product.rating_count + ' Reviews'})
+                {product.average_rating + ' '}({product.rating_count + ' Reviews'})
               </Text>
             </View>
           </View> */}
