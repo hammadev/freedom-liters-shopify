@@ -84,7 +84,8 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           fontFamily: Font.Gilroy_Medium,
           fontSize: 11,
         }}>
-        FROM {item.node.priceRange.minVariantPrice.amount + ' ' + item.node.priceRange.minVariantPrice.currencyCode}
+        FROM
+        {item.node.priceRange.minVariantPrice.amount + ' ' + item.node.priceRange.minVariantPrice.currencyCode}
       </Text>
       <View
         style={{
@@ -98,24 +99,8 @@ const ProductBox = ({item, customStyle, wishlist}) => {
             color: '#363B44',
             fontFamily: Font.Gilroy_Medium,
             fontSize: 11,
-          }}>
-          {/* {item.categories.map((item, i) => {
-            if (i === 0) {
-              return item.name;
-            } else {
-              return ' / ' + item.name;
-            }
-          })} */}
-        </Text>
+          }}></Text>
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          {/* <View style={{ paddingRight: 5 }}>
-            <Icon
-              iconFamily={'Fontisto'}
-              name={'star'}
-              size={10}
-              color={Color.tertiary}
-            />
-          </View> */}
           <Text
             style={{
               color: 'rgba(8, 14, 30, 0.6)',

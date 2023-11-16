@@ -1,8 +1,8 @@
 import React from 'react';
 import {TouchableOpacity, StyleSheet, View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
 import {ChevronSvg} from '../assets/svgs/AuthSvg';
+import {useColorScheme} from 'react-native';
 
 const BackIcon = ({theme}) => {
   let navigation = useNavigation();
@@ -15,16 +15,22 @@ const BackIcon = ({theme}) => {
         justifyContent: 'center',
       }}
       onPress={() => navigation.goBack()}>
-      <ChevronSvg color={theme == 'dark' ? '#000' : '#ffff'} />
+      <ChevronSvg color={theme == 'dark' ? '#fff' : '#000'} />
     </TouchableOpacity>
   );
 };
 const AppBar = props => {
+  let navigation = useNavigation();
+  const scheme = useColorScheme();
   return (
-    <View style={{...props.customStyle, ...Style.topMainIcon}}>
-      {props.left ? props.left : <BackIcon theme={props.theme == 'dark' ? 'light' : 'dark'} />}
+    <View style={{...Style.topMainIcon}}>
+      {props.left ? props.left : <BackIcon theme={props.theme == 'dark' ? 'dark' : '#000'} />}
       {props.center}
-      {props.right}
+      <Text
+        onPress={props.onPressFunc ? props.onPressFunc : () => navigation.navigate(props.navLink)}
+        style={{color: scheme == 'dark' ? '#fff' : '#fff', fontSize: 15}}>
+        {props.right}
+      </Text>
     </View>
   );
 };
@@ -36,6 +42,7 @@ const Style = StyleSheet.create({
     justifyContent: 'space-between',
     height: 50,
     color: 'black',
+    marginTop: 15,
   },
 });
 

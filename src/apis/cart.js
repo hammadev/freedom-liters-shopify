@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
 
-export const handleCreateCart = async (cartCreate, variables, navigation, isCreateCart) => {
+export const handleCreateCart = async (cartCreate, variables, isCreateCart) => {
   try {
     const response = await cartCreate({
       variables,
@@ -12,12 +12,29 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
         message: 'Item Add or cart created Successfully',
         type: 'success',
       });
-      if (isCreateCart) {
-        AsyncStorage.setItem('CART_ID', response.data.cartCreate.cart.id);
+      if (isCreateCart === 0) {
+        await AsyncStorage.setItem('CART_ID', response.data.cartCreate.cart.id);
       }
     }
   } catch (error) {
     console.error('Mutation Error:', error);
+  }
+};
+
+export const hnadleRemoveCartItem = async (cartLinesRemove, variables) => {
+  try {
+    const response = await cartLinesRemove({
+      variables,
+    });
+    if (response) {
+      console.log('RESPONSEs', response);
+      showMessage({
+        message: 'Item Remove Successfully',
+        type: 'success',
+      });
+    }
+  } catch (error) {
+    console.error('Mutation Remove Error:', error);
   }
 };
 
@@ -30,6 +47,6 @@ export const handleCouponCode = async (cart, variables) => {
       console.log('COUPON APPLIED', response);
     }
   } catch (error) {
-    console.error('Mutation Error:', error);
+    console.error('Mutation Coupon Error:', error);
   }
 };

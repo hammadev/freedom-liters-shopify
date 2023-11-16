@@ -1,7 +1,6 @@
 import {gql} from '@apollo/client';
 
 export const GET_CART = gql`
-  # Query a cart by id and return some of the cart's objects. See documentation here for comprehensive list: https://shopify.dev/api/storefront/latest/queries/cart
   query cartQuery($cartId: ID!) {
     cart(id: $cartId) {
       id
@@ -25,6 +24,7 @@ export const GET_CART = gql`
               ... on ProductVariant {
                 id
                 product {
+                  tags
                   title
                 }
                 image {

@@ -1,17 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StatusBar,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet, Platform, SafeAreaView} from 'react-native';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {CartSvg} from '../../../assets/svgs/HomePage';
 import {useSelector} from 'react-redux';
@@ -19,6 +7,8 @@ import {hasNotch} from 'react-native-device-info';
 import SearchBar from '../../../components/SearchBar';
 import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
+import {CatBoxCat} from '../../../components/CategoryCart';
+import StatusAppBar from '../../../components/StatusAppBar';
 
 export const CatBox = ({item, navigation}) => {
   return (
@@ -64,10 +54,9 @@ export const CatBox = ({item, navigation}) => {
 };
 
 const Home = ({navigation}) => {
-  const {auth, categories, product, wishlist, cart} = useSelector(state => ({
+  const {product, categories, wishlist, cart} = useSelector(state => ({
     ...state,
   }));
-
   const [SearchVale, setSearcValue] = useState(false);
 
   const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
@@ -79,6 +68,18 @@ const Home = ({navigation}) => {
   const Goto_Search = () => {
     setSearcValue(true);
   };
+
+  const renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: '100%',
+          backgroundColor: '#CED0CE',
+        }}
+      />
+    );
+  };
   return (
     <SafeAreaView
       style={{backgroundColor: Color.light, flex: 1}}
@@ -88,7 +89,7 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusBar animated={true} showHideTransition={'fade'} barStyle={'light-content'} backgroundColor={'transparent'} translucent />
+      <StatusAppBar />
       {SearchVale ? (
         <SearchBar />
       ) : (
@@ -143,23 +144,24 @@ const Home = ({navigation}) => {
             <Text
               style={{
                 marginTop: 27,
-                fontFamily: Font.Automove_Personal,
-                fontSize: 23,
+                fontFamily: Font.Gilroy_Bold,
+                fontSize: 32,
                 color: Color.white,
               }}>
               Dress With Style
             </Text>
             <Image
               style={{
-                marginLeft: 140,
-                width: 98,
+                marginLeft: 90,
+                width: 80,
                 height: 10,
+                marginTop: -5,
               }}
               source={require('../../../assets/images/products/Vector2.png')}
             />
             <Text
               style={{
-                marginTop: 8,
+                marginTop: 5,
                 fontSize: 20,
                 fontFamily: Font.Gilroy_Bold,
                 color: Color.white,
@@ -168,9 +170,9 @@ const Home = ({navigation}) => {
             </Text>
             <TouchableOpacity
               style={{
-                marginTop: 16,
+                marginTop: 14,
                 justifyContent: 'center',
-                backgroundColor: Color.white,
+                backgroundColor: Color.tertiary,
                 width: 85,
                 height: 40,
                 borderRadius: 100,
@@ -178,7 +180,7 @@ const Home = ({navigation}) => {
               }}>
               <Text
                 style={{
-                  color: Color.tertiary,
+                  color: Color.white,
                   fontSize: 13,
                   fontFamily: Font.Gilroy_Bold,
                 }}>
@@ -192,6 +194,31 @@ const Home = ({navigation}) => {
               padding: Window.fixPadding * 2,
               marginVertical: Window.fixPadding,
             }}>
+            {/* Category List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 0.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Category</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Category')}>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{width: '100%'}}>
+              {categories && (
+                <FlatList
+                  horizontal={false}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={categories.categories.edges}
+                  numColumns={2}
+                  renderItem={item => <CatBoxCat navigation={navigation} item={item} />}
+                />
+              )}
+            </View>
+
             {/* Featured Product List */}
             <View
               style={{
@@ -288,6 +315,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
 });

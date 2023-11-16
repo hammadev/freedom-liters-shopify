@@ -1,22 +1,16 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
 import Button from '../../../components/Button';
-import {GlobalStyle, Color, Window, Font} from '../../../globalStyle/Theme';
+import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
 import AppBar from '../../../components/AppBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {showMessage} from 'react-native-flash-message';
 import TextField2 from '../../../components/TextFeild2';
 import {CREATE_CUSTOMER_ACCOUNT} from '../../../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
 import {handleCreateAccount} from '../../../apis/auth';
+import Toast from 'react-native-toast-message';
+import StatusAppBar from '../../../components/StatusAppBar';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -29,64 +23,77 @@ const SignUp = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createCustomerAccount, {loading, error, data}] = useMutation(
-    CREATE_CUSTOMER_ACCOUNT,
-  );
-
+  const [createCustomerAccount, {loading, error, data}] = useMutation(CREATE_CUSTOMER_ACCOUNT);
   const handleSubmit = () => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const passwordformat = /^\w+(?:[ `'?!]\w+)*[`.?!]?$/;
 
-    if (firstName === '') {
-      showMessage({
-        message: "First Name can't be blank",
-        type: 'danger',
-      });
-      return;
-    }
-    if (lastName === '') {
-      showMessage({
-        message: "Last Name can't be blank",
-        type: 'danger',
+    if (firstName == '' || lastName == '' || password == '' || confirmPassword == '') {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Fields cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
       });
       return;
     }
 
     if (!email.match(mailformat)) {
-      showMessage({
-        message: 'Please enter valid email',
-        type: 'danger',
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Please enter valid email',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
       });
       return;
     }
 
-    if (password === '') {
-      showMessage({
-        message: "Password can't be blank",
-        type: 'danger',
+    if (!password.match(passwordformat)) {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Atleast one special character in password',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
       });
       return;
     }
 
     if (password < 5) {
-      showMessage({
-        message: 'Password must contain at least 5 characters',
-        type: 'danger',
-      });
-      return;
-    }
-
-    if (confirmPassword === '') {
-      showMessage({
-        message: "Confirm Password can't be blank",
-        type: 'danger',
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Password must contain at least 5 characters',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
       });
       return;
     }
 
     if (password !== confirmPassword) {
-      showMessage({
-        message: 'Password & confirm password not match',
-        type: 'danger',
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Password & confirm password not match',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
       });
       return;
     }
@@ -101,23 +108,25 @@ const SignUp = ({navigation}) => {
         phone: phone,
       },
     };
-    // console.log(variables);
-    // return;
-
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
-
+  const Goto_Login = () => {
+    navigation.replace('SignIn');
+  };
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ImageBackground style={{flex: 1, backgroundColor: '#021851'}}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingVertical: Window.fixPadding,
-            paddingHorizontal: Window.fixPadding * 2,
-          }}
-          keyboardShouldPersistTaps={'handled'}>
-          <AppBar />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
+      <StatusAppBar />
+      <ImageBackground
+        style={{
+          width: '100%',
+          height: '100%',
+          paddingVertical: Window.fixPadding,
+          paddingHorizontal: Window.fixPadding * 1.2,
+          backgroundColor: 'none',
+        }}
+        source={require('../../../assets/images/pics/auth.bg.png')}>
+        <ScrollView>
+          <AppBar right={'Skip'} onPressFunc={Goto_Login} theme={'dark'} />
           <Text
             style={{
               ...GlobalStyle.heading,
@@ -131,6 +140,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'account-circle-outline'}
               label="First Name"
+              placeholder={'Doe'}
               isDark={true}
               onChanged={setFirstName}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
@@ -138,6 +148,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'account-circle-outline'}
               label="Last Name"
+              placeholder={'john'}
               isDark={true}
               onChanged={setLastName}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
@@ -145,6 +156,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'email-outline'}
               label="Email"
+              placeholder={'Email@gmail.com'}
               isDark={true}
               onChanged={setEmail}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
@@ -153,6 +165,8 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'phone-outline'}
               label="Phone"
+              value={phone}
+              placeholder={'+923X-XXXXXXXX'}
               isDark={true}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
@@ -161,6 +175,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'lock-outline'}
               label="Password"
+              placeholder={'xxxxxx'}
               isDark={true}
               onChanged={setPassword}
               passwordFeild={true}
@@ -172,6 +187,7 @@ const SignUp = ({navigation}) => {
               icon={'lock-outline'}
               label="Confirm Password"
               isDark={true}
+              placeholder={'xxxxxx'}
               onChanged={setConfirmPassword}
               passwordFeild={true}
               setHidePass={setHideConfirmPass}
@@ -192,9 +208,7 @@ const SignUp = ({navigation}) => {
             />
           </View>
           <View style={styles.BottonContainer}>
-            <Text style={{...styles.TextStyle, color: Color.white}}>
-              Don’t have an account?
-            </Text>
+            <Text style={{...styles.TextStyle, color: Color.white}}>Already have an account ?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
               <Text
                 style={{
@@ -207,6 +221,7 @@ const SignUp = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        <Toast />
       </ImageBackground>
     </SafeAreaView>
   );

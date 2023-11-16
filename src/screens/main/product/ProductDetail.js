@@ -19,14 +19,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductDetail = ({route, navigation}) => {
   const {product} = route.params;
   const [visible, setVisible] = useState(false);
+  const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-
-  console.log(product.node);
-
+  // console.log(product.node.variants.edges[0].node.id);
   const Add_To_Card = async () => {
-    // AsyncStorage.clear();
-    console.log('btn click');
+    setloadingSpinner(true);
     const CART_ID = await AsyncStorage.getItem('CART_ID');
     let variables;
     let mutationFunc;
@@ -41,7 +39,6 @@ const ProductDetail = ({route, navigation}) => {
           quantity: 1,
         },
       };
-
       mutationFunc = cartLinesAdd;
       isCreateCart = 0;
     } else {
@@ -58,6 +55,8 @@ const ProductDetail = ({route, navigation}) => {
       isCreateCart = 1;
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
+    setloadingSpinner(false);
+    navigation.navigate('Cart');
   };
 
   return (
@@ -157,12 +156,11 @@ const ProductDetail = ({route, navigation}) => {
           <Heading
             containerStyle={{
               paddingHorizontal: Window.fixPadding * 2,
-              marginTop: Window.fixPadding * 2,
             }}
             name="Description"
           />
 
-          <View style={{marginTop: 14, paddingHorizontal: 20}}>
+          <View style={{marginTop: 0, paddingHorizontal: 20}}>
             <RenderHtml
               tagsStyles={{
                 p: {
@@ -208,7 +206,7 @@ const ProductDetail = ({route, navigation}) => {
           elevation: 10,
           marginTop: Window.fixPadding * 1.6,
         }}>
-        <Button onPressFunc={Add_To_Card} type="tertiary" theme="tertiary" text="Add to Cart" />
+        <Button onPressFunc={Add_To_Card} theme="tertiary" loading={loadingSpinner} text="Add to Cart" />
       </View>
     </SafeAreaView>
   );

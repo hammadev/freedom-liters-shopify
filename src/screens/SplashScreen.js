@@ -1,13 +1,13 @@
-import {ImageBackground, SafeAreaView, StatusBar, View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
+import {ImageBackground, StatusBar, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Color, Window} from '../globalStyle/Theme';
 import {LogoSvg} from '../assets/svgs/Logo';
 import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import {GET_FEATURED_PRODUCT, GET_LATEST_PRODUCT, GET_ONSALE_PRODUCT} from '../graphql/queries/Product';
-import {GET_COLLECTION} from '../graphql/queries/Collection';
+import {GET_CATEGORIES} from '../graphql/queries/Category';
 
 const Splash = ({navigation}) => {
   const dispatch = useDispatch();
@@ -21,7 +21,17 @@ const Splash = ({navigation}) => {
   // Fetch the first query (GET_LATEST_PRODUCT)
   const {loading: onsaleProductLoading, error: onsaleProductError, data: onsaleProductData} = useQuery(GET_ONSALE_PRODUCT);
 
+  // Fetch the first query (GET_LATEST_PRODUCT)
+  const {loading: categoriesLoading, error: categoriesError, data: categoriesData} = useQuery(GET_CATEGORIES);
+  console.log('catt', categoriesData);
   useEffect(() => {
+    if (!categoriesLoading && !categoriesError && categoriesData) {
+      // Dispatch an action to store the categories data in Redux
+      dispatch({
+        type: 'CATEGORIES',
+        Payload: categoriesData.collections,
+      });
+    }
     if (!featuredProductLoading && !featuredProductError && featuredProductData) {
       // Dispatch an action to store the latest product data in Redux
       dispatch({
@@ -47,11 +57,12 @@ const Splash = ({navigation}) => {
 
     // Check if both sets of data have been successfully fetched and stored in Redux
     if (!latestProductLoading && !onsaleProductLoading && !featuredProductLoading) {
-      // Navigate to the next screen (replace 'BottomTabScreen' with your desired destination)
-      // navigation.replace('SignIn');
       checkUser();
     }
   }, [
+    categoriesLoading,
+    categoriesError,
+    categoriesData,
     featuredProductLoading,
     featuredProductError,
     featuredProductData,
@@ -110,7 +121,9 @@ const Splash = ({navigation}) => {
               left: 0,
               right: 0,
             }}>
-            {featuredProductLoading && latestProductLoading && onsaleProductLoading && <SkypeIndicator size={50} color={Color.white} />}
+            {featuredProductLoading && latestProductLoading && onsaleProductLoading && categoriesLoading && (
+              <SkypeIndicator size={50} color={Color.white} />
+            )}
           </View>
         </View>
       </ImageBackground>

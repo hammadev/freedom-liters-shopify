@@ -12,11 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //   },
 // }
 
-export const handleCreateAccount = async (
-  createCustomerAccount,
-  variables,
-  navigation,
-) => {
+export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
   try {
     const result = await createCustomerAccount({
       variables,
@@ -34,10 +30,7 @@ export const handleCreateAccount = async (
     }
 
     if (result.data.customerCreate.customer) {
-      await AsyncStorage.setItem(
-        'credentials',
-        JSON.stringify(result.data.customerCreate.customer),
-      );
+      await AsyncStorage.setItem('credentials', JSON.stringify(result.data.customerCreate.customer));
       showMessage({
         message: 'Account created successfully!',
         type: 'success',
@@ -62,12 +55,7 @@ export const handleCreateAccount = async (
 //   password: variables.input.password,
 // };
 
-export const handleCreateAccessToken = async (
-  createCustomerAccessToken,
-  input,
-  dispatch,
-  navigation,
-) => {
+export const handleCreateAccessToken = async (createCustomerAccessToken, input, dispatch, navigation) => {
   const tokenResult = await createCustomerAccessToken({
     variables: {
       input,
@@ -76,19 +64,15 @@ export const handleCreateAccessToken = async (
 
   if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
     showMessage({
-      message:
-        tokenResult.data.customerAccessTokenCreate.customerUserErrors[0]
-          .message,
+      message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
       type: 'danger',
     });
     return;
   }
-  // Handle the access token result here (data, errors, etc.)
-  // console.log('Access Token Result:', tokenResult);
+
   let token = tokenResult.data.customerAccessTokenCreate.customerAccessToken;
   if (token) {
     await AsyncStorage.setItem('auth', JSON.stringify(token));
-
     dispatch({
       type: 'LOGGED_IN_USER',
       payload: token,
@@ -103,11 +87,7 @@ export const handleCreateAccessToken = async (
   }
 };
 
-export const handleProfileUpdate = async (
-  customerUpdate,
-  variables,
-  refetch,
-) => {
+export const handleProfileUpdate = async (customerUpdate, variables, refetch) => {
   try {
     const result = await customerUpdate({
       variables,
@@ -139,10 +119,7 @@ export const handleProfileUpdate = async (
   }
 };
 
-export const handleForgetPassword = async (
-  sendPasswordResetEmail,
-  variables,
-) => {
+export const handleForgetPassword = async (sendPasswordResetEmail, variables) => {
   try {
     const result = await sendPasswordResetEmail({
       variables,
@@ -173,12 +150,7 @@ export const handleForgetPassword = async (
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const logout = async (
-  deleteAccessToken,
-  variables,
-  navigation,
-  setVisible,
-) => {
+export const logout = async (deleteAccessToken, variables, navigation, setVisible) => {
   try {
     const result = await deleteAccessToken({
       variables,
