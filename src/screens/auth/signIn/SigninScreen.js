@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Keyboard, ImageBackground, SafeAreaView} from 'react-native';
+import {View, Text, TouchableOpacity, Keyboard, ImageBackground, SafeAreaView, useColorScheme} from 'react-native';
 import Button from '../../../components/Button';
 import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
@@ -9,7 +9,6 @@ import {handleCreateAccessToken} from '../../../apis/auth';
 import {CREATE_CUSTOMER_ACCESS_TOKEN} from '../../../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
 import StatusAppBar from '../../../components/StatusAppBar';
-import AppBar from '../../../components/AppBar';
 import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
 
@@ -59,7 +58,7 @@ const SignIn = ({navigation}) => {
     };
     handleCreateAccessToken(createCustomerAccessToken, input, dispatch, navigation);
   };
-
+  const scheme = useColorScheme();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
       <StatusAppBar />
@@ -72,9 +71,18 @@ const SignIn = ({navigation}) => {
           backgroundColor: 'none',
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <AppBar right={'Skip'} theme={'dark'} navLink="BottomTabScreen" />
-
-        <View style={{alignItems: 'center'}}>
+        <Text
+          onPress={() => navigation.navigate('BottomTabScreen')}
+          style={{
+            alignSelf: 'flex-end',
+            color: scheme == 'dark' ? '#fff' : '#fff',
+            fontSize: 15,
+            paddingVertical: Window.fixPadding * 1.5,
+            marginTop: 20,
+          }}>
+          Skip
+        </Text>
+        <View style={{alignItems: 'center', marginTop: 20}}>
           <LogoSvg />
         </View>
         <Text

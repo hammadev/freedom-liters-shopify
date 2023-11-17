@@ -27,7 +27,6 @@ const SearchScreen = () => {
   useEffect(() => {
     if (data && !loader && !error) {
       setProductData(data.products.edges);
-      console.log('ProductNew', ProductData);
     }
   }, [data, loader, error]);
 

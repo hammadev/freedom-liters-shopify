@@ -5,7 +5,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {PaperProvider} from 'react-native-paper';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import RootStack from './src/navigation/RootStack';
 import {Provider} from 'react-redux';
@@ -23,22 +22,6 @@ const App = () => {
       <ApolloProvider client={client}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{flex: 1}}>
-            <FlashMessage
-              position="top"
-              statusBarHeight={getStatusBarHeight}
-              floating
-              textStyle={{fontFamily: Font.Urbanist_Regular}}
-              style={{marginTop: 10}}
-            />
-            <PaperProvider>
-              <StripeProvider
-                publishableKey={'pk_test_xEVXxVXXe7ywigzB1O8SadA0'}
-                // merchantIdentifier="merchant.identifier" // required for Apple Pay
-                // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-              >
-                <RootStack />
-              </StripeProvider>
-            </PaperProvider>
             <RootStack />
           </GestureHandlerRootView>
         </SafeAreaProvider>

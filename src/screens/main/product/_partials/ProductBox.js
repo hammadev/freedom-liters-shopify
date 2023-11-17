@@ -141,7 +141,6 @@ export default ProductBox;
 const style = StyleSheet.create({
   container: {
     marginVertical: Window.fixPadding / 1.5,
-    flex: 1,
     backgroundColor: Color.white,
     shadowColor: 'rgba(0,0,0,0.4)',
     shadowOffset: {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import OnBoarding from '../screens/main/onBoarding/OnBoardingScreen';
 import PersonalInfo from '../screens/main/personalInfo/PersonalInfo';
 import BottomTabScreen from './BottomTab';
 import CodeVerification from '../screens/auth/codeVerification/CodeVerification';
@@ -14,6 +13,9 @@ import Cart from '../screens/main/cart/Cart';
 import SignIn from '../screens/auth/signIn/SigninScreen';
 import SignUp from '../screens/auth/signUp/SignupScreen';
 import SearchScreen from '../screens/main/search/SearchScreen';
+import Onboarding from '../screens/main/onBoarding/OnBoardingScreen';
+import Category from '../screens/main/category/Category';
+import ProductListing from '../screens/main/product/ProductListing';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -26,10 +28,11 @@ const StackNavigator = () => {
         animation: 'slide_from_right',
       }}>
       <Stack.Screen name="Splash" component={Splash} />
-      <Stack.Screen name="OnBoarding" component={OnBoarding} />
+      <Stack.Screen name="OnBoarding" component={Onboarding} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      <Stack.Screen name="ProductListing" component={ProductListing} />
       <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="CheckOut" component={CheckOut} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
@@ -38,7 +41,7 @@ const StackNavigator = () => {
       <Stack.Screen name="CodeVerification" component={CodeVerification} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="Search" component={SearchScreen} />
-
+      <Stack.Screen name="Category" component={Category} />
       <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
     </Stack.Navigator>
   );

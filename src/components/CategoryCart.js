@@ -4,8 +4,9 @@ import {Color, GlobalStyle, Window} from '../../src/globalStyle/Theme';
 
 export const CatBoxCat = ({item, navigation}) => {
   return (
-    // <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {catId: item.node.id})}>
-    <TouchableOpacity style={{width: '50%', marginRight: 5}} onPress={() => navigation.navigate('ProductListing')}>
+    <TouchableOpacity
+      style={{width: '50%', marginRight: 5}}
+      onPress={() => navigation.navigate('ProductListing', {handle: item.item.node.handle})}>
       <ImageBackground
         style={{height: 180, flex: 1, marginBottom: Window.fixPadding}}
         source={item.item.node.image ? {uri: item.item.node.image.url} : require('../../src/assets/images/products/review.png')}>
