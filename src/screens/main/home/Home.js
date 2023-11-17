@@ -9,6 +9,7 @@ import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
 import {CatBoxCat} from '../../../components/CategoryCart';
 import StatusAppBar from '../../../components/StatusAppBar';
+import Icon from '../../../core/Icon';
 
 export const CatBox = ({item, navigation}) => {
   return (
@@ -66,20 +67,9 @@ const Home = ({navigation}) => {
   };
 
   const Goto_Search = () => {
-    setSearcValue(true);
+    navigation.navigate('Search');
   };
 
-  const renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#CED0CE',
-        }}
-      />
-    );
-  };
   return (
     <SafeAreaView
       style={{backgroundColor: Color.light, flex: 1}}
@@ -112,9 +102,9 @@ const Home = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {/* <TouchableOpacity style={{paddingRight: 10}} onPress={() => Goto_Search()}>
-                  <Icon iconFamily={'Feather'} size={20} style={{}} name={'search'} color={Color.white} />
-                </TouchableOpacity> */}
+                <TouchableOpacity style={{paddingRight: 15}} onPress={() => Goto_Search()}>
+                  <Icon iconFamily={'Feather'} style={{marginTop: 20}} size={20} name={'search'} color={Color.white} />
+                </TouchableOpacity>
                 <TouchableOpacity style={{marginTop: 20}} onPress={() => navigation.navigate('Cart')}>
                   <View
                     style={{

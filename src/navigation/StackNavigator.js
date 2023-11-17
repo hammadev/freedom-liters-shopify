@@ -13,6 +13,7 @@ import ForgetPassword from '../screens/auth/forgetPassword/ForgetPassword';
 import Cart from '../screens/main/cart/Cart';
 import SignIn from '../screens/auth/signIn/SigninScreen';
 import SignUp from '../screens/auth/signUp/SignupScreen';
+import SearchScreen from '../screens/main/search/SearchScreen';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ const StackNavigator = () => {
       <Stack.Screen name="MyOrder" component={MyOrder} />
       <Stack.Screen name="CodeVerification" component={CodeVerification} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+      <Stack.Screen name="Search" component={SearchScreen} />
 
       <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
     </Stack.Navigator>

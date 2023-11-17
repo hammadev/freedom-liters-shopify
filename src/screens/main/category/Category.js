@@ -55,7 +55,7 @@ const Category = ({navigation}) => {
               horizontal={false}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{marginVertical: Window.fixPadding}}
-              data={categories.categories.edges}
+              data={categories.allcategories.edges}
               numColumns={2}
               renderItem={item => <CatBoxCat navigation={navigation} item={item} />}
             />

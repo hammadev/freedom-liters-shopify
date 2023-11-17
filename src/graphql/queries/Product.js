@@ -70,11 +70,21 @@ export const GET_ONSALE_PRODUCT = gql`
 `;
 
 export const GET_ALL_PRODUCT = gql`
-  query GetAllProducts {
-    products(first: 50, query: "status:active AND published_status:published") {
-      nodes {
-        id
-        title
+  query GetOnSaleProducts {
+    products(query: "tag:onsale", first: 10) {
+      edges {
+        node {
+          id
+          title
+          featuredImage {
+            url
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+            }
+          }
+        }
       }
     }
   }

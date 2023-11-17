@@ -7,24 +7,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import {GET_FEATURED_PRODUCT, GET_LATEST_PRODUCT, GET_ONSALE_PRODUCT} from '../graphql/queries/Product';
-import {GET_CATEGORIES} from '../graphql/queries/Category';
+import {GET_ALL_CATEGORIES, GET_CATEGORIES} from '../graphql/queries/Category';
 
 const Splash = ({navigation}) => {
   const dispatch = useDispatch();
 
-  // Fetch the second query (GET_FEATURED_PRODUCT)
+  // (GET_FEATURED_PRODUCT)
   const {loading: featuredProductLoading, error: featuredProductError, data: featuredProductData} = useQuery(GET_FEATURED_PRODUCT);
 
-  // Fetch the first query (GET_LATEST_PRODUCT)
+  // (GET_LATEST_PRODUCT)
   const {loading: latestProductLoading, error: latestProductError, data: latestProductData} = useQuery(GET_LATEST_PRODUCT);
 
-  // Fetch the first query (GET_LATEST_PRODUCT)
+  // (GET_ONSALE_PRODUCT)
   const {loading: onsaleProductLoading, error: onsaleProductError, data: onsaleProductData} = useQuery(GET_ONSALE_PRODUCT);
 
-  // Fetch the first query (GET_LATEST_PRODUCT)
+  // (GET_CATEGORIES)
   const {loading: categoriesLoading, error: categoriesError, data: categoriesData} = useQuery(GET_CATEGORIES);
-  console.log('catt', categoriesData);
+
+  // (GET_ALL_CATEGORIES)
+  const {loading: allcategoriesLoading, error: allcategoriesError, data: allcategoriesData} = useQuery(GET_ALL_CATEGORIES);
+
   useEffect(() => {
+    if (!allcategoriesLoading && !allcategoriesError && allcategoriesData) {
+      // Dispatch an action to store the categories data in Redux
+      dispatch({
+        type: 'ALL_CATEGORIES',
+        Payload: allcategoriesData.collections,
+      });
+    }
     if (!categoriesLoading && !categoriesError && categoriesData) {
       // Dispatch an action to store the categories data in Redux
       dispatch({
