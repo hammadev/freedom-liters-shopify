@@ -29,28 +29,28 @@ const Splash = ({navigation}) => {
 
   useEffect(() => {
     if (!allcategoriesLoading && !allcategoriesError && allcategoriesData) {
-      // Dispatch an action to store the categories data in Redux
+      // Dispatch All categories data in Redux
       dispatch({
         type: 'ALL_CATEGORIES',
         Payload: allcategoriesData.collections,
       });
     }
     if (!categoriesLoading && !categoriesError && categoriesData) {
-      // Dispatch an action to store the categories data in Redux
+      // Dispatch Home Page categories data in Redux
       dispatch({
         type: 'CATEGORIES',
         Payload: categoriesData.collections,
       });
     }
     if (!featuredProductLoading && !featuredProductError && featuredProductData) {
-      // Dispatch an action to store the latest product data in Redux
+      // Dispatch Featrued product data in Redux
       dispatch({
         type: 'FEATURED_PRODUCTS',
         Payload: featuredProductData.products,
       });
     }
     if (!latestProductLoading && !latestProductError && latestProductData) {
-      // Dispatch an action to store the latest product data in Redux
+      // Dispatch latest product data in Redux
       dispatch({
         type: 'LATEST_PRODUCTS',
         Payload: latestProductData.products,
@@ -58,7 +58,7 @@ const Splash = ({navigation}) => {
     }
 
     if (!onsaleProductLoading && !onsaleProductError && onsaleProductData) {
-      // Dispatch an action to store the collection data in Redux
+      // Dispatch Onsale data in Redux
       dispatch({
         type: 'ONSALE_PRODUCTS',
         Payload: onsaleProductData.products,
