@@ -1,12 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableOpacity, StatusBar} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -18,10 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Heading from '../../../components/Heading';
 import {NoResult} from '../../../assets/svgs/NotificationSvg';
 import {placeOrder} from '../../../apis/order';
-import {
-  initPaymentSheet,
-  presentPaymentSheet,
-} from '@stripe/stripe-react-native';
+import {initPaymentSheet, presentPaymentSheet} from '@stripe/stripe-react-native';
 import {RadioButton} from 'react-native-paper';
 import {fetchPaymentSheetParams} from '../../../apis/general_settings';
 import {showMessage} from 'react-native-flash-message';
@@ -74,23 +64,11 @@ const OrderSummary = ({subTotal}) => {
   );
 };
 
-const ProductList = ({
-  quantityFunc,
-  onOpenDeleteCart,
-  item,
-  setCartItemIndex,
-  setCartItemAmount,
-  setCartItemQuantity,
-  index,
-}) => {
+const ProductList = ({quantityFunc, onOpenDeleteCart, item, setCartItemIndex, setCartItemAmount, setCartItemQuantity, index}) => {
   const [qty, setQty] = useState(item.quantity);
   const [productDetails, setProductDetails] = useState({
-    image: item.selectedVariation
-      ? item.selectedVariation.image
-      : item.productDetails.node.featuredImage?.url,
-    price: item.selectedVariation
-      ? item.selectedVariation.sale_price
-      : item.productDetails.price,
+    image: item.selectedVariation ? item.selectedVariation.image : item.productDetails.node.featuredImage?.url,
+    price: item.selectedVariation ? item.selectedVariation.sale_price : item.productDetails.price,
   });
 
   return (
@@ -113,10 +91,7 @@ const ProductList = ({
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Image
-          style={{width: '80%', height: '80%', borderRadius: Window.fixPadding}}
-          source={{uri: productDetails.url}}
-        />
+        <Image style={{width: '80%', height: '80%', borderRadius: Window.fixPadding}} source={{uri: productDetails.url}} />
       </View>
       <View style={{paddingLeft: 15, width: '80%'}}>
         <View
@@ -167,37 +142,18 @@ const ProductList = ({
               onPress={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
-                quantityFunc(
-                  item.productId,
-                  qty,
-                  2,
-                  item.productDetails.node.priceRange.minVariantPrice.amount,
-                );
+                quantityFunc(item.productId, qty, 2, item.productDetails.node.priceRange.minVariantPrice.amount);
               }}>
-              <Icon
-                iconFamily={'AntDesign'}
-                name={'minus'}
-                style={styles.MinusStyle}
-              />
+              <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
             </TouchableOpacity>
             <Text style={styles.NumStyle}>{qty}</Text>
             <TouchableOpacity
               style={styles.cartStyle}
               onPress={() => {
                 setQty(qty + 1);
-                quantityFunc(
-                  item.productId,
-                  qty,
-                  1,
-                  item.productDetails.node.priceRange.minVariantPrice.amount,
-                );
+                quantityFunc(item.productId, qty, 1, item.productDetails.node.priceRange.minVariantPrice.amount);
               }}>
-              <Icon
-                iconFamily={'Ionicons'}
-                name={'md-add'}
-                color={Color.light}
-                style={styles.AddStyle}
-              />
+              <Icon iconFamily={'Ionicons'} name={'md-add'} color={Color.light} style={styles.AddStyle} />
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -316,9 +272,7 @@ const CheckOut = ({navigation}) => {
     });
     console.log('sssss', productDetails);
 
-    const filteredGateways = generalSettings.gateways.find(
-      gateway => gateway.id === paymentMethod,
-    );
+    const filteredGateways = generalSettings.gateways.find(gateway => gateway.id === paymentMethod);
     console.log(filteredGateways);
 
     const formData = {
@@ -378,11 +332,10 @@ const CheckOut = ({navigation}) => {
   // }, []);
 
   const initializePaymentSheet = async () => {
-    const {paymentIntent, ephemeralKey, customer, publishableKey} =
-      await fetchPaymentSheetParams({
-        order_amount: cart.total + 8,
-        user_id: address.id,
-      });
+    const {paymentIntent, ephemeralKey, customer, publishableKey} = await fetchPaymentSheetParams({
+      order_amount: cart.total + 8,
+      user_id: address.id,
+    });
     // console.log(await fetchPaymentSheetParams({ order_amount: cart.total, user_id: address.id }))
 
     const {error} = await initPaymentSheet({
@@ -423,11 +376,7 @@ const CheckOut = ({navigation}) => {
   if (cartData.length <= 0) {
     return (
       <>
-        <AppBar
-          theme="dark"
-          title="Checkout"
-          customStyle={{paddingHorizontal: Window.fixPadding * 2}}
-        />
+        <AppBar theme="dark" title="Checkout" customStyle={{paddingHorizontal: Window.fixPadding * 2}} />
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <NoResult />
           <View>
@@ -447,12 +396,7 @@ const CheckOut = ({navigation}) => {
               }}>
               You do not have any item in your cart
             </Text>
-            <Button
-              text="Explore products"
-              isIcon={false}
-              theme="tertiary"
-              navLink="ProductListing"
-            />
+            <Button text="Explore products" isIcon={false} theme="tertiary" navLink="ProductListing" />
           </View>
         </View>
       </>
@@ -460,13 +404,7 @@ const CheckOut = ({navigation}) => {
   }
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar
-        animated={true}
-        backgroundColor={Color.light}
-        barStyle={'dark-content'}
-        showHideTransition={'fade'}
-        translucent
-      />
+      <StatusBar animated={true} backgroundColor={Color.light} barStyle={'dark-content'} showHideTransition={'fade'} translucent />
       <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
         <AppBar theme="dark" title="Checkout" />
 
@@ -545,22 +483,10 @@ const CheckOut = ({navigation}) => {
         visible={removeCart}
         setVisible={setRemoveCart}
         onTouchOutside={setRemoveCart}
-        PopupBody={
-          <RemoveProduct
-            closeDeleteCart={closeDeleteCart}
-            removeItemFromCart={removeItemFromCart}
-          />
-        }
+        PopupBody={<RemoveProduct closeDeleteCart={closeDeleteCart} removeItemFromCart={removeItemFromCart} />}
       />
-
       {/* Success order Popup */}
-
-      <BottomPopupHOC
-        title="Order Placed"
-        visible={successOrder}
-        setVisible={setSuccessOrder}
-        PopupBody={<SuccessOrder />}
-      />
+      <BottomPopupHOC title="Order Placed" visible={successOrder} setVisible={setSuccessOrder} PopupBody={<SuccessOrder />} />
     </SafeAreaView>
   );
 };
@@ -570,9 +496,7 @@ export default CheckOut;
 const RemoveProduct = ({closeDeleteCart, removeItemFromCart}) => {
   return (
     <View style={{}}>
-      <Text style={styles.text}>
-        Are you sure you want to remove this product?
-      </Text>
+      <Text style={styles.text}>Are you sure you want to remove this product?</Text>
       <View
         style={{
           flexDirection: 'row',
@@ -581,20 +505,10 @@ const RemoveProduct = ({closeDeleteCart, removeItemFromCart}) => {
           alignItems: 'center',
         }}>
         <View style={{flex: 1}}>
-          <Button
-            text="Cancel"
-            isIcon={false}
-            theme="alternate"
-            onPressFunc={() => closeDeleteCart()}
-          />
+          <Button text="Cancel" isIcon={false} theme="alternate" onPressFunc={() => closeDeleteCart()} />
         </View>
         <View style={{flex: 1}}>
-          <Button
-            text="Yes, Remove"
-            isIcon={false}
-            theme="tertiary"
-            onPressFunc={removeItemFromCart}
-          />
+          <Button text="Yes, Remove" isIcon={false} theme="tertiary" onPressFunc={removeItemFromCart} />
         </View>
       </View>
     </View>
@@ -616,12 +530,7 @@ const SuccessOrder = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Icon
-          iconFamily={'Feather'}
-          name={'check-square'}
-          size={45}
-          color={Color.tertiary}
-        />
+        <Icon iconFamily={'Feather'} name={'check-square'} size={45} color={Color.tertiary} />
       </View>
 
       <Text
@@ -633,11 +542,7 @@ const SuccessOrder = () => {
         Thank you for choosing our products! {'\n'}Happy Shoping
       </Text>
 
-      <Button
-        text="Continue Shopping"
-        theme="tertiary"
-        navLink="BottomTabScreen"
-      />
+      <Button text="Continue Shopping" theme="tertiary" navLink="BottomTabScreen" />
       <TouchableOpacity onPress={() => navigation.replace('MyOrder')}>
         <Text
           style={{

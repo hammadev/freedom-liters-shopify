@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Icon from '../../../../core/Icon';
 import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
 import {useNavigation} from '@react-navigation/native';
@@ -8,12 +8,7 @@ import {useDispatch} from 'react-redux';
 const ChipComponent = ({type}) =>
   type === 'featured' ? (
     <View style={{...style.heartIconContainer, top: 50}}>
-      <Icon
-        iconFamily={'Fontisto'}
-        name={'star'}
-        size={15}
-        color={Color.yellow}
-      />
+      <Icon iconFamily={'Fontisto'} name={'star'} size={15} color={Color.yellow} />
     </View>
   ) : type === 'onsale' ? (
     <View
@@ -41,6 +36,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       style={{
         ...customStyle,
         ...style.container,
+        marginRight: 5,
       }}
       onPress={() =>
         navigation.navigate('ProductDetail', {
@@ -66,30 +62,40 @@ const ProductBox = ({item, customStyle, wishlist}) => {
         }}>
         <Icon
           iconFamily={'AntDesign'}
-          style={{fontSize: 18}}
-          color={
-            wishlist.addedItems.some(e => e.node.id === item.node.id)
-              ? '#F91212'
-              : Color.secondary
-          }
-          name={
-            wishlist.addedItems.some(e => e.node.id === item.node.id)
-              ? 'heart'
-              : 'hearto'
-          }
+          style={{fontSize: 14}}
+          color={wishlist.addedItems.some(e => e.node.id === item.node.id) ? '#F91212' : Color.secondary}
+          name={wishlist.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
         />
       </TouchableOpacity>
-      <Image
-        style={style.proImg}
-        source={{uri: item.node.featuredImage?.url}}
-      />
+      <TouchableOpacity
+        style={style.addToCartIconContainer}
+        onPress={() => {
+          if (wishlist.addedItems.some(e => e.node.id === item.node.id)) {
+            dispatch({
+              type: 'REMOVE_SINGLE_FROM_WISHLIST',
+              payload: item.node.id,
+            });
+          } else {
+            dispatch({
+              type: 'ADD_SINGLE_TO_WISHLIST',
+              payload: item,
+            });
+          }
+        }}>
+        <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'plus'} />
+      </TouchableOpacity>
+      {item.node ? (
+        <Image style={style.proImg} source={{uri: item.node.featuredImage?.url}} />
+      ) : (
+        <Image style={style.proImg} source={require('../../../../assets/images/products/noimage.png')} />
+      )}
       <Text
         numberOfLines={1}
         style={{
           marginTop: 7,
           color: Color.primary,
           fontFamily: Font.Gilroy_SemiBold,
-          fontSize: 13,
+          fontSize: 15,
         }}>
         {item.node.title}
       </Text>
@@ -98,12 +104,9 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           marginTop: 4,
           color: '#1B2336',
           fontFamily: Font.Gilroy_Medium,
-          fontSize: 11,
+          fontSize: 15,
         }}>
-        FROM{' '}
-        {item.node.priceRange.minVariantPrice.amount +
-          ' ' +
-          item.node.priceRange.minVariantPrice.currencyCode}
+        $ {item.node.priceRange.minVariantPrice.amount}
       </Text>
       <View
         style={{
@@ -117,24 +120,8 @@ const ProductBox = ({item, customStyle, wishlist}) => {
             color: '#363B44',
             fontFamily: Font.Gilroy_Medium,
             fontSize: 11,
-          }}>
-          {/* {item.categories.map((item, i) => {
-            if (i === 0) {
-              return item.name;
-            } else {
-              return ' / ' + item.name;
-            }
-          })} */}
-        </Text>
+          }}></Text>
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          {/* <View style={{ paddingRight: 5 }}>
-            <Icon
-              iconFamily={'Fontisto'}
-              name={'star'}
-              size={10}
-              color={Color.tertiary}
-            />
-          </View> */}
           <Text
             style={{
               color: 'rgba(8, 14, 30, 0.6)',
@@ -177,10 +164,30 @@ const style = StyleSheet.create({
   },
   heartIconContainer: {
     position: 'absolute',
-    right: 10,
-    top: 12,
-    zIndex: 2,
+    right: 22,
+    top: 20,
     backgroundColor: Color.white,
+    zIndex: 2,
+    width: 25,
+    height: 25,
+    borderRadius: 32 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 22,
+    shadowColor: 'rgba(0,0,0,0.4)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  addToCartIconContainer: {
+    position: 'absolute',
+    right: 20,
+    top: '53%',
+    zIndex: 2,
+    backgroundColor: Color.tertiary,
     width: 32,
     height: 32,
     borderRadius: 32 / 2,

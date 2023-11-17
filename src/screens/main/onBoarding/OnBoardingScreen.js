@@ -1,15 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, Image, StyleSheet, Text, StatusBar} from 'react-native';
+import {View, FlatList, Image, Text, StatusBar} from 'react-native';
 import {Font, Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
 import deviceInfoModule from 'react-native-device-info';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import Button from '../../../components/Button';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 let hasNotch = deviceInfoModule.hasNotch();
 
 const OnBoarding = ({navigation}) => {
@@ -61,7 +57,6 @@ const OnBoarding = ({navigation}) => {
     } else {
       progressIndicator2.value = withSpring(8);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSlideIndex]);
 
   const updateCurrentSlideIndex = e => {
@@ -123,6 +118,7 @@ const OnBoarding = ({navigation}) => {
         currentSlideIndex={currentSlideIndex}
         goToNextSlide={goToNextSlide}
         goToPrevSlide={goToPrevSlide}
+        goLastSlide={goLastSlide}
         navigation={navigation}
         reanimatedStyle={reanimatedStyle}
         reanimatedIndicatorStyle={reanimatedIndicatorStyle}
@@ -181,16 +177,7 @@ const Slide = ({item}) => {
     </View>
   );
 };
-const Indicators = ({
-  currentSlideIndex,
-  goToPrevSlide,
-  goToNextSlide,
-  reanimatedStyle,
-  reanimatedIndicatorStyle,
-  reanimatedIndicator1Style,
-  reanimatedIndicator2Style,
-  navigation,
-}) => {
+const Indicators = ({currentSlideIndex, goToNextSlide, navigation, goLastSlide}) => {
   return (
     <View
       style={{
@@ -232,90 +219,30 @@ const Indicators = ({
                 await AsyncStorage.setItem('onBoardCompleted', 'Done');
                 navigation.replace('SignIn');
               }
-            : goToNextSlide
+            : goLastSlide
         }
       />
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  image: {
-    // height: Window.height,
-    width: Window.width / 1.5,
-  },
-  title: {
-    fontFamily: Font.Manrope_bold,
-    alignSelf: 'center',
-    // textAlign: 'center',
-    fontSize: 24,
-    color: Color.light,
-    letterSpacing: 1.75,
-  },
-  subTitle: {
-    fontFamily: Font.Manrope_regular,
-    fontSize: 16,
-    color: '#BDBDBD',
-    marginTop: 0,
-    marginBottom: 65,
-    textAlign: 'center',
-  },
-  indicator: {
-    height: 8,
-    width: 8,
-    // opacity: 0.5,
-    marginHorizontal: 3,
-    borderRadius: 10,
-    backgroundColor: '#E0E0E0',
-  },
-  fab: {
-    height: 55,
-    width: 55,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Color.secondary,
-    shadowColor: Color.secondary,
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
-    elevation: 15,
-  },
-});
+
 const slides = [
   {
     id: 1,
     title: 'Discover a better way to shop online',
-    subtitle:
-      'Explore our wide selection of products and brands, and save time with smart search tools.',
+    subtitle: 'Explore our wide selection of products and brands, and save time with smart search tools.',
     image: require('../../../assets/images/products/onboarding1.png'),
-    // background: (
-    //   <Onboard1 width={Window.width / 1.25} height={Window.height / 1.35} />
-    // ),
   },
   {
     id: 2,
     title: 'Your One-Stop Shop for Everything',
-    subtitle:
-      'Browse our curated collections and get personalized recommendations based on your preferences.',
+    subtitle: 'Browse our curated collections and get personalized recommendations based on your preferences.',
     image: require('../../../assets/images/products/onboarding2.png'),
-    // background: (
-    //   <Onboard2 width={Window.width / 1.25} height={Window.height / 1.35} />
-    // ),
   },
   {
     id: 3,
     title: 'fast -  secure -  and easy!',
-    subtitle:
-      'Enjoy interactive product demos, 360-degree views, and user-generated reviews.',
+    subtitle: 'Enjoy interactive product demos, 360-degree views, and user-generated reviews.',
     image: require('../../../assets/images/products/onboarding3.png'),
-    // background: (
-    //   <Onboard3 width={Window.width / 1.25} height={Window.height / 1.35} />
-    // ),
   },
 ];

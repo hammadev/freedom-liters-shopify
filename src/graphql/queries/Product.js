@@ -1,41 +1,20 @@
 import {gql} from '@apollo/client';
 
 export const GET_LATEST_PRODUCT = gql`
-  query getLatestProducts {
-    products(first: 10) {
+  query GetLatestProducts {
+    products(first: 8, sortKey: CREATED_AT, reverse: true) {
       edges {
         node {
           id
           title
+          descriptionHtml
           featuredImage {
-            id
             url
           }
           priceRange {
             minVariantPrice {
               amount
               currencyCode
-            }
-          }
-          totalInventory
-          productType
-          descriptionHtml
-          tags
-          variants(first: 100) {
-            edges {
-              node {
-                id
-                title
-                quantityAvailable
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  id
-                  url
-                }
-              }
             }
           }
         }
@@ -46,19 +25,20 @@ export const GET_LATEST_PRODUCT = gql`
 
 export const GET_FEATURED_PRODUCT = gql`
   query FetchFeaturedProduct {
-    products(first: 5) {
+    products(first: 8) {
       edges {
         node {
           id
           title
+          descriptionHtml
+          featuredImage {
+            url
+          }
           priceRange {
             minVariantPrice {
               amount
               currencyCode
             }
-          }
-          featuredImage {
-            originalSrc
           }
         }
       }
@@ -68,18 +48,40 @@ export const GET_FEATURED_PRODUCT = gql`
 
 export const GET_ONSALE_PRODUCT = gql`
   query GetOnSaleProducts {
-    products(query: "on_sale:true", first: 10) {
+    products(query: "tag:onsale", first: 10) {
       edges {
         node {
           id
           title
-          variants(first: 1) {
-            edges {
-              node {
-                price {
-                  amount
-                }
-              }
+          descriptionHtml
+          featuredImage {
+            url
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_PRODUCT = gql`
+  query GetOnSaleProducts {
+    products(query: "tag:onsale", first: 10) {
+      edges {
+        node {
+          id
+          title
+          featuredImage {
+            url
+          }
+          priceRange {
+            minVariantPrice {
+              amount
             }
           }
         }

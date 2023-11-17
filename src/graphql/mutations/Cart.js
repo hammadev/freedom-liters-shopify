@@ -43,6 +43,18 @@ import {gql} from '@apollo/client';
 // }
 // `;
 
+export const GENERATE_CART_ID = gql`
+  mutation {
+    cartCreate {
+      cart {
+        id
+      }
+    }
+  }
+`;
+
+//////  CREATE CART LINE ITEM WITH ONE PRODUCT  /////
+
 export const CREATE_CART_ADD_ONE_ITEM = gql`
   mutation createCart($cartInput: CartInput) {
     cartCreate(input: $cartInput) {
@@ -55,6 +67,8 @@ export const CREATE_CART_ADD_ONE_ITEM = gql`
           edges {
             node {
               id
+              quantity
+
               merchandise {
                 ... on ProductVariant {
                   id
@@ -90,7 +104,7 @@ export const CREATE_CART_ADD_ONE_ITEM = gql`
   }
 `;
 
-export const ADD_ITEM_TO_CART = gql`
+export const ADD_MORE_ITEM = gql`
   mutation addCartLines($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {

@@ -7,6 +7,7 @@ const Color = {
   white: '#fff',
   yellow: '#FBBC05',
   black: '#000',
+  gryLight: '#A0A0A0',
 };
 
 const Font = {
@@ -17,8 +18,7 @@ const Font = {
   Gilroy_Black: 'Gilroy-Black',
   Gilroy_ExtraBold: 'Gilroy-ExtraBold',
   Gilroy_Light: 'Gilroy-Light',
-  Automove_Personal:
-    Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
+  Automove_Personal: Platform.OS == 'ios' ? 'AutomovePersonalUse' : 'Automove-Personal',
 };
 
 const Window = {

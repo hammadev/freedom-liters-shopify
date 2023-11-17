@@ -3,9 +3,10 @@ import {Text, View} from 'react-native';
 import {Font} from './src/globalStyle/Theme';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage from 'react-native-flash-message';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {PaperProvider} from 'react-native-paper';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import RootStack from './src/navigation/RootStack';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
@@ -38,6 +39,7 @@ const App = () => {
                 <RootStack />
               </StripeProvider>
             </PaperProvider>
+            <RootStack />
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ApolloProvider>

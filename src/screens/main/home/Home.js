@@ -1,39 +1,32 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StatusBar,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet, Platform, SafeAreaView} from 'react-native';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
+
 import {CartSvg, ManuSvg} from '../../../assets/svgs/HomePage';
 import Icon from '../../../core/Icon';
 import {useDispatch, useSelector} from 'react-redux';
 // import {getAddress} from '../../../apis/profile';
 import Heading from '../../../components/Heading';
 import {hasNotch} from 'react-native-device-info';
-import {
-  GET_FEATURED_PRODUCT,
-  GET_LATEST_PRODUCT,
-  GET_ONSALE_PRODUCT,
-} from '../../../graphql/queries/Product';
+import {GET_FEATURED_PRODUCT, GET_LATEST_PRODUCT, GET_ONSALE_PRODUCT} from '../../../graphql/queries/Product';
 import {useQuery} from '@apollo/client';
 import SearchBar from '../../../components/SearchBar';
 import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
 
+import {CartSvg} from '../../../assets/svgs/HomePage';
+import {useSelector} from 'react-redux';
+import {hasNotch} from 'react-native-device-info';
+import SearchBar from '../../../components/SearchBar';
+import {BackHandler} from 'react-native';
+import ProductBox from '../product/_partials/ProductBox';
+import {CatBoxCat} from '../../../components/CategoryCart';
+import StatusAppBar from '../../../components/StatusAppBar';
+import Icon from '../../../core/Icon';
+
 export const CatBox = ({item, navigation}) => {
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
-      {/* item.image ? { uri: item.image } : require('../../../assets/images/products/review.png') */}
+    <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
       <ImageBackground
         style={{
           width: Window.width / 2.3,
@@ -41,11 +34,7 @@ export const CatBox = ({item, navigation}) => {
           flexDirection: 'row',
           marginTop: Window.fixPadding,
         }}
-        source={
-          item.image
-            ? {uri: item.image.src}
-            : require('../../../assets/images/products/review.png')
-        }>
+        source={item.image ? {uri: item.image.src} : require('../../../assets/images/products/review.png')}>
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
@@ -79,17 +68,23 @@ export const CatBox = ({item, navigation}) => {
 };
 
 const Home = ({navigation}) => {
-  const {auth, categories, product, wishlist, cart} = useSelector(state => ({
+  const {product, categories, wishlist, cart} = useSelector(state => ({
     ...state,
   }));
-
   const [SearchVale, setSearcValue] = useState(false);
+
+  const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  subscription.remove();
+  const onBackPress = () => {
+    setSearcValue(false);
+  };
+
+  const Goto_Search = () => {
+    navigation.navigate('Search');
+  };
+
   // Fetch Latest Product
-  const {
-    loading: loadinglatestProduct,
-    error: errorLatestProduct,
-    data: dataLatestProduct,
-  } = useQuery(GET_LATEST_PRODUCT);
+  const {loading: loadinglatestProduct, error: errorLatestProduct, data: dataLatestProduct} = useQuery(GET_LATEST_PRODUCT);
   // // Fetch Featured Product
   // const {
   //   loading: loadingFeaturedProduct,
@@ -102,21 +97,7 @@ const Home = ({navigation}) => {
   //   error: errorOnSaleProduct,
   //   data: dataOnSaleProduct,
   // } = useQuery(GET_ONSALE_PRODUCT);
-  useEffect(() => {
-    // getAddress(dispatch, auth.user.ID);
-  }, []);
-  const subscription = BackHandler.addEventListener(
-    'hardwareBackPress',
-    onBackPress,
-  );
-  subscription.remove();
-  const onBackPress = () => {
-    setSearcValue(false);
-  };
 
-  const Goto_Search = () => {
-    setSearcValue(true);
-  };
   return (
     <SafeAreaView
       style={{backgroundColor: Color.light, flex: 1}}
@@ -126,13 +107,8 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusBar
-        animated={true}
-        showHideTransition={'fade'}
-        barStyle={'light-content'}
-        backgroundColor={'transparent'}
-        translucent
-      />
+      <StatusBar animated={true} showHideTransition={'fade'} barStyle={'light-content'} backgroundColor={'transparent'} translucent />
+      <StatusAppBar />
       {SearchVale ? (
         <SearchBar />
       ) : (
@@ -144,6 +120,11 @@ const Home = ({navigation}) => {
               paddingHorizontal: 20,
               backgroundColor: Color.tertiary,
               paddingVertical: 35,
+              height: Window.height / 2.9,
+              paddingHorizontal: 20,
+              backgroundColor: Color.tertiary,
+              paddingVertical: 35,
+              justifyContent: 'center',
             }}
             source={require('../../../assets/images/products/homeBg.png')}>
             <View style={styles.overlay} />
@@ -154,19 +135,16 @@ const Home = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TouchableOpacity
-                  style={{paddingRight: 10}}
-                  onPress={() => Goto_Search()}>
-                  <Icon
-                    iconFamily={'Feather'}
-                    size={20}
-                    style={{}}
-                    name={'search'}
-                    color={Color.white}
-                  />
+                <TouchableOpacity style={{paddingRight: 10}} onPress={() => Goto_Search()}>
+                  <Icon iconFamily={'Feather'} size={20} style={{}} name={'search'} color={Color.white} />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('CheckOut')}>
+                {/* <TouchableOpacity
+                  onPress={() => navigation.navigate('CheckOut')}> */}
+
+                <TouchableOpacity style={{paddingRight: 15}} onPress={() => Goto_Search()}>
+                  <Icon iconFamily={'Feather'} style={{marginTop: 20}} size={20} name={'search'} color={Color.white} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{marginTop: 20}} onPress={() => navigation.navigate('Cart')}>
                   <View
                     style={{
                       zIndex: 1,
@@ -195,23 +173,24 @@ const Home = ({navigation}) => {
             <Text
               style={{
                 marginTop: 27,
-                fontFamily: Font.Automove_Personal,
-                fontSize: 23,
+                fontFamily: Font.Gilroy_Bold,
+                fontSize: 32,
                 color: Color.white,
               }}>
               Dress With Style
             </Text>
             <Image
               style={{
-                marginLeft: 140,
-                width: 98,
+                marginLeft: 90,
+                width: 80,
                 height: 10,
+                marginTop: -5,
               }}
               source={require('../../../assets/images/products/Vector2.png')}
             />
             <Text
               style={{
-                marginTop: 8,
+                marginTop: 5,
                 fontSize: 20,
                 fontFamily: Font.Gilroy_Bold,
                 color: Color.white,
@@ -220,9 +199,9 @@ const Home = ({navigation}) => {
             </Text>
             <TouchableOpacity
               style={{
-                marginTop: 16,
+                marginTop: 14,
                 justifyContent: 'center',
-                backgroundColor: Color.white,
+                backgroundColor: Color.tertiary,
                 width: 85,
                 height: 40,
                 borderRadius: 100,
@@ -230,7 +209,7 @@ const Home = ({navigation}) => {
               }}>
               <Text
                 style={{
-                  color: Color.tertiary,
+                  color: Color.white,
                   fontSize: 13,
                   fontFamily: Font.Gilroy_Bold,
                 }}>
@@ -238,7 +217,6 @@ const Home = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </ImageBackground>
-
           <View
             style={{
               padding: Window.fixPadding * 2,
@@ -249,17 +227,9 @@ const Home = ({navigation}) => {
                 contentContainerStyle={{marginBottom: Window.fixPadding}}
                 columnWrapperStyle={{justifyContent: 'space-between'}}
                 data={categories[0].slice(0, 4)}
-                renderItem={({item}) => (
-                  <CatBox item={item} navigation={navigation} />
-                )}
+                renderItem={({item}) => <CatBox item={item} navigation={navigation} />}
                 numColumns={2}
-                ListHeaderComponent={() => (
-                  <Heading
-                    name={'Category'}
-                    showMore={true}
-                    showMoreLink={'Category'}
-                  />
-                )}
+                ListHeaderComponent={() => <Heading name={'Category'} showMore={true} showMoreLink={'Category'} />}
               />
             )}
 
@@ -281,18 +251,11 @@ const Home = ({navigation}) => {
                     contentContainerStyle={{marginVertical: Window.fixPadding}}
                     data={product.all.edges}
                     renderItem={({item, index}) => (
-                      <ProductBox
-                        wishlist={wishlist}
-                        customStyle={{width: Window.width / 2.3}}
-                        item={item}
-                        index={index}
-                      />
+                      <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
                     )}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={() => (
-                      <View style={{width: Window.fixPadding * 1.5}}></View>
-                    )}
+                    ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
                   />
                 )}
               </>
@@ -331,6 +294,118 @@ const Home = ({navigation}) => {
             )}
           </View> */}
           </View>
+
+          <View
+            style={{
+              padding: Window.fixPadding * 2,
+              marginVertical: Window.fixPadding,
+            }}>
+            {/* Category List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 0.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Category</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Category')}>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{width: '100%'}}>
+              {categories && (
+                <FlatList
+                  horizontal={false}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={categories.categories.edges}
+                  numColumns={2}
+                  renderItem={item => <CatBoxCat navigation={navigation} item={item} />}
+                />
+              )}
+            </View>
+
+            {/* Featured Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Featured</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.featured.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+                />
+              )}
+            </View>
+
+            {/* Latest Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>Latest</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.latest.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+                />
+              )}
+            </View>
+
+            {/* On Sale Product List */}
+            <View
+              style={{
+                marginTop: Window.fixPadding * 1.5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={GlobalStyle.heading}>ONSALE</Text>
+              <TouchableOpacity>
+                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              {product && (
+                <FlatList
+                  contentContainerStyle={{marginVertical: Window.fixPadding}}
+                  data={product.onsale.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+                />
+              )}
+            </View>
+          </View>
         </ScrollView>
       )}
     </SafeAreaView>
@@ -346,6 +421,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
 });
