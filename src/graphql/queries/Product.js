@@ -7,6 +7,14 @@ export const GET_LATEST_PRODUCT = gql`
         node {
           id
           title
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
+          }
           descriptionHtml
           featuredImage {
             url
@@ -30,6 +38,14 @@ export const GET_FEATURED_PRODUCT = gql`
         node {
           id
           title
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
+          }
           descriptionHtml
           featuredImage {
             url
@@ -53,6 +69,14 @@ export const GET_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
+          }
           descriptionHtml
           featuredImage {
             url
@@ -76,6 +100,14 @@ export const GET_ALL_PRODUCT = gql`
         node {
           id
           title
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
+          }
           featuredImage {
             url
           }

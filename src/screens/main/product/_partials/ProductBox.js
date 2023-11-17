@@ -43,8 +43,6 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           product: item,
         })
       }>
-      {item.featured && <ChipComponent type="featured" />}
-      {item.on_sale && <ChipComponent type="onsale" />}
       <TouchableOpacity
         style={style.heartIconContainer}
         onPress={() => {
@@ -69,19 +67,11 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={style.addToCartIconContainer}
-        onPress={() => {
-          if (wishlist.addedItems.some(e => e.node.id === item.node.id)) {
-            dispatch({
-              type: 'REMOVE_SINGLE_FROM_WISHLIST',
-              payload: item.node.id,
-            });
-          } else {
-            dispatch({
-              type: 'ADD_SINGLE_TO_WISHLIST',
-              payload: item,
-            });
-          }
-        }}>
+        onPress={() =>
+          navigation.navigate('ProductDetail', {
+            product: item,
+          })
+        }>
         <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'plus'} />
       </TouchableOpacity>
       {item.node ? (

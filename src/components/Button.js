@@ -47,6 +47,7 @@ const Button = props => {
   return (
     <TouchableOpacity
       style={{
+        paddingHorizontal: 10,
         ...Style.BtnContainer,
         backgroundColor: activeThemeBg(),
         borderWidth: props.type === 'primary' ? 1 : 0,

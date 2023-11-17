@@ -1,41 +1,22 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  AddressSvg,
-  ChevronSvg,
-  GiftSvg,
-  LogoutSvg,
-  PaymentMethodSvg,
-  ProfileSvg,
-} from '../../../assets/svgs/ProfileSvgs';
+import {AddressSvg, ChevronSvg, GiftSvg, LogoutSvg, PaymentMethodSvg, ProfileSvg} from '../../../assets/svgs/ProfileSvgs';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
-import { StatusBar } from 'react-native';
+import {StatusBar} from 'react-native';
 
 const ProfilePages = ({item, popupState}) => {
   const navigation = useNavigation();
   return (
     <>
       <TouchableOpacity
-        onPress={() =>
-          item.navlink == 'logoutFunc'
-            ? popupState(true)
-            : navigation.navigate(item.navlink)
-        }
+        onPress={() => (item.navlink == 'logoutFunc' ? popupState(true) : navigation.navigate(item.navlink))}
         style={{
           justifyContent: 'space-between',
           paddingBottom: 20,
@@ -90,9 +71,7 @@ const Profile = ({navigation}) => {
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={Color.tertiary} />
-      <ScrollView
-        scrollEventThrottle={16}
-        contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"
           imageStyle={{
@@ -109,10 +88,7 @@ const Profile = ({navigation}) => {
           }}>
           <AppBar customStyle={{paddingHorizontal: 20}} />
           <View style={{position: 'relative', alignSelf: 'center'}}>
-            <Image
-              style={{width: 94, height: 94}}
-              source={require('../../../assets/images/pics/profile.png')}
-            />
+            <Image style={{width: 94, height: 94}} source={require('../../../assets/images/pics/profile.png')} />
           </View>
 
           <Text
@@ -121,21 +97,14 @@ const Profile = ({navigation}) => {
               textAlign: 'center',
               marginTop: 24,
               color: Color.white,
-            }}>
-            {/* {auth.user.data.display_name} */}
-          </Text>
+            }}></Text>
         </ImageBackground>
 
         <FlatList
           style={{paddingTop: 20}}
           contentContainerStyle={{paddingHorizontal: 20}}
           data={ProfileData}
-          renderItem={({item}) => (
-            <ProfilePages
-              popupState={item.navlink == 'logoutFunc' && setLogoutAlertPopup}
-              item={item}
-            />
-          )}
+          renderItem={({item}) => <ProfilePages popupState={item.navlink == 'logoutFunc' && setLogoutAlertPopup} item={item} />}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{width: 15}} />}

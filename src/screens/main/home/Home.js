@@ -107,7 +107,7 @@ const Home = ({navigation}) => {
                   <Icon iconFamily={'Feather'} style={{marginTop: 20}} size={20} name={'search'} color={Color.white} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginTop: 20}} onPress={() => navigation.navigate('Cart')}>
-                  <View
+                  {/* <View
                     style={{
                       zIndex: 1,
                       position: 'absolute',
@@ -127,7 +127,7 @@ const Home = ({navigation}) => {
                       }}>
                       {cart.addedItems.length}
                     </Text>
-                  </View>
+                  </View> */}
                   <CartSvg />
                 </TouchableOpacity>
               </View>

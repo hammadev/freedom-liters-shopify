@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StatusBar, Platform, SafeAreaView, ImageBackground} from 'react-native';
+import {View, Text, ScrollView, Platform, SafeAreaView, ImageBackground} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -15,49 +15,61 @@ import {useMutation} from '@apollo/client';
 import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../graphql/mutations/Cart';
 import {handleCreateCart} from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AppStatusBar from '../../../components/AppStatusBar';
+import {useDispatch, useSelector} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
 const ProductDetail = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const {product} = route.params;
-  // console.log(product.node.variants.edges[0].node.id);
   const [visible, setVisible] = useState(false);
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-  // console.log(product.node.variants.edges[0].node.id);
+  const {auth, cart} = useSelector(state => ({
+    ...state,
+  }));
   const Add_To_Card = async () => {
-    setloadingSpinner(true);
-    const CART_ID = await AsyncStorage.getItem('CART_ID');
-    let variables;
-    let mutationFunc;
-    let isCreateCart;
-    if (CART_ID) {
-      console.log('CART_ID', CART_ID);
-      console.log('cart already created');
-      variables = {
-        cartId: CART_ID,
-        lines: {
-          merchandiseId: product.node.variants.edges[0].node.id,
-          quantity: 1,
-        },
-      };
-      mutationFunc = cartLinesAdd;
-      isCreateCart = 0;
-    } else {
-      console.log('cart not found');
-      variables = {
-        cartInput: {
+    if (auth) {
+      setloadingSpinner(true);
+      const CART_ID = await AsyncStorage.getItem('CART_ID');
+      let variables;
+      let mutationFunc;
+      let isCreateCart;
+      if (CART_ID) {
+        console.log('CART_ID', CART_ID);
+        console.log('Add Item In Cart');
+        variables = {
+          cartId: CART_ID,
           lines: {
             merchandiseId: product.node.variants.edges[0].node.id,
             quantity: 1,
           },
-        },
-      };
-      mutationFunc = cartCreate;
-      isCreateCart = 1;
+        };
+        mutationFunc = cartLinesAdd;
+        isCreateCart = 0;
+      } else {
+        console.log('Cart Is Creating....');
+        variables = {
+          cartInput: {
+            lines: {
+              merchandiseId: product.node.variants.edges[0].node.id,
+              quantity: 1,
+            },
+          },
+        };
+        mutationFunc = cartCreate;
+        isCreateCart = 1;
+      }
+      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
+      setloadingSpinner(false);
+    } else {
+      showMessage({
+        message: 'Please Login First',
+        type: 'danger',
+      });
+      navigation.navigate('SignIn');
     }
-    handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
-    setloadingSpinner(false);
-    navigation.navigate('Cart');
+    console.log('CAT REDUX', cart);
   };
 
   return (
@@ -69,7 +81,7 @@ const ProductDetail = ({route, navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusBar animated={true} backgroundColor={'transparent'} barStyle={'light-content'} showHideTransition={'fade'} translucent />
+      <AppStatusBar />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
@@ -84,7 +96,7 @@ const ProductDetail = ({route, navigation}) => {
           }}>
           <View style={styles.overlay} />
           <AppBar
-            theme="#fff"
+            theme="dark"
             header="solid"
             customStyle={{paddingHorizontal: Window.fixPadding * 2}}
             right={
@@ -96,26 +108,6 @@ const ProductDetail = ({route, navigation}) => {
         </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
-          {/* <View
-            style={{
-              paddingHorizontal: 20,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Icon iconFamily={'Fontisto'} name={'star'} size={15} color={Color.tertiary} />
-              <Text
-                style={{
-                  paddingLeft: 5.5,
-                  fontSize: 13,
-                  fontFamily: Font.Gilroy_Medium,
-                  color: Color.primary,
-                }}>
-                {product.average_rating + ' '}({product.rating_count + ' Reviews'})
-              </Text>
-            </View>
-          </View> */}
           <View
             style={{
               paddingHorizontal: 20,

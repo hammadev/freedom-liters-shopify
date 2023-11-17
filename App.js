@@ -1,19 +1,17 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {Font} from './src/globalStyle/Theme';
+import {StatusBar, Text, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage from 'react-native-flash-message';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import RootStack from './src/navigation/RootStack';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {rootReducer} from './src/redux';
-import {StripeProvider} from '@stripe/stripe-react-native';
 import {ApolloProvider} from '@apollo/client';
 import client from './src/graphql/ApolloClient';
+import StatusAppBar from './src/components/StatusAppBar';
+import {Color, Font} from './src/globalStyle/Theme';
 
 const App = () => {
   const store = createStore(rootReducer, composeWithDevTools);
@@ -22,6 +20,16 @@ const App = () => {
       <ApolloProvider client={client}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{flex: 1}}>
+            <StatusAppBar />
+            <FlashMessage
+              position="top"
+              hideStatusBar={false}
+              statusBarHeight={StatusBar.currentHeight}
+              onHide={() => {
+                StatusBar.setBackgroundColor(Color.white);
+              }}
+              titleStyle={{fontSize: 14, fontFamily: Font.Gilroy_Medium}}
+            />
             <RootStack />
           </GestureHandlerRootView>
         </SafeAreaProvider>

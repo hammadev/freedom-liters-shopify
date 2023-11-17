@@ -45,7 +45,6 @@ const ProductListing = route => {
   const searchFilterFunction = text => {
     if (text) {
       const newData = data.collection.products.edges.filter(item => {
-        console.log(item);
         const itemData = item.node.title ? item.node.title.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;

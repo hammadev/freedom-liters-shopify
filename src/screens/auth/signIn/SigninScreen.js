@@ -11,6 +11,7 @@ import {useMutation} from '@apollo/client';
 import StatusAppBar from '../../../components/StatusAppBar';
 import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
+import {ScrollView} from 'react-native';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -71,67 +72,70 @@ const SignIn = ({navigation}) => {
           backgroundColor: 'none',
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <Text
-          onPress={() => navigation.navigate('BottomTabScreen')}
-          style={{
-            alignSelf: 'flex-end',
-            color: scheme == 'dark' ? '#fff' : '#fff',
-            fontSize: 15,
-            paddingVertical: Window.fixPadding * 1.5,
-            marginTop: 20,
-          }}>
-          Skip
-        </Text>
-        <View style={{alignItems: 'center', marginTop: 20}}>
-          <LogoSvg />
-        </View>
-        <Text
-          style={{
-            ...GlobalStyle.heading,
-            color: Color.white,
-            marginTop: Window.fixPadding * 3,
-            marginBottom: Window.fixPadding * 3,
-          }}>
-          Sign In
-        </Text>
-
-        <View>
-          <TextField2
-            icon={'email-outline'}
-            label="Email"
-            isDark={true}
-            onChanged={setEmail}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-          />
-          <TextField2
-            icon={'lock-outline'}
-            label="Password"
-            isDark={true}
-            onChanged={setPassword}
-            passwordFeild={true}
-            setHidePass={setHidePass}
-            hidePass={hidePass}
-            customStyle={{marginBottom: Window.fixPadding}}
-          />
-        </View>
-        <View style={{marginTop: 50, marginBottom: Window.fixPadding * 2}}>
-          <Button text="Login" icon="mail" isIcon={false} theme="white" navLink="SignUp" loading={loading} onPressFunc={handleSubmit} />
-        </View>
-        <View style={{justifyContent: 'flex-end', flex: 1}}>
-          <View style={{...styles.BottonContainer}}>
-            <Text style={{...styles.TextStyle, color: Color.white}}>Don't have an account yet?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text
-                style={{
-                  ...styles.SecondTextStyle,
-                  color: '#FBBC05',
-                  paddingLeft: 5,
-                }}>
-                Register
-              </Text>
-            </TouchableOpacity>
+        <ScrollView>
+          <Text
+            onPress={() => navigation.navigate('BottomTabScreen')}
+            style={{
+              alignSelf: 'flex-end',
+              color: scheme == 'dark' ? '#fff' : '#fff',
+              fontSize: 15,
+              paddingVertical: Window.fixPadding * 1.5,
+              marginTop: 20,
+            }}>
+            Skip
+          </Text>
+          <View style={{alignItems: 'center', marginTop: 20}}>
+            <LogoSvg />
           </View>
-        </View>
+          <Text
+            style={{
+              ...GlobalStyle.heading,
+              color: Color.white,
+              marginTop: Window.fixPadding * 3,
+              marginBottom: Window.fixPadding * 3,
+            }}>
+            Sign In
+          </Text>
+
+          <View>
+            <TextField2
+              icon={'email-outline'}
+              label="Email"
+              isDark={true}
+              onChanged={setEmail}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            />
+            <TextField2
+              icon={'lock-outline'}
+              label="Password"
+              isDark={true}
+              onChanged={setPassword}
+              passwordFeild={true}
+              setHidePass={setHidePass}
+              hidePass={hidePass}
+              customStyle={{marginBottom: Window.fixPadding}}
+            />
+          </View>
+          <View style={{marginTop: 50, marginBottom: Window.fixPadding * 2}}>
+            <Button text="Login" icon="mail" isIcon={false} theme="white" navLink="SignUp" loading={loading} onPressFunc={handleSubmit} />
+          </View>
+          <View style={{justifyContent: 'flex-end', flex: 1}}>
+            <View style={{...styles.BottonContainer}}>
+              <Text style={{...styles.TextStyle, color: Color.white}}>Don't have an account yet?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                <Text
+                  style={{
+                    ...styles.SecondTextStyle,
+                    color: '#FBBC05',
+                    paddingLeft: 5,
+                  }}>
+                  Register
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+
         <Toast />
       </ImageBackground>
     </SafeAreaView>
