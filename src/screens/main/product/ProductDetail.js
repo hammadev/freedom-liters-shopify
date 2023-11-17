@@ -20,12 +20,63 @@ import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import VariationsDetails from '../../../components/VariationsDetails';
 import {hasNotch} from 'react-native-device-info';
 import {StyleSheet} from 'react-native';
+import {useMutation} from '@apollo/client';
+import {
+  ADD_ITEM_TO_CART,
+  CREATE_CART_ADD_ONE_ITEM,
+} from '../../../graphql/mutations/Cart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CART_ID} from '../../../graphql/ApolloClient';
 
 const ProductDetail = ({route}) => {
   const {product} = route.params;
+  // console.log(product.node.variants.edges[0].node.id);
   const [visible, setVisible] = useState(false);
-
-    return (
+  const [cartCreate, {data, loading, error}] = useMutation(
+    CREATE_CART_ADD_ONE_ITEM,
+  );
+  const [cartLinesAdd] = useMutation(ADD_ITEM_TO_CART);
+  const Add_To_Card = async () => {
+    try {
+      const cartValue = AsyncStorage.getItem('cart');
+      if (cartValue) {
+        console.log('Cart Alrady Created');
+        const response = await cartLinesAdd({
+          variables: {
+            cartId: CART_ID,
+            lines: {
+              merchandiseId: product.node.variants.edges[0].node.id,
+              quantity: 1,
+            },
+          },
+        });
+        console.log('RESPONSE', response.data.cartLinesAdd.cart.lines.edges);
+      } else {
+        const response = await cartCreate({
+          variables: {
+            cartInput: {
+              lines: [
+                {
+                  quantity: 1,
+                  merchandiseId: product.node.variants.edges[0].node.id,
+                },
+              ],
+              attributes: {
+                key: '',
+                value: '',
+              },
+            },
+          },
+        });
+        if (response) {
+          AsyncStorage.setItem('cart', response);
+        }
+      }
+    } catch (error) {
+      console.error('Mutation Error:', error);
+    }
+  };
+  return (
     <SafeAreaView
       style={{backgroundColor: Color.white, flex: 1}}
       edges={{
@@ -42,12 +93,11 @@ const ProductDetail = ({route}) => {
         translucent
       />
       <ScrollView
-      showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
         style={{backgroundColor: Color.white, flex: 1}}>
         <ImageBackground
-                  resizeMode="cover"
-
+          resizeMode="cover"
           source={{uri: product.node.featuredImage?.url}}
           style={{
             width: '100%',
@@ -177,7 +227,6 @@ const ProductDetail = ({route}) => {
             visible={visible}
             setVisible={setVisible}
             product={product}
-
             PopupBody={<VariationsDetails product={product} />}
           />
         </View>
@@ -191,7 +240,7 @@ const ProductDetail = ({route}) => {
           marginTop: Window.fixPadding * 1.6,
         }}>
         <Button
-          onPressFunc={() => setVisible()}
+          onPressFunc={() => Add_To_Card()}
           type="tertiary"
           theme="tertiary"
           text="Add to Cart"

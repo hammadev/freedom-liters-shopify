@@ -1,13 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  StatusBar,
-} from 'react-native';
-import { Font, Color, Window, GlobalStyle } from '../../../globalStyle/Theme';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, FlatList, Image, StyleSheet, Text, StatusBar} from 'react-native';
+import {Font, Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import Animated, {
   useSharedValue,
@@ -19,7 +12,7 @@ import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let hasNotch = deviceInfoModule.hasNotch();
 
-const OnBoarding = ({ navigation }) => {
+const OnBoarding = ({navigation}) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
   const progress = useSharedValue(0);
@@ -84,13 +77,13 @@ const OnBoarding = ({ navigation }) => {
     }
     if (nextSlideIndex != slides.length) {
       const offset = nextSlideIndex * Window.width;
-      ref?.current.scrollToOffset({ offset });
+      ref?.current.scrollToOffset({offset});
       setCurrentSlideIndex(currentSlideIndex + 1);
     }
   };
   const goLastSlide = () => {
     const offset = 2 * Window.width;
-    ref?.current.scrollToOffset({ offset });
+    ref?.current.scrollToOffset({offset});
     setCurrentSlideIndex(2);
   };
   const goToPrevSlide = () => {
@@ -100,7 +93,7 @@ const OnBoarding = ({ navigation }) => {
     }
     if (nextSlideIndex != slides.length) {
       const offset = nextSlideIndex * Window.width;
-      ref?.current.scrollToOffset({ offset });
+      ref?.current.scrollToOffset({offset});
       setCurrentSlideIndex(currentSlideIndex - 1);
     }
   };
@@ -123,7 +116,7 @@ const OnBoarding = ({ navigation }) => {
         onScrollEndDrag={updateCurrentSlideIndex}
         showsHorizontalScrollIndicator={false}
         bounces={false}
-        renderItem={({ item }) => <Slide item={item} />}
+        renderItem={({item}) => <Slide item={item} />}
       />
 
       <Indicators
@@ -140,7 +133,7 @@ const OnBoarding = ({ navigation }) => {
   );
 };
 export default OnBoarding;
-const Slide = ({ item }) => {
+const Slide = ({item}) => {
   return (
     <View
       style={{
@@ -206,7 +199,7 @@ const Indicators = ({
         backgroundColor: '#021851',
         paddingBottom: 20,
       }}>
-      <View style={{ paddingBottom: 20 }}>
+      <View style={{paddingBottom: 20}}>
         <Button
           text={currentSlideIndex === 2 ? 'Continue' : 'Next'}
           icon="mail"
@@ -218,9 +211,9 @@ const Indicators = ({
           onPressFunc={
             currentSlideIndex === 2
               ? async () => {
-                await AsyncStorage.setItem('onBoardCompleted', 'Done');
-                navigation.replace('SignIn');
-              }
+                  await AsyncStorage.setItem('onBoardCompleted', 'Done');
+                  navigation.replace('SignIn');
+                }
               : goToNextSlide
           }
         />
@@ -236,9 +229,9 @@ const Indicators = ({
         onPressFunc={
           currentSlideIndex === 2
             ? async () => {
-              await AsyncStorage.setItem('onBoardCompleted', 'Done');
-              navigation.replace('SignIn');
-            }
+                await AsyncStorage.setItem('onBoardCompleted', 'Done');
+                navigation.replace('SignIn');
+              }
             : goToNextSlide
         }
       />

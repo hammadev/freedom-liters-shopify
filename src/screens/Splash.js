@@ -10,15 +10,10 @@ import {Color, GlobalStyle, Window} from '../globalStyle/Theme';
 import {LogoSvg} from '../assets/svgs/Logo';
 import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {signinReq} from '../apis/auth';
 import {useDispatch} from 'react-redux';
 import {gql, useQuery} from '@apollo/client';
-import {
-  GET_FEATURED_PRODUCT,
-  GET_LATEST_PRODUCT,
-} from '../graphql/queries/Product';
+import {GET_LATEST_PRODUCT} from '../graphql/queries/Product';
 import {GET_COLLECTION} from '../graphql/queries/Collection';
-import {Checkout} from '../graphql/queries/Orders';
 
 const Splash = ({navigation}) => {
   // const [loading, setLoading] = useState(true);
@@ -31,13 +26,6 @@ const Splash = ({navigation}) => {
     data: latestProductData,
   } = useQuery(GET_LATEST_PRODUCT);
 
-  // Fetch the first query (GET_LATEST_PRODUCT)
-  const {
-    loading: FeaturedProductLoading,
-    error: FeaturedProductError,
-    data: FeaturedProductData,
-  } = useQuery(GET_FEATURED_PRODUCT);
-
   // Fetch the second query (GET_COLLECTION)
   const {
     loading: collectionLoading,
@@ -46,37 +34,12 @@ const Splash = ({navigation}) => {
   } = useQuery(GET_COLLECTION);
   // const { loading, error, data } = useQuery(GET_COLLECTION);
 
-  // Fetch the third query (GET_COLLECTION)
-
-  // const {
-  //   loading: checkoutLoading,
-  //   error: checkoutError,
-  //   data: checkoutData,
-  // } = useQuery(Checkout);
-
-  // const {
-  //   loading: checkoutLoading,
-  //   error: checkoutError,
-  //   data: checkoutData,
-  // } = useQuery(Checkout);
-
   useEffect(() => {
-    // if (!latestProductLoading && !latestProductError && latestProductData) {
-    //   // Dispatch an action to store the latest product data in Redux
-    //   dispatch({
-    //     type: 'PRODUCTS',
-    //     Payload: latestProductData.products,
-    //   });
-    // }
-    if (
-      !FeaturedProductLoading &&
-      !FeaturedProductError &&
-      FeaturedProductData
-    ) {
+    if (!latestProductLoading && !latestProductError && latestProductData) {
       // Dispatch an action to store the latest product data in Redux
       dispatch({
-        type: 'FEATURED_PRODUCTS',
-        Payload: FeaturedProductData.products,
+        type: 'PRODUCTS',
+        Payload: latestProductData.products,
       });
     }
 
@@ -95,9 +58,9 @@ const Splash = ({navigation}) => {
       checkUser();
     }
   }, [
-    FeaturedProductLoading,
-    FeaturedProductError,
-    FeaturedProductData,
+    latestProductLoading,
+    latestProductError,
+    latestProductData,
     collectionLoading,
     collectionError,
     collectionData,
@@ -133,19 +96,7 @@ const Splash = ({navigation}) => {
     return () => clearTimeout(timer);
   };
 
-  // if (loading) {
-  //   return <Text>Loading...</Text>;
-  // }
-
-  // if (error) {
-  //   return <Text>Error: {error.message}</Text>;
-  // }
-
-  // const product  s = data.products.edges;
-  // console.log('Fetched products:', data.products.edges);
-
   return (
-    // <SafeAreaView style={{...GlobalStyle.Container}}>
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground
@@ -161,9 +112,7 @@ const Splash = ({navigation}) => {
           <View
             style={{
               position: 'absolute',
-              // justifyContent: 'center',
               top: Window.height / 1.8,
-              // alignItems: 'center',
               left: 0,
               right: 0,
             }}>
@@ -174,7 +123,6 @@ const Splash = ({navigation}) => {
         </View>
       </ImageBackground>
     </>
-    // </SafeAreaView>
   );
 };
 

@@ -27,6 +27,9 @@ import {fetchPaymentSheetParams} from '../../../apis/general_settings';
 import {showMessage} from 'react-native-flash-message';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {useNavigation} from '@react-navigation/native';
+import {useQuery} from '@apollo/client';
+import {GET_CART_DATA} from '../../../graphql/queries/Checkout';
+import {CART_ID} from '../../../graphql/ApolloClient';
 
 const OrderSummary = ({subTotal}) => {
   return (
@@ -251,13 +254,23 @@ const CheckOut = ({navigation}) => {
     setRefresh(!refresh);
     closeDeleteCart();
   };
-
+  const {
+    data: cartItem,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery(GET_CART_DATA, {
+    variables: {
+      cartId: CART_ID,
+    },
+  });
+  console.log('Cart Data', cartItem);
+  const {data, loading: CartLoader, error} = useQuery(GET_CART_DATA);
   useEffect(() => {
     setCartData(cart.addedItems);
     setSubTotal(cart.total);
   }, [refresh]);
 
-  console.log('ddddd', cart.total);
+  // console.log('ddddd', cart.total);
   const quantityFunc = (id, quantity, type, price, total, setQty) => {
     if (type === 2 && quantity === 1) {
       return;
