@@ -25,9 +25,10 @@ const ProductDetail = ({route, navigation}) => {
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-  const {auth, cart} = useSelector(state => ({
+  const {auth} = useSelector(state => ({
     ...state,
   }));
+
   const Add_To_Card = async () => {
     if (auth) {
       setloadingSpinner(true);
@@ -36,8 +37,6 @@ const ProductDetail = ({route, navigation}) => {
       let mutationFunc;
       let isCreateCart;
       if (CART_ID) {
-        console.log('CART_ID', CART_ID);
-        console.log('Add Item In Cart');
         variables = {
           cartId: CART_ID,
           lines: {
@@ -48,7 +47,6 @@ const ProductDetail = ({route, navigation}) => {
         mutationFunc = cartLinesAdd;
         isCreateCart = 0;
       } else {
-        console.log('Cart Is Creating....');
         variables = {
           cartInput: {
             lines: {
@@ -69,7 +67,6 @@ const ProductDetail = ({route, navigation}) => {
       });
       navigation.navigate('SignIn');
     }
-    console.log('CAT REDUX', cart);
   };
 
   return (

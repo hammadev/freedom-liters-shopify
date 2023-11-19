@@ -1,7 +1,18 @@
-export const cartReducer = (state = [], action) => {
+const InitialState = {
+  addedItems: [],
+  total: 0,
+  Subtotal: 0,
+};
+
+export const cartReducer = (state = InitialState, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      return {...state, cart: action.Payload};
+      return {
+        ...state,
+        addedItems: action.payload,
+        total: action.payload.cost.subtotalAmount.amount,
+        Subtotal: action.payload.cost.totalAmount.amount,
+      };
 
     case 'UPDATE_ITEM':
       return {

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Color} from '../globalStyle/Theme';
-import {EmailSvg} from '../assets/svgs/AuthSvg';
 const TextField2 = ({
   isDark = false,
   label,
   placeholder,
   icon,
+  title,
   passwordFeild = false,
   setHidePass,
   hidePass,
@@ -18,6 +18,7 @@ const TextField2 = ({
 }) => {
   let bgColor = !isDark ? Color.white : Color.tertiary;
   let color = isDark ? Color.white : Color.tertiary;
+  console.log('Lenth', title);
   return (
     <TextInput
       label={<Text style={{color: color, backgroundColor: bgColor}}>{label}</Text>}

@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ChevronSvg} from '../assets/svgs/AuthSvg';
 import {useColorScheme} from 'react-native';
 
-const BackIcon = ({theme}) => {
+export const BackIcon = ({theme}) => {
   let navigation = useNavigation();
   return (
     <TouchableOpacity

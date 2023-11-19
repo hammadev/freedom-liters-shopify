@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import ActivityLoader from '../../../components/ActivityLoader';
 import {useEffect} from 'react';
 import StatusAppBar from '../../../components/StatusAppBar';
+import {BackIcon} from '../../../components/AppBar';
 
 const SearchScreen = () => {
   const [searchValue, setSearcValue] = useState();
@@ -56,6 +57,14 @@ const SearchScreen = () => {
     <Animated.View style={[reanimatedHeightStyle, {overflow: 'hidden', padding: 20, flex: 1}]}>
       <StatusAppBar />
       <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+        <View
+          style={{
+            marginRight: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <BackIcon theme={'light'} />
+        </View>
         <Searchbar
           placeholder="Search"
           onClearIconPress={() => {
@@ -82,9 +91,8 @@ const SearchScreen = () => {
         />
         <View
           style={{
-            width: 60,
             marginLeft: 8,
-            borderRadius: 15,
+            borderRadius: 20,
             backgroundColor: Color.tertiary,
             justifyContent: 'center',
             alignItems: 'center',

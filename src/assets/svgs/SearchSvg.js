@@ -3,7 +3,7 @@ import Svg, {G, Path, Defs, LinearGradient, Stop, Circle, ClipPath, Rect, Mask} 
 
 export function SearchFilterSvg({width, height}) {
   return (
-    <Svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg width="60" height="60" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M28 19C29.1046 19 30 19.8954 30 21C30 22.1046 29.1046 23 28 23C26.8954 23 26 22.1046 26 21C26 19.8954 26.8954 19 28 19Z"
         fill="white"

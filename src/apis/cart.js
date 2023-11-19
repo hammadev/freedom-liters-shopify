@@ -11,16 +11,7 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
       if (isCreateCart) {
         console.log('RESPONSEs', response.data.cartCreate.cart.id);
         await AsyncStorage.setItem('CART_ID', response.data.cartCreate.cart.id);
-        dispatch({
-          type: 'ADD_TO_CART',
-          payload: response.data.cartCreate.cart,
-        });
       }
-
-      dispatch({
-        type: 'ADD_TO_CART',
-        payload: response.data.cartLinesAdd.cart,
-      });
       showMessage({
         message: 'Item Add or cart created Successfully',
         type: 'success',
@@ -37,7 +28,6 @@ export const hnadleRemoveCartItem = async (cartLinesRemove, variables) => {
       variables,
     });
     if (response) {
-      console.log('RESPONSEs', response);
       showMessage({
         message: 'Item Remove Successfully',
         type: 'success',
@@ -54,7 +44,21 @@ export const hnadleIncreseCartValue = async (cartLinesUpdate, variables) => {
       variables,
     });
     if (response) {
-      console.log('RESPONSEs', response);
+      showMessage({
+        message: 'Item Increse Value Successfully',
+        type: 'success',
+      });
+    }
+  } catch (error) {
+    console.error('Mutation Remove Error:', error);
+  }
+};
+export const hnadleDecreaseCartValue = async (cartLinesUpdate, variables) => {
+  try {
+    const response = await cartLinesUpdate({
+      variables,
+    });
+    if (response) {
       showMessage({
         message: 'Item Increse Value Successfully',
         type: 'success',
@@ -71,7 +75,6 @@ export const handleCouponCode = async (cart, variables) => {
       variables,
     });
     if (response) {
-      console.log('COUPON APPLIED', response);
     }
   } catch (error) {
     console.error('Mutation Coupon Error:', error);

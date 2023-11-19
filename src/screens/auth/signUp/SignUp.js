@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StatusBar, ScrollView, ImageBackground} from 'react-native';
 import Button from '../../../components/Button';
 import {GlobalStyle, Color, Window, Font} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
@@ -29,14 +22,20 @@ const SignUp = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createCustomerAccount, {loading, error, data}] = useMutation(
-    CREATE_CUSTOMER_ACCOUNT,
-  );
+  const [createCustomerAccount, {loading, error, data}] = useMutation(CREATE_CUSTOMER_ACCOUNT);
 
   const handleSubmit = () => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const passwordformat = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
 
     if (firstName === '') {
+      showMessage({
+        message: "First Name can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+    if (password.match(passwordformat)) {
       showMessage({
         message: "First Name can't be blank",
         type: 'danger',
@@ -142,6 +141,7 @@ const SignUp = ({navigation}) => {
               onChanged={setLastName}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
+
             <TextField2
               icon={'email-outline'}
               label="Email"
@@ -154,6 +154,7 @@ const SignUp = ({navigation}) => {
               icon={'phone-outline'}
               label="Phone"
               isDark={true}
+              title={'title'}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
@@ -192,9 +193,7 @@ const SignUp = ({navigation}) => {
             />
           </View>
           <View style={styles.BottonContainer}>
-            <Text style={{...styles.TextStyle, color: Color.white}}>
-              Don’t have an account?
-            </Text>
+            <Text style={{...styles.TextStyle, color: Color.white}}>Don’t have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
               <Text
                 style={{

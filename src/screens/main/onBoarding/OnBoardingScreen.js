@@ -5,6 +5,7 @@ import deviceInfoModule from 'react-native-device-info';
 import {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppStatusBar from '../../../components/AppStatusBar';
 
 let hasNotch = deviceInfoModule.hasNotch();
 
@@ -77,9 +78,10 @@ const OnBoarding = ({navigation}) => {
     }
   };
   const goLastSlide = () => {
-    const offset = 2 * Window.width;
-    ref?.current.scrollToOffset({offset});
-    setCurrentSlideIndex(2);
+    // const offset = 2 * Window.width;
+    // ref?.current.scrollToOffset({offset});
+    // setCurrentSlideIndex(2);
+    navigation.navigate('SignIn');
   };
   const goToPrevSlide = () => {
     const nextSlideIndex = currentSlideIndex - 1;
@@ -95,7 +97,7 @@ const OnBoarding = ({navigation}) => {
 
   return (
     <>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
+      <AppStatusBar />
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
@@ -134,7 +136,7 @@ const Slide = ({item}) => {
     <View
       style={{
         width: Window.width,
-        height: Window.height / 1.25,
+        height: Window.height / 1.21,
         backgroundColor: '#021851',
       }}>
       <Image
