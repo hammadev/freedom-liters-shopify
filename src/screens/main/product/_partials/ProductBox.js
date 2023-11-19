@@ -3,7 +3,12 @@ import React from 'react';
 import Icon from '../../../../core/Icon';
 import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../../graphql/mutations/Cart';
+import {handleCreateCart} from '../../../../apis/cart';
+import {useState} from 'react';
+import {useMutation} from '@apollo/client';
 
 const ChipComponent = ({type}) =>
   type === 'featured' ? (
@@ -29,6 +34,53 @@ const ChipComponent = ({type}) =>
   ) : null;
 
 const ProductBox = ({item, customStyle, wishlist}) => {
+  const [loadingSpinner, setloadingSpinner] = useState(false);
+  const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
+  const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
+  const {auth} = useSelector(state => ({
+    ...state,
+  }));
+
+  const Add_To_Card = async item => {
+    console.log(item.id);
+    if (auth) {
+      setloadingSpinner(true);
+      const CART_ID = await AsyncStorage.getItem('CART_ID');
+      let variables;
+      let mutationFunc;
+      let isCreateCart;
+      if (CART_ID) {
+        variables = {
+          cartId: CART_ID,
+          lines: {
+            merchandiseId: item.id,
+            quantity: 1,
+          },
+        };
+        mutationFunc = cartLinesAdd;
+        isCreateCart = 0;
+      } else {
+        variables = {
+          cartInput: {
+            lines: {
+              merchandiseId: item.id,
+              quantity: 1,
+            },
+          },
+        };
+        mutationFunc = cartCreate;
+        isCreateCart = 1;
+      }
+      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
+      setloadingSpinner(false);
+    } else {
+      showMessage({
+        message: 'Please Login First',
+        type: 'danger',
+      });
+      navigation.navigate('SignIn');
+    }
+  };
   const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
@@ -65,13 +117,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           name={wishlist.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={style.addToCartIconContainer}
-        onPress={() =>
-          navigation.navigate('ProductDetail', {
-            product: item,
-          })
-        }>
+      <TouchableOpacity style={style.addToCartIconContainer} onPress={() => Add_To_Card(item.node.variants.edges[0].node)}>
         <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'plus'} />
       </TouchableOpacity>
       {item.node ? (

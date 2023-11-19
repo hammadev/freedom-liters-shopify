@@ -1,8 +1,7 @@
 import React from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image, ScrollView, StyleSheet} from 'react-native';
-
+import {View, Text, ScrollView} from 'react-native';
 import AppBar from '../../../components/AppBar';
-import {Color, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {CatBoxCat} from '../../../components/CategoryCart';

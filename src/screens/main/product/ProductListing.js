@@ -6,7 +6,6 @@ import {useState} from 'react';
 import {Color, Window} from '../../../globalStyle/Theme';
 import {SearchFilterSvg} from '../../../assets/svgs/SearchSvg';
 import {useQuery} from '@apollo/client';
-import {GET_ALL_PRODUCT} from '../../../graphql/queries/Product';
 import {FlatList} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
 import {useSelector} from 'react-redux';
@@ -14,6 +13,7 @@ import ActivityLoader from '../../../components/ActivityLoader';
 import {useEffect} from 'react';
 import StatusAppBar from '../../../components/StatusAppBar';
 import {GET_ONE_CATEGORIES_PRODUCT} from '../../../graphql/queries/Category';
+import {BackIcon} from '../../../components/AppBar';
 
 const ProductListing = route => {
   const [ProductData, setProductData] = useState([]);
@@ -61,11 +61,16 @@ const ProductListing = route => {
     <Animated.View style={[reanimatedHeightStyle, {overflow: 'hidden', padding: 20, flex: 1}]}>
       <StatusAppBar />
       <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+        <View
+          style={{
+            marginRight: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <BackIcon theme={'light'} />
+        </View>
         <Searchbar
           placeholder="Search"
-          onClearIconPress={() => {
-            setLoading(false);
-          }}
           onChangeText={text => {
             searchFilterFunction(text);
           }}
@@ -87,9 +92,8 @@ const ProductListing = route => {
         />
         <View
           style={{
-            width: 60,
             marginLeft: 8,
-            borderRadius: 15,
+            borderRadius: 20,
             backgroundColor: Color.tertiary,
             justifyContent: 'center',
             alignItems: 'center',
