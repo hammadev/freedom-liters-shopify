@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StatusBar} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
-import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import TextField2 from '../../../components/TextFeild2';
-import { useDispatch, useSelector } from 'react-redux';
-import { handleProfileUpdate } from '../../../apis/auth';
-import { showMessage } from 'react-native-flash-message';
-import { SkypeIndicator } from 'react-native-indicators';
-import { FETCH_CUSTOMER_INFO } from '../../../graphql/queries/Customer';
-import { CUSTOMER_UPDATE } from '../../../graphql/mutations/Auth';
-import { useMutation, useQuery } from '@apollo/client';
+import {useDispatch, useSelector} from 'react-redux';
+import {handleProfileUpdate} from '../../../apis/auth';
+import {showMessage} from 'react-native-flash-message';
+import {SkypeIndicator} from 'react-native-indicators';
+import {FETCH_CUSTOMER_INFO} from '../../../graphql/queries/Customer';
+import {CUSTOMER_UPDATE} from '../../../graphql/mutations/Auth';
+import {useMutation, useQuery} from '@apollo/client';
 
-const PersonalInfo = ({ navigation }) => {
-  const { auth, address } = useSelector(state => ({ ...state }));
+const PersonalInfo = ({navigation}) => {
+  const {auth, address} = useSelector(state => ({...state}));
   const dispatch = useDispatch();
 
   // const [loading, setLoading] = useState(false);
@@ -28,16 +24,14 @@ const PersonalInfo = ({ navigation }) => {
   const [email, setEmail] = useState(null);
   const [displayName, setDisplayName] = useState(null);
 
-  // console.log(auth.accessToken);
-  const { loading, error, data, refetch } = useQuery(FETCH_CUSTOMER_INFO, {
+  const {loading, error, data, refetch} = useQuery(FETCH_CUSTOMER_INFO, {
     variables: {
-      customerAccessToken: auth.accessToken, // Replace with your actual customer access token
+      customerAccessToken: auth.accessToken,
     },
   });
 
   useEffect(() => {
     if (data && data.customer) {
-      // Handle and display customer information as needed
       console.log('Customer Info:', data.customer);
       setFirstName(data.customer.firstName);
       setLastName(data.customer.lastName);
@@ -45,17 +39,15 @@ const PersonalInfo = ({ navigation }) => {
       setEmail(data.customer.email);
       setDisplayName(data.customer.displayName);
     }
-
-  }, [data])
+  }, [data]);
 
   if (error) {
     console.log(error);
   }
 
-  const [customerUpdate, { loading: updateLoading, error: updateError, data: updateData }] = useMutation(CUSTOMER_UPDATE);
+  const [customerUpdate, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(CUSTOMER_UPDATE);
 
   const handleSubmit = async () => {
-
     if (firstName === null) {
       showMessage({
         message: "First Name can't be blank",
@@ -93,26 +85,29 @@ const PersonalInfo = ({ navigation }) => {
         lastName,
         email,
       },
-    }
+    };
 
-    console.log('variables', variables);
     handleProfileUpdate(customerUpdate, variables, refetch);
   };
 
   return (
     <SafeAreaView style={GlobalStyle.Container}>
-            <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
+      <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
 
-      <AppBar
-        theme='dark'
-        title='Personal Information'
-      />
-      {
-        loading &&
-        <View style={{ flex: 1, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)', width: Window.width, height: Window.height, zIndex: 1 }}>
+      <AppBar theme="dark" title="Personal Information" />
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            width: Window.width,
+            height: Window.height,
+            zIndex: 1,
+          }}>
           <SkypeIndicator />
         </View>
-      }
+      )}
       <Text
         style={{
           marginTop: 8,
@@ -121,60 +116,32 @@ const PersonalInfo = ({ navigation }) => {
           fontFamily: Font.Gilroy_Regular,
           color: 'rgba(8, 14, 30, 0.4)',
         }}>
-        This may include details you have provided to us such as your name, your
-        number & email...
+        This may include details you have provided to us such as your name, your number & email...
       </Text>
-      <View style={{ flexDirection: 'row', marginTop: 20 }}>
-        <View style={{ width: '48%', marginRight: 5 }}>
-          <TextField2
-            label="First Name"
-            onChanged={setFirstName}
-            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-            value={firstName}
-          />
+      <View style={{flexDirection: 'row', marginTop: 20}}>
+        <View style={{width: '48%', marginRight: 5}}>
+          <TextField2 label="First Name" onChanged={setFirstName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={firstName} />
         </View>
-        <View style={{ width: '48%', marginLeft: 5 }}>
-          <TextField2
-            label="Last Name"
-            onChanged={setLastName}
-            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-            value={lastName}
-          />
+        <View style={{width: '48%', marginLeft: 5}}>
+          <TextField2 label="Last Name" onChanged={setLastName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={lastName} />
         </View>
       </View>
 
       <TextField2
         label="Display Name"
         onChanged={setDisplayName}
-        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
+        customStyle={{marginBottom: Window.fixPadding * 1.5}}
         value={displayName}
         // numberOfLines={4}
         disabled
       />
 
-      <TextField2
-        label="Email"
-        onChanged={setEmail}
-        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-        value={email}
-      />
+      <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
 
-      <TextField2
-        label="Phone"
-        onChanged={setPhone}
-        customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
-        value={phone}
-      />
+      <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} />
 
-      <View style={{ marginTop: 20 }}>
-        <Button
-          loading={updateLoading}
-          text="Update Profile"
-          onPressFunc={handleSubmit}
-          icon="mail"
-          isIcon={false}
-          theme="tertiary"
-        />
+      <View style={{marginTop: 20}}>
+        <Button loading={updateLoading} text="Update Profile" onPressFunc={handleSubmit} icon="mail" isIcon={false} theme="tertiary" />
       </View>
     </SafeAreaView>
   );

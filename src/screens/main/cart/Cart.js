@@ -27,18 +27,19 @@ const PaymentDetails = ({totalAmout, cartId}) => {
   const [CouponCodeVisibility, setCouponCodeVisibility] = React.useState('');
   const handlePress = () => setExpanded(!expanded);
   const [cart, {data, loading, error}] = useMutation(COUPON_CODE);
+
   useEffect(() => {
-    if (data) {
+    if (data && !loading && !error) {
       setCouponCodeVisibility(false);
     }
   }, [data, loading, error]);
   const Apply_Coupon = async () => {
     const variables = {
       cartId: cartId,
-      discountCodes: [couponCode],
+      discountCodes: couponCode,
     };
     handleCouponCode(cart, variables);
-    if (data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable == true) {
+    if (data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable === true) {
       setCouponCodeVisibility(false);
     } else if (error) {
       showMessage({
@@ -55,73 +56,78 @@ const PaymentDetails = ({totalAmout, cartId}) => {
 
   return (
     <View>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          marginVertical: 10,
-          alignItems: 'center',
-          flexDirection: 'row',
-          backgroundColor: '',
-        }}>
-        <Text style={styles.TextStyle}> Subtotal </Text>
-        <Text style={styles.TotalStyle}>
-          {data ? data.cartDiscountCodesUpdate.cart.cost.totalAmount.amount : totalAmout.subtotalAmount.amount}{' '}
-        </Text>
-      </View>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          marginVertical: 10,
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}>
-        <Text style={styles.TextStyle}> Delivery Fee </Text>
+      {totalAmout ? (
+        <>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginVertical: 10,
+              alignItems: 'center',
+              flexDirection: 'row',
+              backgroundColor: '',
+            }}>
+            <Text style={styles.TextStyle}> Subtotal </Text>
+            <Text style={styles.TotalStyle}>{totalAmout.subtotalAmount.amount}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginVertical: 10,
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={styles.TextStyle}> Delivery Fee </Text>
 
-        <Text style={styles.TotalStyle}> {totalAmout ? totalAmout.totalTaxAmount.amount : '0.00'} </Text>
-      </View>
-      {!CouponCodeVisibility ? (
-        <View>
-          <List.Section>
-            <List.Accordion
-              style={{backgroundColor: 'white', width: '100%'}}
-              title="Apply Coupon"
-              left={props => <List.Icon icon="percent" />}
-              expanded={expanded}
-              onPress={handlePress}>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                }}>
-                <TextField2 icon={'barcode'} onChanged={setCouponCode} label="Apply Coupon" customStyle={{width: 200}} />
-                {loading ? (
-                  <SkypeIndicator size={20} color={Color.black} />
-                ) : (
-                  <Text onPress={() => Apply_Coupon()} style={styles.TextStyle}>
-                    Apply
-                  </Text>
-                )}
-              </View>
-            </List.Accordion>
-          </List.Section>
-        </View>
+            <Text style={styles.TotalStyle}> {totalAmout.totalTaxAmount.amount} </Text>
+          </View>
+
+          <View style={{marginBottom: 10}}>
+            {CouponCodeVisibility ? (
+              <List.Section>
+                <List.Accordion
+                  style={{backgroundColor: 'white', width: '100%'}}
+                  title="Apply Coupon"
+                  left={props => <List.Icon icon="percent" />}
+                  expanded={expanded}
+                  onPress={handlePress}>
+                  <View
+                    style={{
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <TextField2 icon={'barcode'} onChanged={setCouponCode} label="Apply Coupon" customStyle={{width: 200}} />
+                    {loading ? (
+                      <SkypeIndicator size={20} color={Color.black} />
+                    ) : (
+                      <Text onPress={() => Apply_Coupon()} style={styles.TextStyle}>
+                        Apply
+                      </Text>
+                    )}
+                  </View>
+                </List.Accordion>
+              </List.Section>
+            ) : (
+              <Text style={[styles.TextStyle, {color: 'green'}]}> Applied Coupon </Text>
+            )}
+          </View>
+
+          <View style={{...GlobalStyle.borderStyle, marginTop: 0}}></View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginVertical: 10,
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={styles.TextStyle}>Total</Text>
+            {/* <Text style={styles.TotalStyle}>$ ${totalAmout.cost.totalAmount.amount}</Text> */}
+            <Text style={styles.TotalStyle}> {totalAmout ? totalAmout.totalAmount.amount : '0.00'} PKR</Text>
+          </View>
+        </>
       ) : (
-        <Text style={[styles.TextStyle, {color: 'green'}]}>'Applied Coupon'</Text>
+        ''
       )}
-
-      <View style={{...GlobalStyle.borderStyle, marginTop: 0}}></View>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          marginVertical: 10,
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}>
-        <Text style={styles.TextStyle}>Total</Text>
-        {/* <Text style={styles.TotalStyle}>$ ${totalAmout.cost.totalAmount.amount}</Text> */}
-        <Text style={styles.TotalStyle}> {totalAmout ? totalAmout.totalAmount.amount : '0.00'} PKR</Text>
-      </View>
     </View>
   );
 };
@@ -167,7 +173,6 @@ const Cart = () => {
     hnadleDecreaseCartValue(cartLinesUpdate, variables);
   };
   const incrementValue = item => {
-    setIncreaseQtyLoader(true);
     const variables = {
       cartId: CartId,
       lines: {
@@ -175,8 +180,8 @@ const Cart = () => {
         quantity: item.node.quantity + 1,
       },
     };
+    console.log('Increse ', variables);
     hnadleIncreseCartValue(cartLinesUpdate, variables);
-    setIncreaseQtyLoader(false);
   };
 
   const Remove_Items = item => {

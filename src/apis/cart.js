@@ -48,6 +48,7 @@ export const hnadleIncreseCartValue = async (cartLinesUpdate, variables) => {
         message: 'Item Increse Value Successfully',
         type: 'success',
       });
+      console.log(response.data.cartLinesUpdate.cart.lines.edges);
     }
   } catch (error) {
     console.error('Mutation Remove Error:', error);

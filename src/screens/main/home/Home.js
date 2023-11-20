@@ -218,7 +218,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>Featured</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 1})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -245,7 +245,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>Latest</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 2})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -272,7 +272,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>ONSALE</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 3})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>

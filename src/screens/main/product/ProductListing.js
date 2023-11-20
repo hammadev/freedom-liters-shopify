@@ -14,6 +14,12 @@ import {useEffect} from 'react';
 import StatusAppBar from '../../../components/StatusAppBar';
 import {GET_ONE_CATEGORIES_PRODUCT} from '../../../graphql/queries/Category';
 import {BackIcon} from '../../../components/AppBar';
+import {
+  GET_ALL_FEATURED_PRODUCT,
+  GET_ALL_LATEST_PRODUCT,
+  GET_ALL_ONSALE_PRODUCT,
+  GET_FEATURED_PRODUCT,
+} from '../../../graphql/queries/Product';
 
 const ProductListing = route => {
   const [ProductData, setProductData] = useState([]);
@@ -26,14 +32,46 @@ const ProductListing = route => {
     },
   });
 
+  const {data: featuredProductData, loader: featuredProductLoader, error: featuredProductError} = useQuery(GET_ALL_FEATURED_PRODUCT);
+  const {data: latestProductData, loader: latestProductLoader, error: latestProductError} = useQuery(GET_ALL_LATEST_PRODUCT);
+  const {data: onSaleProductData, loader: onSaleProductLoader, error: onSaleProductError} = useQuery(GET_ALL_ONSALE_PRODUCT);
+
   const {wishlist} = useSelector(state => ({
     ...state,
   }));
   useEffect(() => {
-    if (data && !loader && !error) {
-      setProductData(data.collection.products.edges);
+    if (route.route.params?.value == 0) {
+      console.log('Category');
+      if (data && !loader && !error) {
+        setProductData(data.collection.products.edges);
+      }
+    } else if (route.route.params?.value == 1) {
+      if (featuredProductData && !featuredProductLoader && !featuredProductError) {
+        setProductData(featuredProductData.products.edges);
+      }
+    } else if (route.route.params?.value == 2) {
+      if (latestProductData && !latestProductLoader && !latestProductError) {
+        setProductData(latestProductData.products.edges);
+      }
+    } else if (route.route.params?.value == 3) {
+      if (onSaleProductData && !onSaleProductLoader && !onSaleProductError) {
+        setProductData(onSaleProductData.products.edges);
+      }
     }
-  }, [data, loader, error]);
+  }, [
+    data,
+    loader,
+    error,
+    featuredProductData,
+    featuredProductLoader,
+    featuredProductError,
+    latestProductData,
+    latestProductLoader,
+    latestProductError,
+    onSaleProductData,
+    onSaleProductLoader,
+    onSaleProductError,
+  ]);
 
   const heightProgress = useSharedValue(50);
   const reanimatedHeightStyle = useAnimatedStyle(() => {
@@ -102,7 +140,7 @@ const ProductListing = route => {
         </View>
       </View>
       <View style={{flex: 1}}>
-        {ProductData ? (
+        {ProductData.length ? (
           <FlatList
             contentContainerStyle={{marginVertical: Window.fixPadding}}
             data={ProductData}
