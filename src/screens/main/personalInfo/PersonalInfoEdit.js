@@ -5,17 +5,16 @@ import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TextField2 from '../../../components/TextFeild2';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {handleProfileUpdate} from '../../../apis/auth';
 import {showMessage} from 'react-native-flash-message';
 import {SkypeIndicator} from 'react-native-indicators';
 import {FETCH_CUSTOMER_INFO} from '../../../graphql/queries/Customer';
 import {CUSTOMER_UPDATE} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
-import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
-import {TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native';
 
-const PersonalInfo = ({navigation}) => {
+const PersonalInfoEdit = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
 
   const [firstName, setFirstName] = useState(null);
@@ -29,7 +28,7 @@ const PersonalInfo = ({navigation}) => {
       customerAccessToken: auth.accessToken,
     },
   });
-
+  console.log(data);
   useEffect(() => {
     if (data && data.customer) {
       setFirstName(data.customer.firstName);
@@ -94,78 +93,74 @@ const PersonalInfo = ({navigation}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
 
       <AppBar theme="light" title="Personal Information" />
-      {loading && (
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            width: Window.width,
-            height: Window.height,
-            zIndex: 1,
-          }}>
-          <SkypeIndicator />
-        </View>
-      )}
+      <ScrollView>
+        {loading && (
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              width: Window.width,
+              height: Window.height,
+              zIndex: 1,
+            }}>
+            <SkypeIndicator />
+          </View>
+        )}
 
-      <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: Font.Gilroy_Bold,
+              color: Color.black,
+            }}>
+            Personal Information Edit
+          </Text>
+        </View>
         <Text
           style={{
-            fontSize: 20,
-            fontFamily: Font.Gilroy_Bold,
-            color: Color.black,
+            marginTop: 8,
+            lineHeight: 20,
+            fontSize: 13,
+            fontFamily: Font.Gilroy_Regular,
+            color: 'rgba(8, 14, 30, 0.4)',
           }}>
-          Personal Information
+          This may include details you have provided to us such as your name, your number & email...
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('PersonalInfoEdit')}>
-          <Image source={require('../../../assets/images/pics/edit.png')} />
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{
-          marginTop: 8,
-          lineHeight: 20,
-          fontSize: 13,
-          fontFamily: Font.Gilroy_Regular,
-          color: 'rgba(8, 14, 30, 0.4)',
-        }}>
-        This may include details you have provided to us such as your name, your number & email...
-      </Text>
 
-      <View style={{flexDirection: 'row', marginTop: 20}}>
-        <View style={{width: '48%', marginRight: 5}}>
-          <TextField2
-            label="First Name"
-            onChanged={setFirstName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            maxLength={12}
-            value={firstName}
-            disabled
-          />
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <View style={{width: '48%', marginRight: 5}}>
+            <TextField2
+              label="First Name"
+              onChanged={setFirstName}
+              customStyle={{marginBottom: Window.fixPadding * 1.5}}
+              maxLength={12}
+              value={firstName}
+            />
+          </View>
+          <View style={{width: '48%', marginLeft: 5}}>
+            <TextField2 label="Last Name" onChanged={setLastName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={lastName} />
+          </View>
         </View>
-        <View style={{width: '48%', marginLeft: 5}}>
-          <TextField2
-            label="Last Name"
-            onChanged={setLastName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            value={lastName}
-            disabled
-          />
+
+        <TextField2
+          label="Display Name"
+          onChanged={setDisplayName}
+          customStyle={{marginBottom: Window.fixPadding * 1.5}}
+          value={displayName}
+          disabled
+        />
+
+        <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
+
+        <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} maxLength={13} />
+
+        <View style={{marginTop: 20}}>
+          <Button loading={updateLoading} text="Update Profile" onPressFunc={handleSubmit} icon="mail" isIcon={false} theme="tertiary" />
         </View>
-      </View>
-
-      <TextField2
-        label="Display Name"
-        onChanged={setDisplayName}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
-        value={displayName}
-        disabled
-      />
-
-      <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
-
-      <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} disabled />
+      </ScrollView>
     </SafeAreaView>
   );
 };
-export default PersonalInfo;
+export default PersonalInfoEdit;

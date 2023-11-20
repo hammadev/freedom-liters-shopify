@@ -16,42 +16,41 @@ import {List} from 'react-native-paper';
 import TextField2 from '../../../components/TextFeild2';
 import {COUPON_CODE} from '../../../graphql/mutations/Coupon';
 import {handleCouponCode, hnadleDecreaseCartValue, hnadleIncreseCartValue, hnadleRemoveCartItem} from '../../../apis/cart';
-import {CartEmptyIcon, NoCartItem, NoResult} from '../../../assets/svgs/NotificationSvg';
 import {showMessage} from 'react-native-flash-message';
 import {SkypeIndicator} from 'react-native-indicators';
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
+
 const PaymentDetails = ({totalAmout, cartId}) => {
   const [expanded, setExpanded] = React.useState(false);
   const [couponCode, setCouponCode] = React.useState(false);
-  const [CouponCodeVisibility, setCouponCodeVisibility] = React.useState('');
+  const [CouponCodeVisibility, setCouponCodeVisibility] = React.useState(true);
+
   const handlePress = () => setExpanded(!expanded);
   const [cart, {data, loading, error}] = useMutation(COUPON_CODE);
 
   useEffect(() => {
-    if (data && !loading && !error) {
+    Check_Coupon();
+  }, [Check_Coupon]);
+
+  const Check_Coupon = async () => {
+    const Coupon = await AsyncStorage.getItem('COUPON');
+    console.log('Coupon', Coupon);
+    if (Coupon) {
       setCouponCodeVisibility(false);
+      console.log('Coupon HY');
+    } else {
+      setCouponCodeVisibility(true);
+      console.log('Coupon Nahi HY');
     }
-  }, [data, loading, error]);
+  };
+
   const Apply_Coupon = async () => {
     const variables = {
       cartId: cartId,
       discountCodes: couponCode,
     };
     handleCouponCode(cart, variables);
-    if (data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable === true) {
-      setCouponCodeVisibility(false);
-    } else if (error) {
-      showMessage({
-        message: 'Invalid Coupon',
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: 'Invalid Coupon',
-        type: 'danger',
-      });
-    }
   };
 
   return (
@@ -82,7 +81,7 @@ const PaymentDetails = ({totalAmout, cartId}) => {
           </View>
 
           <View style={{marginBottom: 10}}>
-            {CouponCodeVisibility ? (
+            {CouponCodeVisibility == true ? (
               <List.Section>
                 <List.Accordion
                   style={{backgroundColor: 'white', width: '100%'}}
@@ -180,7 +179,6 @@ const Cart = () => {
         quantity: item.node.quantity + 1,
       },
     };
-    console.log('Increse ', variables);
     hnadleIncreseCartValue(cartLinesUpdate, variables);
   };
 

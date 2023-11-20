@@ -43,7 +43,6 @@ const Style = StyleSheet.create({
     height: 50,
     color: 'black',
     marginTop: 15,
-    paddingHorizontal: 10,
   },
 });
 

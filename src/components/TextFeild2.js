@@ -5,9 +5,9 @@ import {Color} from '../globalStyle/Theme';
 const TextField2 = ({
   isDark = false,
   label,
+  maxLength,
   placeholder,
   icon,
-  title,
   passwordFeild = false,
   setHidePass,
   hidePass,
@@ -18,7 +18,6 @@ const TextField2 = ({
 }) => {
   let bgColor = !isDark ? Color.white : Color.tertiary;
   let color = isDark ? Color.white : Color.tertiary;
-  console.log('Lenth', title);
   return (
     <TextInput
       label={<Text style={{color: color, backgroundColor: bgColor}}>{label}</Text>}
@@ -35,6 +34,7 @@ const TextField2 = ({
       theme={{
         roundness: 14,
       }}
+      maxLength={maxLength ? maxLength : 50}
       selectionColor={color}
       outlineColor={color}
       activeOutlineColor={color}

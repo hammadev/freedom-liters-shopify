@@ -1,23 +1,10 @@
 import React from 'react';
-import Svg, {
-  G,
-  Path,
-  Defs,
-  LinearGradient,
-  Stop,
-  Circle,
-  ClipPath,
-  Rect,
-} from 'react-native-svg';
+import Svg, {G, Path, Defs, LinearGradient, Stop, Circle, ClipPath, Rect} from 'react-native-svg';
+import {Color} from '../../globalStyle/Theme';
 
 export function FacebookIcon({width, height}) {
   return (
-    <Svg
-      width="24"
-      height="25"
-      viewBox="0 0 24 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <G clipPath="url(#clip0_150_1055)">
         <Path
           d="M12 0.75C5.3724 0.75 0 6.1224 0 12.75C0 19.3776 5.3724 24.75 12 24.75C18.6276 24.75 24 19.3776 24 12.75C24 6.1224 18.6276 0.75 12 0.75Z"
@@ -29,23 +16,12 @@ export function FacebookIcon({width, height}) {
         />
       </G>
       <Defs>
-        <LinearGradient
-          id="paint0_linear_150_1055"
-          x1="3.5958"
-          y1="4.3458"
-          x2="21.969"
-          y2="22.719"
-          gradientUnits="userSpaceOnUse">
+        <LinearGradient id="paint0_linear_150_1055" x1="3.5958" y1="4.3458" x2="21.969" y2="22.719" gradientUnits="userSpaceOnUse">
           <Stop stopColor="#2AA4F4" />
           <Stop offset="1" stopColor="#007AD9" />
         </LinearGradient>
         <ClipPath id="clip0_150_1055">
-          <Rect
-            width="24"
-            height="24"
-            fill="white"
-            transform="translate(0 0.75)"
-          />
+          <Rect width="24" height="24" fill="white" transform="translate(0 0.75)" />
         </ClipPath>
       </Defs>
     </Svg>
@@ -53,12 +29,7 @@ export function FacebookIcon({width, height}) {
 }
 export function GoogleIcon({width, height}) {
   return (
-    <Svg
-      width="24"
-      height="25"
-      viewBox="0 0 24 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <G clipPath="url(#clip0_150_324)">
         <Path
           d="M23.5078 12.9745C23.5078 11.9912 23.4295 11.2737 23.2598 10.5296H12.2295V14.9676H18.7041C18.5736 16.0705 17.8687 17.7314 16.3022 18.8475L16.2802 18.9961L19.7678 21.7463L20.0095 21.7709C22.2285 19.6847 23.5078 16.6153 23.5078 12.9745Z"
@@ -79,12 +50,7 @@ export function GoogleIcon({width, height}) {
       </G>
       <Defs>
         <ClipPath id="clip0_150_324">
-          <Rect
-            width="23.04"
-            height="24"
-            fill="white"
-            transform="translate(0.47998 0.75)"
-          />
+          <Rect width="23.04" height="24" fill="white" transform="translate(0.47998 0.75)" />
         </ClipPath>
       </Defs>
     </Svg>
@@ -92,12 +58,7 @@ export function GoogleIcon({width, height}) {
 }
 export function AppleIcon({width, height}) {
   return (
-    <Svg
-      width="25"
-      height="25"
-      viewBox="0 0 25 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <G clipPath="url(#clip0_150_392)">
         <Path
           d="M17.273 0.762011C17.222 0.705011 15.3845 0.784511 13.7855 2.52001C12.1865 4.25401 12.4325 6.24301 12.4685 6.29401C12.5045 6.34501 14.7485 6.42451 16.181 4.40701C17.6135 2.38951 17.324 0.820511 17.273 0.762011ZM22.244 18.3615C22.172 18.2175 18.7565 16.5105 19.0745 13.2285C19.3925 9.94501 21.587 9.04501 21.6215 8.94751C21.656 8.85001 20.726 7.76251 19.7405 7.21201C19.0169 6.82389 18.2161 6.60152 17.396 6.56101C17.234 6.55651 16.6715 6.41851 15.515 6.73501C14.753 6.94351 13.0355 7.61851 12.563 7.64551C12.089 7.67251 10.679 6.86251 9.16251 6.64801C8.19201 6.46051 7.16301 6.84451 6.42651 7.14001C5.69151 7.43401 4.29351 8.27101 3.31551 10.4955C2.33751 12.7185 2.84901 16.2405 3.21501 17.3355C3.58101 18.429 4.15251 20.2215 5.12451 21.5295C5.98851 23.0055 7.13451 24.03 7.61301 24.378C8.09151 24.726 9.44151 24.957 10.3775 24.4785C11.1305 24.0165 12.4895 23.751 13.0265 23.7705C13.562 23.79 14.618 24.0015 15.6995 24.579C16.556 24.8745 17.366 24.7515 18.1775 24.4215C18.989 24.09 20.1635 22.833 21.5345 20.2845C22.055 19.0995 22.292 18.459 22.244 18.3615Z"
@@ -110,12 +71,7 @@ export function AppleIcon({width, height}) {
       </G>
       <Defs>
         <ClipPath id="clip0_150_392">
-          <Rect
-            width="24"
-            height="24"
-            fill="white"
-            transform="translate(0.5 0.75)"
-          />
+          <Rect width="24" height="24" fill="white" transform="translate(0.5 0.75)" />
         </ClipPath>
       </Defs>
     </Svg>
@@ -123,12 +79,7 @@ export function AppleIcon({width, height}) {
 }
 export function SortIcon({width, height}) {
   return (
-    <Svg
-      width="14"
-      height="12"
-      viewBox="0 0 14 12"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -140,12 +91,7 @@ export function SortIcon({width, height}) {
 }
 export function ManuIcon({width, height}) {
   return (
-    <Svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M1 5.13714C1 4.50857 1.4906 4 2.0945 4H10.9055C11.1958 4 11.4742 4.11981 11.6794 4.33306C11.8847 4.54632 12 4.83555 12 5.13714C12 5.43873 11.8847 5.72797 11.6794 5.94122C11.4742 6.15448 11.1958 6.27429 10.9055 6.27429H2.0945C1.80422 6.27429 1.52583 6.15448 1.32057 5.94122C1.11531 5.72797 1 5.43873 1 5.13714ZM1 12C1 11.3714 1.4906 10.8629 2.0945 10.8629H21.9055C22.1958 10.8629 22.4742 10.9827 22.6794 11.1959C22.8847 11.4092 23 11.6984 23 12C23 12.3016 22.8847 12.5908 22.6794 12.8041C22.4742 13.0173 22.1958 13.1371 21.9055 13.1371H2.0945C1.80422 13.1371 1.52583 13.0173 1.32057 12.8041C1.11531 12.5908 1 12.3016 1 12ZM2.0945 17.7257C1.80422 17.7257 1.52583 17.8455 1.32057 18.0588C1.11531 18.272 1 18.5613 1 18.8629C1 19.1644 1.11531 19.4537 1.32057 19.6669C1.52583 19.8802 1.80422 20 2.0945 20H15.3055C15.5958 20 15.8742 19.8802 16.0794 19.6669C16.2847 19.4537 16.4 19.1644 16.4 18.8629C16.4 18.5613 16.2847 18.272 16.0794 18.0588C15.8742 17.8455 15.5958 17.7257 15.3055 17.7257H2.0945Z"
         fill="#EF7F01"
@@ -156,12 +102,7 @@ export function ManuIcon({width, height}) {
 
 export function ShareIcon() {
   return (
-    <Svg
-      width="24"
-      height="24"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M14.1333 5.1416C15.8 6.29993 16.95 8.1416 17.1833 10.2666"
         stroke="#fff"
@@ -210,12 +151,7 @@ export function ShareIcon() {
 
 export function CartSvg({color, height}) {
   return (
-    <Svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M1.66663 1.6665H3.11663C4.01663 1.6665 4.72496 2.4415 4.64996 3.33317L3.95829 11.6332C3.84163 12.9915 4.91662 14.1582 6.28329 14.1582H15.1583C16.3583 14.1582 17.4083 13.1748 17.5 11.9832L17.95 5.73317C18.05 4.34984 17 3.22483 15.6083 3.22483H4.84997"
         stroke="black"
@@ -240,26 +176,14 @@ export function CartSvg({color, height}) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <Path
-        d="M7.5 6.6665H17.5"
-        stroke="black"
-        strokWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path d="M7.5 6.6665H17.5" stroke="black" strokWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
 
 export function AppbarChevronSvg({color, height}) {
   return (
-    <Svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <Svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M12.5 16.5999L7.0667 11.1666C6.42503 10.5249 6.42503 9.4749 7.0667 8.83324L12.5 3.3999"
         stroke="#080E1E"

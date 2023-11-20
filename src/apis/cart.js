@@ -76,6 +76,20 @@ export const handleCouponCode = async (cart, variables) => {
       variables,
     });
     if (response) {
+      console.log('resop', response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable);
+      if (response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable) {
+        console.log('Yessss');
+        await AsyncStorage.setItem('COUPON', JSON.stringify(response.data.cartDiscountCodesUpdate.cart));
+        showMessage({
+          message: 'Coupon Applied Successfully',
+          type: 'success',
+        });
+      } else {
+        showMessage({
+          message: 'Invalid Coupon',
+          type: 'danger',
+        });
+      }
     }
   } catch (error) {
     console.error('Mutation Coupon Error:', error);

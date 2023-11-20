@@ -81,23 +81,24 @@ const Profile = ({navigation}) => {
             height: '100%',
           }}
           style={{
-            height: Window.height / 3,
+            height: Window.height / 3.5,
             backgroundColor: Color.tertiary,
             borderBottomRightRadius: 16,
             borderBottomLeftRadius: 16,
           }}>
           <AppBar customStyle={{paddingHorizontal: 20}} />
-          <View style={{position: 'relative', alignSelf: 'center'}}>
+          <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 180}}>
             <Image style={{width: 94, height: 94}} source={require('../../../assets/images/pics/profile.png')} />
+            <Text
+              style={{
+                ...GlobalStyle.heading,
+                textAlign: 'center',
+                marginTop: 10,
+                color: Color.white,
+              }}>
+              Profile
+            </Text>
           </View>
-
-          <Text
-            style={{
-              ...GlobalStyle.heading,
-              textAlign: 'center',
-              marginTop: 24,
-              color: Color.white,
-            }}></Text>
         </ImageBackground>
 
         <FlatList

@@ -16,6 +16,7 @@ import SearchScreen from '../screens/main/search/SearchScreen';
 import Onboarding from '../screens/main/onBoarding/OnBoardingScreen';
 import Category from '../screens/main/category/Category';
 import ProductListing from '../screens/main/product/ProductListing';
+import PersonalInfoEdit from '../screens/main/personalInfo/PersonalInfoEdit';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="CheckOut" component={CheckOut} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
+      <Stack.Screen name="PersonalInfoEdit" component={PersonalInfoEdit} />
       <Stack.Screen name="WishList" component={WishList} />
       <Stack.Screen name="MyOrder" component={MyOrder} />
       <Stack.Screen name="CodeVerification" component={CodeVerification} />

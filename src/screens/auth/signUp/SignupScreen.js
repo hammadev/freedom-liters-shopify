@@ -56,7 +56,7 @@ const SignUp = ({navigation}) => {
       return;
     }
 
-    if (!password.match(passwordformat)) {
+    if (password.match(passwordformat)) {
       Toast.show({
         type: 'error',
         position: 'top',
@@ -142,6 +142,7 @@ const SignUp = ({navigation}) => {
               label="First Name"
               placeholder={'Doe'}
               isDark={true}
+              maxLength={10}
               onChanged={setFirstName}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
@@ -150,6 +151,7 @@ const SignUp = ({navigation}) => {
               label="Last Name"
               placeholder={'john'}
               isDark={true}
+              maxLength={10}
               onChanged={setLastName}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
@@ -168,6 +170,7 @@ const SignUp = ({navigation}) => {
               value={phone}
               placeholder={'+923X-XXXXXXXX'}
               isDark={true}
+              maxLength={13}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />

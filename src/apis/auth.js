@@ -150,13 +150,11 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const logout = async (deleteAccessToken, variables, navigation, setVisible) => {
+export const Applogout = async (deleteAccessToken, variables, navigation, setVisible) => {
   try {
     const result = await deleteAccessToken({
       variables,
     });
-
-    // Handle the result here (data, errors, etc.)
     console.log('Delete Access Token Result:', result);
     if (result) {
       await AsyncStorage.removeItem('credentials');
