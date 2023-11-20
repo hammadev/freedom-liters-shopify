@@ -5,6 +5,7 @@ import {Color} from '../globalStyle/Theme';
 const TextField2 = ({
   isDark = false,
   label,
+  type,
   maxLength,
   placeholder,
   icon,
@@ -12,6 +13,7 @@ const TextField2 = ({
   setHidePass,
   hidePass,
   customStyle,
+  onChangeText,
   onChanged = val => console.log('No Onchange Event', val),
   value,
   disabled = false,
@@ -21,7 +23,13 @@ const TextField2 = ({
   return (
     <TextInput
       label={<Text style={{color: color, backgroundColor: bgColor}}>{label}</Text>}
-      left={icon && <TextInput.Icon icon={icon} iconColor={color} />}
+      left={
+        label === 'Phone' ? (
+          <TextInput.Affix text="+92" textStyle={{marginRight: 5, color: Color.white}} />
+        ) : icon ? (
+          <TextInput.Icon icon={icon} iconColor={color} />
+        ) : null
+      }
       right={
         passwordFeild && (
           <TextInput.Icon onPress={() => setHidePass(!hidePass)} icon={hidePass ? 'eye-off-outline' : 'eye-outline'} iconColor={color} />
@@ -34,13 +42,14 @@ const TextField2 = ({
       theme={{
         roundness: 14,
       }}
+      keyboardType={type ? type : 'default'}
       maxLength={maxLength ? maxLength : 50}
       selectionColor={color}
       outlineColor={color}
       activeOutlineColor={color}
       style={{...customStyle, backgroundColor: bgColor}}
       textColor={color}
-      onChangeText={text => onChanged(text)}
+      onChangeText={onChangeText ? onChangeText : text => onChanged(text)}
       value={value}
       disabled={disabled}
     />

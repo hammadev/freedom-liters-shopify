@@ -18,10 +18,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppStatusBar from '../../../components/AppStatusBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
+import {SliderBox} from 'react-native-image-slider-box';
+import {useEffect} from 'react';
 const ProductDetail = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {product} = route.params;
   const [visible, setVisible] = useState(false);
+  const [ProductImages, setProductImages] = useState([]);
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
@@ -29,6 +32,14 @@ const ProductDetail = ({route, navigation}) => {
     ...state,
   }));
 
+  useEffect(() => {
+    const Images = [];
+    console.log(product.node.images.nodes[0].url);
+    if (product.node.images) {
+      product.node.images.nodes.forEach(element => Images.push(element.url));
+    }
+    setProductImages(Images);
+  }, []);
   const Add_To_Card = async () => {
     if (auth) {
       setloadingSpinner(true);
@@ -60,6 +71,7 @@ const ProductDetail = ({route, navigation}) => {
       }
       handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
       setloadingSpinner(false);
+      navigation.navigate('Cart');
     } else {
       showMessage({
         message: 'Please Login First',
@@ -78,12 +90,16 @@ const ProductDetail = ({route, navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <AppStatusBar />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1, paddingBottom: 0}}
-        style={{backgroundColor: Color.white, flex: 1}}>
-        <ImageBackground
+        contentContainerStyle={{flexGrow: 1}}
+        style={{backgroundColor: Color.white, flex: 1, marginTop: 15}}>
+        <AppBar theme="light" center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>{product.node.title}</Text>} />
+        <View style={{marginTop: 15}}>
+          <SliderBox images={ProductImages} sliderBoxHeight={250} dotColor="#E9D8C6" inactiveDotColor="#E9D8C6" />
+        </View>
+
+        {/* <ImageBackground
           resizeMode="cover"
           source={{uri: product.node.featuredImage?.url}}
           style={{
@@ -102,7 +118,7 @@ const ProductDetail = ({route, navigation}) => {
               </View>
             }
           />
-        </ImageBackground>
+        </ImageBackground> */}
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
           <View

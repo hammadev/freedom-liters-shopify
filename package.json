@@ -26,6 +26,7 @@
     "react-native-device-info": "^10.6.0",
     "react-native-flash-message": "^0.4.1",
     "react-native-gesture-handler": "^2.10.1",
+    "react-native-image-slider-box": "^2.0.7",
     "react-native-indicators": "^0.17.0",
     "react-native-onboarding-swiper": "^1.2.0",
     "react-native-pager-view": "^6.2.0",

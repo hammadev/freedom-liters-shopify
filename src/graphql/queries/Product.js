@@ -7,6 +7,11 @@ export const GET_LATEST_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {
@@ -38,6 +43,11 @@ export const GET_ALL_LATEST_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {
@@ -69,6 +79,11 @@ export const GET_FEATURED_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {
@@ -100,6 +115,11 @@ export const GET_ALL_FEATURED_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 10) {
             edges {
               node {
@@ -131,6 +151,11 @@ export const GET_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {
@@ -162,6 +187,11 @@ export const GET_ALL_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {
@@ -193,6 +223,11 @@ export const GET_ALL_PRODUCT = gql`
         node {
           id
           title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
           variants(first: 1) {
             edges {
               node {

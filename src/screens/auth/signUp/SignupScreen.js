@@ -19,7 +19,7 @@ const SignUp = ({navigation}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+92');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -168,9 +168,15 @@ const SignUp = ({navigation}) => {
               icon={'phone-outline'}
               label="Phone"
               value={phone}
-              placeholder={'+923X-XXXXXXXX'}
+              onChangeText={text => {
+                const newtext = text.replace(/^0|[^\d\s]/g, '');
+                setPhone(newtext);
+              }}
+              type={'number-pad'}
+              Affix={true}
+              placeholder={'3X-XXXXXXXX'}
               isDark={true}
-              maxLength={13}
+              maxLength={10}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />

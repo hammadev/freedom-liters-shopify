@@ -42,7 +42,6 @@ const ProductBox = ({item, customStyle, wishlist}) => {
   }));
 
   const Add_To_Card = async item => {
-    console.log(item.id);
     if (auth) {
       setloadingSpinner(true);
       const CART_ID = await AsyncStorage.getItem('CART_ID');
@@ -73,6 +72,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       }
       handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
       setloadingSpinner(false);
+      navigation.navigate('Cart');
     } else {
       showMessage({
         message: 'Please Login First',
