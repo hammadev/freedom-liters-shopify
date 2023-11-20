@@ -19,7 +19,7 @@ const SignUp = ({navigation}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('+92');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -105,9 +105,10 @@ const SignUp = ({navigation}) => {
         firstName: firstName,
         lastName: lastName,
         password: password,
-        phone: phone,
+        phone: `+92` + phone,
       },
     };
+    console.log(variables);
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
   const Goto_Login = () => {
