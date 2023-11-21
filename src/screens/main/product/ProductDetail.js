@@ -68,7 +68,6 @@ const ProductDetail = ({route, navigation}) => {
       }
       handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
       setloadingSpinner(false);
-      navigation.navigate('Cart');
     } else {
       showMessage({
         message: 'Please Login First',
@@ -102,27 +101,6 @@ const ProductDetail = ({route, navigation}) => {
         <View style={{marginTop: 15}}>
           <SliderBox images={ProductImages} sliderBoxHeight={250} dotColor="#E9D8C6" inactiveDotColor="#E9D8C6" />
         </View>
-
-        {/* <ImageBackground
-          resizeMode="cover"
-          source={{uri: product.node.featuredImage?.url}}
-          style={{
-            width: '100%',
-            paddingVertical: Window.fixPadding * 2,
-            height: Window.height / 2.8,
-          }}>
-          <View style={styles.overlay} />
-          <AppBar
-            theme="dark"
-            header="solid"
-            customStyle={{paddingHorizontal: Window.fixPadding * 2}}
-            right={
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ShareIcon />
-              </View>
-            }
-          />
-        </ImageBackground> */}
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
           <View

@@ -59,6 +59,13 @@ const PersonalInfoEdit = ({navigation}) => {
       });
       return;
     }
+    if (phone) {
+      showMessage({
+        message: "Phone can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
     if (phone === null) {
       showMessage({
         message: "Phone can't be blank",
@@ -153,7 +160,14 @@ const PersonalInfoEdit = ({navigation}) => {
 
         <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
 
-        <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} maxLength={13} />
+        <TextField2
+          label="Phone"
+          onChanged={setPhone}
+          customStyle={{marginBottom: Window.fixPadding * 1.5}}
+          value={phone}
+          type={'number-pad'}
+          maxLength={13}
+        />
 
         <View style={{marginTop: 20}}>
           <Button loading={updateLoading} text="Update Profile" onPressFunc={handleSubmit} icon="mail" isIcon={false} theme="tertiary" />

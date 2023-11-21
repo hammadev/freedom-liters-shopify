@@ -61,13 +61,10 @@ const ProfilePages = ({item, popupState}) => {
 
 const Profile = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
-  console.log(auth);
   if (!auth) {
     return <NotLogin />;
   }
-
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
-
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={Color.tertiary} />

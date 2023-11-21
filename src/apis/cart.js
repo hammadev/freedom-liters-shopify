@@ -11,11 +11,12 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
       if (isCreateCart) {
         console.log('RESPONSEs', response.data.cartCreate.cart.id);
         await AsyncStorage.setItem('CART_ID', response.data.cartCreate.cart.id);
+        showMessage({
+          message: 'Item Added Successfully',
+          type: 'success',
+        });
+        navigation.navigate('Cart');
       }
-      showMessage({
-        message: 'Item Add or cart created Successfully',
-        type: 'success',
-      });
     }
   } catch (error) {
     console.error('Mutation Error:', error);
