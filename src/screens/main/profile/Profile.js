@@ -67,7 +67,7 @@ const Profile = ({navigation}) => {
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <ScrollView scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"
           imageStyle={{
@@ -138,12 +138,6 @@ const ProfileData = [
     name: 'Wishlist',
     chevron: <ChevronSvg />,
     navlink: 'WishList',
-  },
-  {
-    icon: <PaymentMethodSvg />,
-    name: 'My Orders',
-    chevron: <ChevronSvg />,
-    navlink: 'MyOrder',
   },
   {
     icon: <GiftSvg />,
