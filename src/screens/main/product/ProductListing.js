@@ -152,8 +152,11 @@ const ProductListing = route => {
               paddingVertical: 10,
               borderRadius: 20,
             }}>
-            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/filter-search.png')} />
-            <Text>Filters</Text>
+            <Image
+              style={{width: 20, height: 20, marginRight: 5, tintColor: Color.black}}
+              source={require('../../../assets/images/pics/filter-search.png')}
+            />
+            <Text style={{color: Color.black}}>Filters</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -164,8 +167,11 @@ const ProductListing = route => {
               paddingVertical: 10,
               borderRadius: 20,
             }}>
-            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/arrow-down.png')} />
-            <Text>Sort</Text>
+            <Image
+              style={{width: 20, height: 20, marginRight: 5, tintColor: Color.black}}
+              source={require('../../../assets/images/pics/arrow-down.png')}
+            />
+            <Text style={{color: Color.black}}>Sort</Text>
           </TouchableOpacity>
         </View>
       )}
