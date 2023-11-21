@@ -31,11 +31,10 @@ const PaymentDetails = ({totalAmout, cartId}) => {
 
   useEffect(() => {
     Check_Coupon();
-  }, [Check_Coupon]);
+  });
 
   const Check_Coupon = async () => {
     const Coupon = await AsyncStorage.getItem('COUPON');
-    console.log('Coupon', Coupon);
     if (Coupon) {
       setCouponCodeVisibility(false);
       console.log('Coupon HY');
@@ -82,30 +81,36 @@ const PaymentDetails = ({totalAmout, cartId}) => {
 
           <View style={{marginBottom: 10}}>
             {CouponCodeVisibility == true ? (
-              <List.Section>
-                <List.Accordion
-                  style={{backgroundColor: 'white', width: '100%'}}
-                  title="Apply Coupon"
-                  left={props => <List.Icon icon="percent" />}
-                  expanded={expanded}
-                  onPress={handlePress}>
-                  <View
+              <View style={{position: 'relative', overflow: 'hidden'}}>
+                <TextField2
+                  icon={'barcode'}
+                  onChanged={setCouponCode}
+                  label="Apply Coupon"
+                  // customStyle={{marginLeft: -Window.width / 9}}
+                />
+
+                <TouchableOpacity
+                  onPress={() => Apply_Coupon()}
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    backgroundColor: Color.primary,
+                    bottom: 5.5,
+                    alignItems: 'center',
+                    paddingVertical: 12,
+                    paddingHorizontal: 15,
+                    borderRadius: 10,
+                    zIndex: 2,
+                  }}>
+                  <Text
                     style={{
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      flexDirection: 'row',
+                      ...styles.TextStyle,
+                      color: Color.light,
                     }}>
-                    <TextField2 icon={'barcode'} onChanged={setCouponCode} label="Apply Coupon" customStyle={{width: 200}} />
-                    {loading ? (
-                      <SkypeIndicator size={20} color={Color.black} />
-                    ) : (
-                      <Text onPress={() => Apply_Coupon()} style={styles.TextStyle}>
-                        Apply
-                      </Text>
-                    )}
-                  </View>
-                </List.Accordion>
-              </List.Section>
+                    Apply
+                  </Text>
+                </TouchableOpacity>
+              </View>
             ) : (
               <Text style={[styles.TextStyle, {color: 'green'}]}> Applied Coupon </Text>
             )}
@@ -132,8 +137,6 @@ const PaymentDetails = ({totalAmout, cartId}) => {
 };
 
 const Cart = () => {
-  const [adultCount, setAdultCount] = useState(0);
-  const [childCount, setChildCount] = useState(0);
   const [CartItems, setCartItems] = useState('');
   const [RemoveLoader, setRemoveLoader] = useState(false);
   const [CartId, setCartId] = useState();
@@ -154,7 +157,7 @@ const Cart = () => {
     }
     setTimeout(() => {
       setRemoveLoader(true);
-    }, 4000);
+    }, 5000);
   }, [CartData, loadingCartData, errorCartData]);
 
   const Get_Cart_Id = async () => {

@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, Keyboard, ImageBackground, SafeAreaView, u
 import Button from '../../../components/Button';
 import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import TextField2 from '../../../components/TextFeild2';
 import {handleCreateAccessToken} from '../../../apis/auth';
 import {CREATE_CUSTOMER_ACCESS_TOKEN} from '../../../graphql/mutations/Auth';
@@ -25,12 +25,25 @@ const SignIn = ({navigation}) => {
     Keyboard.dismiss();
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (email == '' || password == '') {
+    if (email == '') {
       Toast.show({
         type: 'error',
         position: 'top',
         text1: 'Error',
-        text2: 'Fields cannot be empty.',
+        text2: 'Email cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (password == '') {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Password cannot be empty.',
         visibilityTime: 5000,
         autoHide: true,
         topOffset: 30,

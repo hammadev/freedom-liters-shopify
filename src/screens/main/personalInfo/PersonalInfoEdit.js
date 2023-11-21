@@ -28,7 +28,6 @@ const PersonalInfoEdit = ({navigation}) => {
       customerAccessToken: auth.accessToken,
     },
   });
-  console.log(data);
   useEffect(() => {
     if (data && data.customer) {
       setFirstName(data.customer.firstName);

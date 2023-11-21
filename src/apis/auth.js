@@ -150,17 +150,20 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const Applogout = async (deleteAccessToken, variables, navigation, setVisible) => {
+export const Applogout = async (deleteAccessToken, variables, navigation, setVisible, dispatch) => {
   try {
     const result = await deleteAccessToken({
       variables,
     });
-    console.log('Delete Access Token Result:', result);
     if (result) {
+      console.log('Delete Access Token Result:', result);
       await AsyncStorage.removeItem('credentials');
       await AsyncStorage.removeItem('auth');
       setVisible(false);
       navigation.replace('SignIn');
+      dispatch({
+        type: 'LOGOUT',
+      });
     }
   } catch (error) {
     console.error('Mutation error:', error);

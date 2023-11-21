@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Applogout, logout} from '../apis/auth';
 import {DELETE_ACCESS_TOKEN} from '../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
+import {useDispatch} from 'react-redux';
 
 const Logout = ({auth, setVisible}) => {
   const [deleteAccessToken, {loading, error, data}] = useMutation(DELETE_ACCESS_TOKEN);
@@ -14,6 +15,7 @@ const Logout = ({auth, setVisible}) => {
     customerAccessToken: auth.accessToken,
   };
 
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   return (
@@ -34,7 +36,7 @@ const Logout = ({auth, setVisible}) => {
         isIcon={false}
         theme="tertiary"
         loading={loading}
-        onPressFunc={() => Applogout(deleteAccessToken, variables, navigation, setVisible)}
+        onPressFunc={() => Applogout(deleteAccessToken, variables, navigation, setVisible, dispatch)}
       />
     </View>
   );

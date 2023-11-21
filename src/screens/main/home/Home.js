@@ -56,9 +56,10 @@ export const CatBox = ({item, navigation}) => {
 };
 
 const Home = ({navigation}) => {
-  const {product, categories, wishlist, cart} = useSelector(state => ({
+  const {product, categories, wishlist, auth} = useSelector(state => ({
     ...state,
   }));
+
   const [SearchVale, setSearcValue] = useState(false);
 
   const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);

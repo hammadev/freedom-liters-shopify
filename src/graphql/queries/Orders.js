@@ -1,21 +1,35 @@
 import {gql} from '@apollo/client';
 
+// export const GET_ORDERS = gql`
+//   query getOrders {
+//     orders(first: 10) {
+//       edges {
+//         node {
+//           id
+//           totalPriceV2 {
+//             amount
+//             currencyCode
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
+
 export const GET_ORDERS = gql`
-  query getOrders {
-    orders(first: 10) {
-      edges {
-        node {
-          id
-          totalPriceV2 {
-            amount
-            currencyCode
+  query getCustomerOrders($customerAccessToken: String!) {
+    customer(customerAccessToken: $customerAccessToken) {
+      id
+      orders(first: 100) {
+        edges {
+          node {
+            orderNumber
           }
         }
       }
     }
   }
 `;
-
 
 export const Checkout = gql`
  query checkoutCreate(

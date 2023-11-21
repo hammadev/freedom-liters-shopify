@@ -53,7 +53,7 @@ const Button = props => {
         borderWidth: props.type === 'primary' ? 1 : 0,
         borderColor: props.type === 'primary' ? Color.white : 'transparent',
       }}
-      onPress={props.onPressFunc ? props.onPressFunc : () => navigation.navigate(props.navLink)}
+      onPress={props.onPressFunc ? props.onPressFunc : () => navigation.navigate(props.navLink, {value: 4})}
       disabled={props.loading ? true : false}>
       {props.loading ? (
         <SkypeIndicator size={25} color={props.theme == 'white' ? Color.tertiary : Color.white} />

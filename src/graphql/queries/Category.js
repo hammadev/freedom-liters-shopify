@@ -41,7 +41,8 @@ export const GET_ONE_CATEGORIES_PRODUCT = gql`
         edges {
           node {
             id
-            variants(first: 1) {
+            descriptionHtml
+            variants(first: 10) {
               edges {
                 node {
                   id
@@ -51,6 +52,11 @@ export const GET_ONE_CATEGORIES_PRODUCT = gql`
             title
             featuredImage {
               url
+            }
+            images(first: 5) {
+              nodes {
+                url
+              }
             }
             priceRange {
               # Returns range of prices for a product in the shop's currency.

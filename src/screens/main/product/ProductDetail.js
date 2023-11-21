@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, Platform, SafeAreaView, ImageBackground} from 'react-native';
+import {View, Text, ScrollView, Platform, SafeAreaView} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 import PopularProducts from './_partials/PopularProducts';
 import Heading from '../../../components/Heading';
 import RenderHtml from 'react-native-render-html';
@@ -15,7 +14,6 @@ import {useMutation} from '@apollo/client';
 import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../graphql/mutations/Cart';
 import {handleCreateCart} from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppStatusBar from '../../../components/AppStatusBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -34,12 +32,11 @@ const ProductDetail = ({route, navigation}) => {
 
   useEffect(() => {
     const Images = [];
-    console.log(product.node.images.nodes[0].url);
     if (product.node.images) {
       product.node.images.nodes.forEach(element => Images.push(element.url));
     }
     setProductImages(Images);
-  }, []);
+  }, [product]);
   const Add_To_Card = async () => {
     if (auth) {
       setloadingSpinner(true);
@@ -94,7 +91,14 @@ const ProductDetail = ({route, navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         style={{backgroundColor: Color.white, flex: 1, marginTop: 15}}>
-        <AppBar theme="light" center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>{product.node.title}</Text>} />
+        <AppBar
+          theme="light"
+          center={
+            <Text numberOfLines={1} style={{...GlobalStyle.heading, fontSize: 18, color: 'black'}}>
+              {product.node.title}
+            </Text>
+          }
+        />
         <View style={{marginTop: 15}}>
           <SliderBox images={ProductImages} sliderBoxHeight={250} dotColor="#E9D8C6" inactiveDotColor="#E9D8C6" />
         </View>

@@ -9,6 +9,7 @@ import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../../graphql/mutat
 import {handleCreateCart} from '../../../../apis/cart';
 import {useState} from 'react';
 import {useMutation} from '@apollo/client';
+import {showMessage} from 'react-native-flash-message';
 
 const ChipComponent = ({type}) =>
   type === 'featured' ? (

@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Animated, {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
 import {Searchbar} from 'react-native-paper';
@@ -19,6 +19,7 @@ const SearchScreen = () => {
   const [searchValue, setSearcValue] = useState();
   const [ProductData, setProductData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ShowFilterIcon, setShowFilterIcon] = useState(false);
 
   const {data, loader, error} = useQuery(GET_ALL_PRODUCT);
   const {wishlist} = useSelector(state => ({
@@ -89,20 +90,52 @@ const SearchScreen = () => {
           showDivider={false}
           inputStyle={{minHeight: 48}}
         />
-        <View
+        <TouchableOpacity
           style={{
-            marginLeft: 8,
+            paddingHorizontal: 20,
             borderRadius: 20,
+            marginLeft: 8,
             backgroundColor: Color.tertiary,
             justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <SearchFilterSvg />
-        </View>
+          }}
+          onPress={() => setShowFilterIcon(!ShowFilterIcon)}>
+          <View>
+            <Image style={{width: 15, height: 15}} source={require('../../../assets/images/pics/filter.png')} />
+          </View>
+        </TouchableOpacity>
       </View>
-      <View style={{width: '100%', flex: 1}}>
+      {ShowFilterIcon && (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              borderWidth: 1,
+              borderColor: Color.gryLight,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 20,
+            }}>
+            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/filter-search.png')} />
+            <Text>Filters</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              borderWidth: 1,
+              borderColor: Color.gryLight,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 20,
+            }}>
+            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/arrow-down.png')} />
+            <Text>Sort</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      <View style={{width: '100%', flex: 1, marginTop: 10}}>
         {ProductData ? (
           <FlatList
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{marginVertical: Window.fixPadding}}
             data={ProductData}
             numColumns={2}

@@ -61,7 +61,7 @@ const ProfilePages = ({item, popupState}) => {
 
 const Profile = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
-
+  console.log(auth);
   if (!auth) {
     return <NotLogin />;
   }
@@ -131,12 +131,12 @@ const ProfileData = [
     chevron: <ChevronSvg />,
     navlink: 'PersonalInfo',
   },
-  {
-    icon: <AddressSvg />,
-    name: 'Address',
-    chevron: <ChevronSvg />,
-    navlink: 'AddressListing',
-  },
+  // {
+  //   icon: <AddressSvg />,
+  //   name: 'Address',
+  //   chevron: <ChevronSvg />,
+  //   navlink: '',
+  // },
   {
     icon: <AddressSvg />,
     name: 'Wishlist',
@@ -152,6 +152,12 @@ const ProfileData = [
   {
     icon: <GiftSvg />,
     name: 'Vouchers',
+    chevron: <ChevronSvg />,
+    navlink: 'Coupons',
+  },
+  {
+    icon: <Image style={{width: 25, height: 25, tintColor: Color.black}} source={require('../../../assets/images/pics/setting.png')} />,
+    name: 'Setting',
     chevron: <ChevronSvg />,
     navlink: 'Coupons',
   },

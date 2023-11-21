@@ -11,6 +11,7 @@ import {useMutation} from '@apollo/client';
 import {handleCreateAccount} from '../../../apis/auth';
 import Toast from 'react-native-toast-message';
 import StatusAppBar from '../../../components/StatusAppBar';
+import {hasLowerCase, hasUpperCase} from '../../../utils/utils';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -28,12 +29,77 @@ const SignUp = ({navigation}) => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const passwordformat = /^\w+(?:[ `'?!]\w+)*[`.?!]?$/;
 
-    if (firstName == '' || lastName == '' || password == '' || confirmPassword == '') {
+    if (firstName == '') {
       Toast.show({
         type: 'error',
         position: 'top',
         text1: 'Error',
-        text2: 'Fields cannot be empty.',
+        text2: 'First Name cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (!hasLowerCase(password)) {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (!hasUpperCase(password)) {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Atlest one Capital letter in password',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (lastName == '') {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Last Name cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (password == '') {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Password cannot be empty.',
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+      return;
+    }
+    if (confirmPassword == '') {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Confirm Password cannot be empty.',
         visibilityTime: 5000,
         autoHide: true,
         topOffset: 30,

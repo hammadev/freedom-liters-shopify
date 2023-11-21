@@ -110,7 +110,7 @@ export const GET_FEATURED_PRODUCT = gql`
 
 export const GET_ALL_FEATURED_PRODUCT = gql`
   query FetchFeaturedProduct {
-    products(first: 250) {
+    products(first: 100) {
       edges {
         node {
           id
@@ -217,8 +217,8 @@ export const GET_ALL_ONSALE_PRODUCT = gql`
 `;
 
 export const GET_ALL_PRODUCT = gql`
-  query GetOnSaleProducts {
-    products(query: "tag:onsale", first: 10) {
+  query GetProducts {
+    products(first: 100) {
       edges {
         node {
           id

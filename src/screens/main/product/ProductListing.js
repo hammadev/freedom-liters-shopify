@@ -1,4 +1,4 @@
-import {Image, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Animated, {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
 import {Searchbar} from 'react-native-paper';
@@ -13,27 +13,30 @@ import {useEffect} from 'react';
 import StatusAppBar from '../../../components/StatusAppBar';
 import {GET_ONE_CATEGORIES_PRODUCT} from '../../../graphql/queries/Category';
 import AppBar from '../../../components/AppBar';
-import {GET_ALL_FEATURED_PRODUCT, GET_ALL_LATEST_PRODUCT, GET_ALL_ONSALE_PRODUCT} from '../../../graphql/queries/Product';
+import {GET_ALL_FEATURED_PRODUCT, GET_ALL_LATEST_PRODUCT, GET_ALL_ONSALE_PRODUCT, GET_ALL_PRODUCT} from '../../../graphql/queries/Product';
 import {Text} from 'react-native';
 
 const ProductListing = route => {
   const [ProductData, setProductData] = useState([]);
   const [searchValue, setSearcValue] = useState();
   const [loading, setLoading] = useState(true);
+  const [ShowFilterIcon, setShowFilterIcon] = useState(false);
 
   const {data, loader, error} = useQuery(GET_ONE_CATEGORIES_PRODUCT, {
     variables: {
       handle: route.route.params?.handle,
     },
   });
-
   const {data: featuredProductData, loader: featuredProductLoader, error: featuredProductError} = useQuery(GET_ALL_FEATURED_PRODUCT);
   const {data: latestProductData, loader: latestProductLoader, error: latestProductError} = useQuery(GET_ALL_LATEST_PRODUCT);
   const {data: onSaleProductData, loader: onSaleProductLoader, error: onSaleProductError} = useQuery(GET_ALL_ONSALE_PRODUCT);
+  const {data: AllProductsData, loader: AllProductsLoader, error: AllProductsError} = useQuery(GET_ALL_PRODUCT);
 
   const {wishlist} = useSelector(state => ({
     ...state,
   }));
+
+  console.log(route.route.params?.value);
   useEffect(() => {
     if (route.route.params?.value == 0) {
       if (data && !loader && !error) {
@@ -51,6 +54,10 @@ const ProductListing = route => {
       if (onSaleProductData && !onSaleProductLoader && !onSaleProductError) {
         setProductData(onSaleProductData.products.edges);
       }
+    } else if (route.route.params?.value == 4) {
+      if (AllProductsData && !AllProductsLoader && !AllProductsError) {
+        setProductData(AllProductsData.products.edges);
+      }
     }
   }, [
     data,
@@ -65,6 +72,9 @@ const ProductListing = route => {
     onSaleProductData,
     onSaleProductLoader,
     onSaleProductError,
+    AllProductsData,
+    AllProductsLoader,
+    AllProductsError,
   ]);
 
   const heightProgress = useSharedValue(50);
@@ -116,19 +126,52 @@ const ProductListing = route => {
           showDivider={false}
           inputStyle={{minHeight: 48}}
         />
-        <View
+
+        <TouchableOpacity
           style={{
-            marginLeft: 8,
-            borderRadius: 15,
             paddingHorizontal: 15,
+            borderRadius: 15,
+            marginLeft: 8,
             backgroundColor: Color.tertiary,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
-          <Image style={{width: 20, height: 20}} source={require('../../../assets/images/pics/filter.png')} />
-        </View>
+          }}
+          onPress={() => setShowFilterIcon(!ShowFilterIcon)}>
+          <View>
+            <Image style={{width: 20, height: 20}} source={require('../../../assets/images/pics/filter.png')} />
+          </View>
+        </TouchableOpacity>
       </View>
-      <View style={{flex: 1}}>
+      {ShowFilterIcon && (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              borderWidth: 1,
+              borderColor: Color.gryLight,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 20,
+            }}>
+            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/filter-search.png')} />
+            <Text>Filters</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              borderWidth: 1,
+              borderColor: Color.gryLight,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 20,
+            }}>
+            <Image style={{width: 20, height: 20, marginRight: 5}} source={require('../../../assets/images/pics/arrow-down.png')} />
+            <Text>Sort</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <View style={{flex: 1, marginTop: 15}}>
         {ProductData.length ? (
           <FlatList
             contentContainerStyle={{marginVertical: Window.fixPadding}}
