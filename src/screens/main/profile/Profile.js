@@ -67,7 +67,6 @@ const Profile = ({navigation}) => {
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <StatusBar barStyle={'light-content'} backgroundColor={Color.tertiary} />
       <ScrollView scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"

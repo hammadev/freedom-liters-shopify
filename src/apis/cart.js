@@ -15,6 +15,10 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
           message: 'Item Added Successfully',
           type: 'success',
         });
+        showMessage({
+          message: 'Item Added Successfully',
+          type: 'success',
+        });
         navigation.navigate('Cart');
       }
     }

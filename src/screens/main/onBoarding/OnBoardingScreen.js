@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, Image, Text, StatusBar} from 'react-native';
+import {View, FlatList, Image, Text} from 'react-native';
 import {Font, Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppStatusBar from '../../../components/AppStatusBar';
 
 let hasNotch = deviceInfoModule.hasNotch();
 
@@ -97,7 +96,6 @@ const OnBoarding = ({navigation}) => {
 
   return (
     <>
-      <AppStatusBar />
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}

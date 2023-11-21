@@ -101,7 +101,6 @@ const ProductListing = route => {
 
   return (
     <Animated.View style={[reanimatedHeightStyle, {overflow: 'hidden', padding: 20, flex: 1}]}>
-      <StatusAppBar />
       <AppBar theme="light" center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Products</Text>} />
 
       <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>

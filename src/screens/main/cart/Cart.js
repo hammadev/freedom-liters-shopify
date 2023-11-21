@@ -20,6 +20,7 @@ import {showMessage} from 'react-native-flash-message';
 import {SkypeIndicator} from 'react-native-indicators';
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
+import {useIsFocused} from '@react-navigation/native';
 
 const PaymentDetails = ({totalAmout, cartId}) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -149,7 +150,7 @@ const Cart = () => {
   const [cartLinesUpdate, {data: IncreaseData, loading: IncreaseLoading, error: IncreaseError}] = useMutation(INCREASE_CART_VALUE);
   /////  REMOVE CART ITEM
   const [cartLinesRemove, {data: RemoveData, loading: RemoveLoading, error: RemoveError}] = useMutation(REMOVE_ITEM);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
     Get_Cart_Id();
     if (CartData && !loadingCartData && !errorCartData) {

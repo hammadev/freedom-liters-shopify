@@ -81,11 +81,10 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusAppBar />
       {SearchVale ? (
         <SearchBar />
       ) : (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <ImageBackground
             resizeMode="cover"
             style={{

@@ -11,7 +11,8 @@ import {useMutation} from '@apollo/client';
 import {handleCreateAccount} from '../../../apis/auth';
 import Toast from 'react-native-toast-message';
 import StatusAppBar from '../../../components/StatusAppBar';
-import {hasLowerCase, hasUpperCase} from '../../../utils/utils';
+import {hasLowerCase, hasNumber, hasUpperCase} from '../../../utils/utils';
+import {showMessage} from 'react-native-flash-message';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -30,136 +31,86 @@ const SignUp = ({navigation}) => {
     const passwordformat = /^\w+(?:[ `'?!]\w+)*[`.?!]?$/;
 
     if (firstName == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'First Name cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'First Name cannot be empty',
+        type: 'danger',
       });
+
       return;
     }
     if (!hasLowerCase(password)) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Atlest one small letter in password',
+        type: 'danger',
+      });
+      return;
+    }
+    if (!hasNumber(password)) {
+      showMessage({
+        message: 'Atlest one number in password',
+        type: 'danger',
       });
       return;
     }
     if (!hasUpperCase(password)) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Atlest one Capital letter in password',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-      });
-      return;
-    }
-    if (lastName == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Last Name cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-      });
-      return;
-    }
-    if (password == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Password cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-      });
-      return;
-    }
-    if (confirmPassword == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Confirm Password cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Atlest one Capital letter in password',
+        type: 'danger',
       });
       return;
     }
 
+    if (lastName == '') {
+      showMessage({
+        message: 'Last Name cannot be empty',
+        type: 'danger',
+      });
+      return;
+    }
+    if (password == '') {
+      showMessage({
+        message: 'Password cannot be empty.',
+        type: 'danger',
+      });
+      return;
+    }
+    if (confirmPassword == '') {
+      showMessage({
+        message: 'confirm Password cannot be empty.',
+        type: 'danger',
+      });
+
+      return;
+    }
+
     if (!email.match(mailformat)) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Please enter valid email',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Please enter valid email',
+        type: 'danger',
       });
       return;
     }
 
     if (password.match(passwordformat)) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Atleast one special character in password',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Atleast one special character in password',
+        type: 'danger',
       });
       return;
     }
 
     if (password < 5) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Password must contain at least 5 characters',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Password must contain at least 6 characters',
+        type: 'danger',
       });
       return;
     }
 
     if (password !== confirmPassword) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Password & confirm password not match',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Password & confirm password not match',
+        type: 'danger',
       });
       return;
     }
