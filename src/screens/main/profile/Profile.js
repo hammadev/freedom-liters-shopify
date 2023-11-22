@@ -63,7 +63,7 @@ const Profile = ({navigation}) => {
   useEffect(() => {
     StatusBar.setBarStyle('dark-content', true);
     StatusBar.setBackgroundColor(Color.tertiary);
-  });
+  }, []);
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;

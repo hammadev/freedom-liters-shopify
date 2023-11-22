@@ -21,6 +21,8 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
+import NotLogin from '../../../components/NotLogin';
+import {useSelector} from 'react-redux';
 
 const PaymentDetails = ({totalAmout, cartId}) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -151,6 +153,10 @@ const Cart = () => {
   /////  REMOVE CART ITEM
   const [cartLinesRemove, {data: RemoveData, loading: RemoveLoading, error: RemoveError}] = useMutation(REMOVE_ITEM);
   const isFocused = useIsFocused();
+
+  const {auth} = useSelector(state => ({
+    ...state,
+  }));
   useEffect(() => {
     Get_Cart_Id();
     if (CartData && !loadingCartData && !errorCartData) {
@@ -159,7 +165,7 @@ const Cart = () => {
     setTimeout(() => {
       setRemoveLoader(true);
     }, 5000);
-  }, [CartData, loadingCartData, errorCartData]);
+  }, [CartData, loadingCartData, errorCartData, isFocused]);
 
   const Get_Cart_Id = async () => {
     let CART_ID = await AsyncStorage.getItem('CART_ID');
@@ -198,6 +204,9 @@ const Cart = () => {
     }
   };
 
+  if (!auth) {
+    return <NotLogin />;
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{backgroundColor: Color.white, paddingVertical: 20}}>

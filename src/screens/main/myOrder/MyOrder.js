@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import {Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppBar from '../../../components/AppBar';
@@ -8,6 +8,10 @@ import NotLogin from '../../../components/NotLogin';
 import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
 
 const MyOrder = () => {
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content', true);
+    StatusBar.setBackgroundColor(Color.tertiary);
+  }, []);
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;

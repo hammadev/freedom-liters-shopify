@@ -24,6 +24,9 @@ const App = () => {
               position="top"
               hideStatusBar={false}
               statusBarHeight={StatusBar.currentHeight}
+              onHide={() => {
+                StatusBar.setBackgroundColor(Color.tertiary);
+              }}
               titleStyle={{fontSize: 14, fontFamily: Font.Gilroy_Medium}}
             />
             <RootStack />
