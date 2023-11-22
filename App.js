@@ -20,14 +20,10 @@ const App = () => {
       <ApolloProvider client={client}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{flex: 1}}>
-            <StatusAppBar />
             <FlashMessage
               position="top"
               hideStatusBar={false}
               statusBarHeight={StatusBar.currentHeight}
-              onHide={() => {
-                StatusBar.setBackgroundColor(Color.white);
-              }}
               titleStyle={{fontSize: 14, fontFamily: Font.Gilroy_Medium}}
             />
             <RootStack />

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView, StatusBar} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
-import {StatusBar} from 'react-native';
+import {useEffect} from 'react';
 
 const ProfilePages = ({item, popupState}) => {
   const navigation = useNavigation();
@@ -60,6 +60,10 @@ const ProfilePages = ({item, popupState}) => {
 };
 
 const Profile = ({navigation}) => {
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content', true);
+    StatusBar.setBackgroundColor(Color.tertiary);
+  });
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;
@@ -67,6 +71,7 @@ const Profile = ({navigation}) => {
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={Color.tertiary} />
       <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"

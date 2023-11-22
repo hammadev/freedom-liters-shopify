@@ -249,3 +249,76 @@ export const GET_ALL_PRODUCT = gql`
     }
   }
 `;
+
+export const FILTER_PRODUCTS = gql`
+  query getSortProducts($reverse: Boolean!, $sortkey: ProductSortKeys!) {
+    products(first: 100, sortKey: $sortkey, reverse: $reverse) {
+      edges {
+        node {
+          id
+          title
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
+          createdAt
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
+          }
+          featuredImage {
+            url
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FILTER_CATEGORY_PRODUCTS = gql`
+  query getProductsOfProductTypeInCollection($handle: String!, $reverse: Boolean!, $sortkey: ProductCollectionSortKeys!) {
+    collection(handle: $handle) {
+      handle
+      products(first: 100, sortKey: $sortkey, reverse: $reverse) {
+        edges {
+          node {
+            id
+            title
+            images(first: 10) {
+              nodes {
+                url
+              }
+            }
+            createdAt
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  title
+                }
+              }
+            }
+            featuredImage {
+              url
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

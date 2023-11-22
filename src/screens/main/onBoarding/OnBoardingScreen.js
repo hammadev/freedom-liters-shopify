@@ -5,6 +5,7 @@ import deviceInfoModule from 'react-native-device-info';
 import {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StatusBar} from 'react-native';
 
 let hasNotch = deviceInfoModule.hasNotch();
 
@@ -137,6 +138,7 @@ const Slide = ({item}) => {
         height: Window.height / 1.21,
         backgroundColor: '#021851',
       }}>
+      <StatusBar backgroundColor="transparent" translucent={true} />
       <Image
         style={{
           width: Window.width,

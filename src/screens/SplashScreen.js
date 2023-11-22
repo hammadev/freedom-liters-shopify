@@ -116,6 +116,7 @@ const Splash = ({navigation}) => {
   return (
     <>
       <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
+        <StatusBar backgroundColor="transparent" translucent={true} />
         <View
           style={{
             flex: 0.9,

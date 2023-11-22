@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import StatusAppBar from '../../../components/StatusAppBar';
 import {hasLowerCase, hasNumber, hasUpperCase} from '../../../utils/utils';
 import {showMessage} from 'react-native-flash-message';
+import {StatusBar} from 'react-native';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -122,7 +123,7 @@ const SignUp = ({navigation}) => {
         firstName: firstName,
         lastName: lastName,
         password: password,
-        phone: `+92` + phone,
+        phone: phone,
       },
     };
     console.log(variables);
@@ -133,7 +134,7 @@ const SignUp = ({navigation}) => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusAppBar />
+      <StatusBar backgroundColor="transparent" translucent={true} />
       <ImageBackground
         style={{
           width: '100%',
@@ -143,7 +144,7 @@ const SignUp = ({navigation}) => {
           backgroundColor: 'none',
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <AppBar right={'Skip'} onPressFunc={Goto_Login} theme={'dark'} />
           <Text
             style={{
@@ -187,14 +188,12 @@ const SignUp = ({navigation}) => {
               label="Phone"
               value={phone}
               onChangeText={text => {
-                const newtext = text.replace(/^0|[^\d\s]/g, '');
+                const newtext = text.replace(/[^0-9+]/g, '');
                 setPhone(newtext);
               }}
-              type={'number-pad'}
-              Affix={true}
-              placeholder={'3X-XXXXXXXX'}
+              placeholder={'+923X-XXXXXXXX'}
               isDark={true}
-              maxLength={10}
+              maxLength={13}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />

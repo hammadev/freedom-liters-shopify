@@ -199,16 +199,15 @@ const Cart = () => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{backgroundColor: Color.white, paddingVertical: 20}}>
+        <AppBar center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>} right={<Text></Text>} />
+      </View>
+
       {!RemoveLoader ? (
         <ActivityLoader />
       ) : CartItems && CartItems.lines.edges.length > 0 ? (
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar />
-          <View style={{backgroundColor: Color.white, paddingVertical: 20}}>
-            <AppBar center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>} right={<Text></Text>} />
-          </View>
-          {/* ITEM VIEW */}
+        <>
           <ScrollView style={{backgroundColor: Color.white}} contentContainerStyle={{flexGrow: 1}}>
             {CartItems.lines.edges.length > 0 ? (
               <View style={{paddingHorizontal: 20}}>
@@ -319,7 +318,7 @@ const Cart = () => {
               <ActivityLoader />
             )}
           </ScrollView>
-          {/* BOTTOM VIEW */}
+
           <View
             style={{
               backgroundColor: Color.white,
@@ -344,39 +343,33 @@ const Cart = () => {
               <View></View>
             )}
           </View>
-        </SafeAreaView>
+        </>
       ) : (
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar bgcolor={'white'} />
-          <View style={{backgroundColor: Color.white, paddingVertical: 20}}>
-            <AppBar center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>} right={<Text></Text>} />
-          </View>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Image style={{width: 150, height: 150}} source={require('../../../assets/images/images/ShoppingCart.png')} />
-            <Text
-              style={{
-                fontFamily: Font.Gilroy_SemiBold,
-                fontSize: 22,
-                textAlign: 'center',
-                color: 'black',
-                marginTop: Window.fixPadding * 2,
-              }}>
-              Your cart is empty
-            </Text>
-            <Text
-              style={{
-                ...GlobalStyle.textStlye,
-                textAlign: 'center',
-                color: Color.black,
-                lineHeight: 20,
-                marginVertical: Window.fixPadding,
-              }}>
-              Discover your next favorite thing - {'\n'} start shopping now!
-            </Text>
-          </View>
-        </SafeAreaView>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Image style={{width: 150, height: 150}} source={require('../../../assets/images/images/ShoppingCart.png')} />
+          <Text
+            style={{
+              fontFamily: Font.Gilroy_SemiBold,
+              fontSize: 22,
+              textAlign: 'center',
+              color: 'black',
+              marginTop: Window.fixPadding * 2,
+            }}>
+            Your cart is empty
+          </Text>
+          <Text
+            style={{
+              ...GlobalStyle.textStlye,
+              textAlign: 'center',
+              color: Color.black,
+              lineHeight: 20,
+              marginVertical: Window.fixPadding,
+            }}>
+            Discover your next favorite thing - {'\n'} start shopping now!
+          </Text>
+        </View>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 export default Cart;

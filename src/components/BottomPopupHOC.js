@@ -3,7 +3,7 @@ import React from 'react';
 import {GlobalStyle} from '../globalStyle/Theme';
 import {ScrollView} from 'react-native';
 
-const BottomPopupHOC = ({PopupBody, title, visible, setVisible}) => {
+const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
   const onTouchOutside = () => {
     setVisible(false);
   };
@@ -42,7 +42,7 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible}) => {
           <Text
             style={{
               ...GlobalStyle.heading,
-              color: '#F75555',
+              color: color ? color : '#F75555',
               fontSize: 20,
               textAlign: 'center',
             }}>

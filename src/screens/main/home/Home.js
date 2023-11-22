@@ -11,6 +11,9 @@ import ProductBox from '../product/_partials/ProductBox';
 import {CatBoxCat} from '../../../components/CategoryCart';
 import StatusAppBar from '../../../components/StatusAppBar';
 import Icon from '../../../core/Icon';
+import AppStatusBar from '../../../components/AppStatusBar';
+import {useEffect} from 'react';
+import {StatusBar} from 'react-native';
 
 export const CatBox = ({item, navigation}) => {
   return (
@@ -218,7 +221,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>Featured</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 1})}>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 1, title: 'Featured'})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -245,7 +248,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>Latest</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 2})}>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 2, title: 'Latest'})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -272,7 +275,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={GlobalStyle.heading}>ONSALE</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 3})}>
+              <TouchableOpacity onPress={() => navigation.navigate('ProductListing', {value: 3, title: 'ONSALE'})}>
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>

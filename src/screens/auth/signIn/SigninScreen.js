@@ -12,6 +12,7 @@ import StatusAppBar from '../../../components/StatusAppBar';
 import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
 import {ScrollView} from 'react-native';
+import {StatusBar} from 'react-native';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -75,7 +76,7 @@ const SignIn = ({navigation}) => {
   const scheme = useColorScheme();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusAppBar />
+      <StatusBar backgroundColor="transparent" translucent={true} />
       <ImageBackground
         style={{
           width: '100%',
@@ -85,7 +86,7 @@ const SignIn = ({navigation}) => {
           backgroundColor: 'none',
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <Text
             onPress={() => navigation.navigate('BottomTabScreen')}
             style={{

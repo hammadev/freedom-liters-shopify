@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {CatBoxCat} from '../../../components/CategoryCart';
 import {FlatList} from 'react-native';
+import StatusAppBar from '../../../components/StatusAppBar';
 
 // export const CatBoxCat = ({item, navigation}) => {
 //   return (
