@@ -34,7 +34,7 @@ const ProductDetail = ({route, navigation}) => {
     ...state,
   }));
 
-  // console.log('product.node.variants.edges', product.node.variants.edges[0].node.selectedOptions.length);
+  console.log('product.node.variants.edges', product.node.variants.edges[0].node.id);
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
 
@@ -50,8 +50,10 @@ const ProductDetail = ({route, navigation}) => {
 
   const Add_To_Card = async () => {
     if (auth) {
-      if (product.node.variants.edges.length > 0) {
+      console.log('Auth hy');
+      if (product.node.variants.edges.length > 1) {
         if (selectedColor && selectedSize) {
+          console.log('True');
           setloadingSpinner(true);
           const CART_ID = await AsyncStorage.getItem('CART_ID');
           let variables;
@@ -87,6 +89,37 @@ const ProductDetail = ({route, navigation}) => {
             type: 'danger',
           });
         }
+      } else {
+        console.log('True');
+        setloadingSpinner(true);
+        const CART_ID = await AsyncStorage.getItem('CART_ID');
+        let variables;
+        let mutationFunc;
+        let isCreateCart;
+        if (CART_ID) {
+          variables = {
+            cartId: CART_ID,
+            lines: {
+              merchandiseId: product.node.variants.edges[0].node.id,
+              quantity: 1,
+            },
+          };
+          mutationFunc = cartLinesAdd;
+          isCreateCart = 0;
+        } else {
+          variables = {
+            cartInput: {
+              lines: {
+                merchandiseId: product.node.variants.edges[0].node.id,
+                quantity: 1,
+              },
+            },
+          };
+          mutationFunc = cartCreate;
+          isCreateCart = 1;
+        }
+        handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
+        setloadingSpinner(false);
       }
     } else {
       showMessage({

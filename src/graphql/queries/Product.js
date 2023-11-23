@@ -301,6 +301,7 @@ export const GET_ALL_PRODUCT = gql`
         node {
           id
           title
+          descriptionHtml
           featuredImage {
             url
           }
@@ -333,6 +334,7 @@ export const GET_ALL_PRODUCT = gql`
           priceRange {
             minVariantPrice {
               amount
+              currencyCode
             }
           }
         }
@@ -348,6 +350,7 @@ export const FILTER_PRODUCTS = gql`
         node {
           id
           title
+          descriptionHtml
           images(first: 5) {
             nodes {
               url
@@ -379,6 +382,7 @@ export const FILTER_PRODUCTS = gql`
           priceRange {
             minVariantPrice {
               amount
+              currencyCode
             }
           }
         }
@@ -396,6 +400,7 @@ export const FILTER_CATEGORY_PRODUCTS = gql`
           node {
             id
             title
+            descriptionHtml
             images(first: 10) {
               nodes {
                 url
@@ -426,6 +431,7 @@ export const FILTER_CATEGORY_PRODUCTS = gql`
             priceRange {
               minVariantPrice {
                 amount
+                currencyCode
               }
             }
           }

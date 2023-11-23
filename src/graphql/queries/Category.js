@@ -46,6 +46,17 @@ export const GET_ONE_CATEGORIES_PRODUCT = gql`
               edges {
                 node {
                   id
+                  title
+                  image {
+                    url
+                  }
+                  price {
+                    amount
+                  }
+                  selectedOptions {
+                    name
+                    value
+                  }
                 }
               }
             }
@@ -59,7 +70,6 @@ export const GET_ONE_CATEGORIES_PRODUCT = gql`
               }
             }
             priceRange {
-              # Returns range of prices for a product in the shop's currency.
               minVariantPrice {
                 amount
                 currencyCode
