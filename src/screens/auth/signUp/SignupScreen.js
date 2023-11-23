@@ -191,7 +191,8 @@ const SignUp = ({navigation}) => {
                 const newtext = text.replace(/[^0-9+]/g, '');
                 setPhone(newtext);
               }}
-              placeholder={'+923X-XXXXXXXX'}
+              type={'number-pad'}
+              placeholder={'+913X-XXXXXXXX'}
               isDark={true}
               maxLength={13}
               onChanged={setPhone}

@@ -8,6 +8,7 @@ const TextField2 = ({
   maxLength,
   placeholder,
   icon,
+  type,
   passwordFeild = false,
   setHidePass,
   hidePass,
@@ -35,6 +36,7 @@ const TextField2 = ({
       theme={{
         roundness: 14,
       }}
+      keyboardType={type ? type : 'default'}
       maxLength={maxLength ? maxLength : 50}
       selectionColor={color}
       outlineColor={color}

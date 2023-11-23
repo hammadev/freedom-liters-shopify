@@ -21,6 +21,7 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
         message: 'Item Added Successfully',
         type: 'success',
       });
+      navigation.navigate('Cart');
     }
   } catch (error) {
     console.error('Mutation Error:', error);
