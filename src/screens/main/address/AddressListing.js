@@ -165,7 +165,6 @@ const AddressListing = ({navigation}) => {
     console.log(DefultAddress);
     setRadioCheck(DefultAddress);
   };
-  // console.log(data);
 
   const resetState = () => {
     setFirstName('');

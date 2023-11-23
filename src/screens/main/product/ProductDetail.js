@@ -14,17 +14,15 @@ import {useMutation} from '@apollo/client';
 import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../graphql/mutations/Cart';
 import {handleCreateCart} from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
-import {SliderBox} from 'react-native-image-slider-box';
 import {useEffect} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ImageBackground} from 'react-native';
-import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 const ProductDetail = ({route, navigation}) => {
   const {product} = route.params;
   const [visible, setVisible] = useState(false);
-  const [ProductImages, setProductImages] = useState([]);
+  const [ProductImages, setProductImages] = useState(null);
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [selectedColor, setselectedColor] = useState(null);
@@ -36,18 +34,16 @@ const ProductDetail = ({route, navigation}) => {
     ...state,
   }));
 
+  // console.log('product.node.variants.edges', product.node.variants.edges[0].node.selectedOptions.length);
   useEffect(() => {
-    const Images = [];
-    if (product.node.images) {
-      product.node.images.nodes.forEach(element => Images.push(element.url));
-    }
-    setProductImages(Images);
+    setProductImages(product.node.featuredImage.url);
 
     if (selectedColor && selectedSize) {
       const filtered = product.node.variants.edges.filter(
         item => item.node.selectedOptions[0].value === selectedSize && item.node.selectedOptions[1].value === selectedColor
       );
       setNewArr(filtered[0].node);
+      setProductImages(filtered[0].node.image.url);
       setNewPrice(filtered[0].node.price.amount);
     }
   }, [product, selectedColor, selectedSize, NewPrice]);
@@ -122,12 +118,12 @@ const ProductDetail = ({route, navigation}) => {
   };
 
   const HandleSize = index => {
-    console.log(index);
+    // console.log(index);
     setselectedSize(index);
   };
 
   const HandleColor = index => {
-    console.log(index);
+    // console.log(index);
     setselectedColor(index);
   };
 
@@ -146,23 +142,14 @@ const ProductDetail = ({route, navigation}) => {
         style={{backgroundColor: Color.white, flex: 1}}>
         <ImageBackground
           resizeMode="cover"
-          source={{uri: NewArr ? NewArr.image.url : product.node.featuredImage?.url}}
+          source={{uri: ProductImages}}
           style={{
             width: '100%',
             paddingVertical: Window.fixPadding * 2,
             height: Window.height / 3,
           }}>
           <View style={styles.overlay} />
-          <AppBar
-            theme="#fff"
-            header="solid"
-            customStyle={{paddingHorizontal: Window.fixPadding * 2}}
-            right={
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ShareIcon />
-              </View>
-            }
-          />
+          <AppBar theme="dark" header="solid" customStyle={{paddingHorizontal: 100}} />
         </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
@@ -186,7 +173,7 @@ const ProductDetail = ({route, navigation}) => {
               {product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
-          {product?.node.variants.edges && (
+          {product.node.variants.edges[0].node.selectedOptions.length > 1 && (
             <View
               style={{
                 paddingHorizontal: 20,
@@ -219,7 +206,7 @@ const ProductDetail = ({route, navigation}) => {
               </ScrollView>
             </View>
           )}
-          {product?.node.variants.edges && (
+          {product.node.variants.edges[0].node.selectedOptions.length > 1 && (
             <View
               style={{
                 paddingHorizontal: 20,

@@ -39,6 +39,7 @@ const Style = StyleSheet.create({
   topMainIcon: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 10,
     justifyContent: 'space-between',
     height: 50,
     color: 'black',
