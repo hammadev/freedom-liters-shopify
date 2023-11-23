@@ -1,4 +1,4 @@
-import {StyleSheet, View, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import React from 'react';
 import {Window} from '../../../../globalStyle/Theme';
 import ProductBox from './ProductBox';
