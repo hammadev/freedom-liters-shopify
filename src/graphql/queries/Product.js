@@ -7,16 +7,29 @@ export const GET_LATEST_PRODUCT = gql`
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -43,16 +56,29 @@ export const GET_ALL_LATEST_PRODUCT = gql`
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -74,21 +100,34 @@ export const GET_ALL_LATEST_PRODUCT = gql`
 
 export const GET_FEATURED_PRODUCT = gql`
   query FetchFeaturedProduct {
-    products(first: 8) {
+    products(first: 8, query: "product_type:featured") {
       edges {
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -110,11 +149,14 @@ export const GET_FEATURED_PRODUCT = gql`
 
 export const GET_ALL_FEATURED_PRODUCT = gql`
   query FetchFeaturedProduct {
-    products(first: 100) {
+    products(first: 100, query: "product_type:featured") {
       edges {
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
@@ -125,6 +167,16 @@ export const GET_ALL_FEATURED_PRODUCT = gql`
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -151,16 +203,29 @@ export const GET_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -187,16 +252,29 @@ export const GET_ALL_ONSALE_PRODUCT = gql`
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -223,16 +301,29 @@ export const GET_ALL_PRODUCT = gql`
         node {
           id
           title
+          featuredImage {
+            url
+          }
           images(first: 5) {
             nodes {
               url
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
@@ -263,17 +354,28 @@ export const FILTER_PRODUCTS = gql`
             }
           }
           createdAt
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
                 title
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }
           featuredImage {
             url
           }
+
           priceRange {
             minVariantPrice {
               amount
@@ -300,11 +402,21 @@ export const FILTER_CATEGORY_PRODUCTS = gql`
               }
             }
             createdAt
-            variants(first: 1) {
+            variants(first: 10) {
               edges {
                 node {
                   id
                   title
+                  image {
+                    url
+                  }
+                  price {
+                    amount
+                  }
+                  selectedOptions {
+                    name
+                    value
+                  }
                 }
               }
             }

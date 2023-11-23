@@ -53,7 +53,7 @@ const ProfilePages = ({item, popupState}) => {
             {item.name}
           </Text>
         </View>
-        <ChevronSvg />
+        {item.name == 'Log Out' ? null : <ChevronSvg />}
       </TouchableOpacity>
     </>
   );
@@ -132,12 +132,12 @@ const ProfileData = [
     chevron: <ChevronSvg />,
     navlink: 'PersonalInfo',
   },
-  // {
-  //   icon: <AddressSvg />,
-  //   name: 'Address',
-  //   chevron: <ChevronSvg />,
-  //   navlink: '',
-  // },
+  {
+    icon: <AddressSvg />,
+    name: 'Address',
+    chevron: <ChevronSvg />,
+    navlink: 'AddressListing',
+  },
   {
     icon: <AddressSvg />,
     name: 'Wishlist',
@@ -159,7 +159,6 @@ const ProfileData = [
   {
     icon: <LogoutSvg />,
     name: 'Log Out',
-    chevron: <ChevronSvg />,
     navlink: 'logoutFunc',
   },
 ];

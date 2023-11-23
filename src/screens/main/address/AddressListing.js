@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, TouchableOpacity, ScrollView, StatusBar, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppBar from '../../../components/AppBar';
@@ -16,10 +16,13 @@ import {FETCH_CUSTOMER_ADDRESS} from '../../../graphql/queries/Customer';
 import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showModal, defaultAddressId}) => {
-  const RadioClick = itemID => {
+  const RadioClick = async itemID => {
     setRadioState(itemID);
+    await AsyncStorage.setItem('address', itemID);
+    console.log(itemID);
   };
 
   return (
@@ -74,7 +77,7 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{...styles.Heading}}>{item.firstName + ' ' + item.lastName}</Text>
 
-              {defaultAddressId == item.id && (
+              {radioState == item.id && (
                 <View
                   style={{
                     backgroundColor: Color.grey,
@@ -96,6 +99,7 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
                 </View>
               )}
             </View>
+            <Text style={{...GlobalStyle.textStlye, marginVertical: 5}}>{item.phone}</Text>
 
             <Text style={{...styles.TextStyle}} numberOfLines={2}>
               {item.address1 + ', ' + item.address2 + ', '}
@@ -112,7 +116,7 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
             value="first"
             uncheckedColor={Color.primary}
             color={Color.primary}
-            status={defaultAddressId == item.id ? 'checked' : 'unchecked'}
+            status={radioState == item.id ? 'checked' : 'unchecked'}
             onPress={() => RadioClick(item.id)}
           />
         )}
@@ -124,7 +128,7 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
 const AddressListing = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
 
-  const [radioCheck, setRadioCheck] = useState(1);
+  const [radioCheck, setRadioCheck] = useState('');
   const [editIcon, setEditIcon] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibleAddress, setVisibleAddress] = useState(false);
@@ -132,13 +136,13 @@ const AddressListing = ({navigation}) => {
   // address form states
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
-  const [company, setCompany] = useState('');
+  const [country, setcountry] = useState('');
   const [zip, setZip] = useState('');
   const [province, setProvince] = useState('');
   const [city, setCity] = useState('');
-  const [country, setcountry] = useState('');
   const [activeAddressId, setActiveAddressId] = useState(null);
 
   const [createCustomerAddress, {loading: createAddressLoading, error: createAddressError, data: createAddressData}] =
@@ -152,12 +156,21 @@ const AddressListing = ({navigation}) => {
       customerAccessToken: auth.accessToken,
     },
   });
+  useEffect(() => {
+    Get_Defult_Address();
+  }, [Get_Defult_Address]);
 
+  const Get_Defult_Address = async () => {
+    const DefultAddress = await AsyncStorage.getItem('address');
+    console.log(DefultAddress);
+    setRadioCheck(DefultAddress);
+  };
   // console.log(data);
 
   const resetState = () => {
     setFirstName('');
     setLastName('');
+    setPhone('');
     setAddress1('');
     setAddress2('');
     setcountry('');
@@ -176,6 +189,7 @@ const AddressListing = ({navigation}) => {
   const showModal = item => {
     setFirstName(item.firstName);
     setLastName(item.lastName);
+    setPhone(item.phone);
     setAddress1(item.address1);
     setAddress2(item.address2);
     setcountry(item.country);
@@ -185,7 +199,7 @@ const AddressListing = ({navigation}) => {
     setActiveAddressId(item.id);
     setVisibleAddress(true);
   };
-  console.log(auth.accessToken);
+
   const handleSubmit = isUpdate => {
     // console.log(isUpdate);
 
@@ -200,6 +214,14 @@ const AddressListing = ({navigation}) => {
     if (lastName === '') {
       showMessage({
         message: "Last Name can't be blank",
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (phone === '') {
+      showMessage({
+        message: "Phone can't be blank",
         type: 'danger',
       });
       return;
@@ -232,11 +254,13 @@ const AddressListing = ({navigation}) => {
     const variables = {
       customerAccessToken: auth.accessToken,
       address: {
-        lastName,
         firstName,
+        lastName,
+        phone,
         address1,
-        province,
+        address2,
         country,
+        province,
         zip,
         city,
       },
@@ -245,7 +269,7 @@ const AddressListing = ({navigation}) => {
     if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible);
     else {
       variables.addressId = activeAddressId;
-      console.log(variables);
+      // console.log(variables);
       handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress);
     }
   };
@@ -337,6 +361,8 @@ const AddressListing = ({navigation}) => {
             setFirstName={setFirstName}
             lastName={lastName}
             setLastName={setLastName}
+            phone={phone}
+            setPhone={setPhone}
             address1={address1}
             setAddress1={setAddress1}
             address2={address2}
@@ -366,6 +392,8 @@ const AddressListing = ({navigation}) => {
             setFirstName={setFirstName}
             lastName={lastName}
             setLastName={setLastName}
+            phone={phone}
+            setPhone={setPhone}
             address1={address1}
             setAddress1={setAddress1}
             province={province}
@@ -426,12 +454,14 @@ const AddressForm = ({
   setZip,
   city,
   setCity,
+  phone,
+  setPhone,
   handleSubmit,
   isUpdate = 0,
   loading,
 }) => {
   return (
-    <View style={{}}>
+    <View>
       <View
         style={{
           width: '100%',
@@ -446,6 +476,8 @@ const AddressForm = ({
           <TextField2 label="Last Name" onChanged={setLastName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={lastName} />
         </View>
       </View>
+
+      <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} />
 
       <TextField2 label="Address1" onChanged={setAddress1} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={address1} />
 
@@ -484,7 +516,6 @@ const AddressForm = ({
           text={!isUpdate ? 'Add Address' : 'Update Address'}
           isIcon={false}
           theme="tertiary"
-          // navLink="Profile"
           loading={loading}
           onPressFunc={() => handleSubmit(isUpdate)}
         />

@@ -18,13 +18,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useEffect} from 'react';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ImageBackground} from 'react-native';
+import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 const ProductDetail = ({route, navigation}) => {
-  const dispatch = useDispatch();
   const {product} = route.params;
   const [visible, setVisible] = useState(false);
   const [ProductImages, setProductImages] = useState([]);
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
+  const [selectedColor, setselectedColor] = useState(null);
+  const [selectedSize, setselectedSize] = useState(null);
+  const [NewPrice, setNewPrice] = useState(null);
+  const [NewArr, setNewArr] = useState([]);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
   const {auth} = useSelector(state => ({
     ...state,
@@ -36,38 +42,56 @@ const ProductDetail = ({route, navigation}) => {
       product.node.images.nodes.forEach(element => Images.push(element.url));
     }
     setProductImages(Images);
-  }, [product]);
+
+    if (selectedColor && selectedSize) {
+      const filtered = product.node.variants.edges.filter(
+        item => item.node.selectedOptions[0].value === selectedSize && item.node.selectedOptions[1].value === selectedColor
+      );
+      setNewArr(filtered[0].node);
+      setNewPrice(filtered[0].node.price.amount);
+    }
+  }, [product, selectedColor, selectedSize, NewPrice]);
+
   const Add_To_Card = async () => {
     if (auth) {
-      setloadingSpinner(true);
-      const CART_ID = await AsyncStorage.getItem('CART_ID');
-      let variables;
-      let mutationFunc;
-      let isCreateCart;
-      if (CART_ID) {
-        variables = {
-          cartId: CART_ID,
-          lines: {
-            merchandiseId: product.node.variants.edges[0].node.id,
-            quantity: 1,
-          },
-        };
-        mutationFunc = cartLinesAdd;
-        isCreateCart = 0;
-      } else {
-        variables = {
-          cartInput: {
-            lines: {
-              merchandiseId: product.node.variants.edges[0].node.id,
-              quantity: 1,
-            },
-          },
-        };
-        mutationFunc = cartCreate;
-        isCreateCart = 1;
+      if (product.node.variants.edges.length > 0) {
+        if (selectedColor && selectedSize) {
+          setloadingSpinner(true);
+          const CART_ID = await AsyncStorage.getItem('CART_ID');
+          let variables;
+          let mutationFunc;
+          let isCreateCart;
+          if (CART_ID) {
+            variables = {
+              cartId: CART_ID,
+              lines: {
+                merchandiseId: NewArr.id,
+                quantity: 1,
+              },
+            };
+            mutationFunc = cartLinesAdd;
+            isCreateCart = 0;
+          } else {
+            variables = {
+              cartInput: {
+                lines: {
+                  merchandiseId: NewArr.id,
+                  quantity: 1,
+                },
+              },
+            };
+            mutationFunc = cartCreate;
+            isCreateCart = 1;
+          }
+          handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
+          setloadingSpinner(false);
+        } else {
+          showMessage({
+            message: 'Please Select Color & Size First',
+            type: 'danger',
+          });
+        }
       }
-      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
-      setloadingSpinner(false);
     } else {
       showMessage({
         message: 'Please Login First',
@@ -75,6 +99,36 @@ const ProductDetail = ({route, navigation}) => {
       });
       navigation.navigate('SignIn');
     }
+  };
+
+  const getUniqueVariant = index => {
+    const productEdge = product.node.variants.edges;
+    const tempProductData = [];
+    const uniqueVariant = [];
+
+    // Extract titles from productEdge
+    for (let a = 0; a < productEdge.length; a++) {
+      tempProductData.push(productEdge[a].node.selectedOptions[index].value);
+    }
+
+    // Filter out unique titles
+    for (let b = 0; b < tempProductData.length; b++) {
+      if (!uniqueVariant.includes(tempProductData[b])) {
+        uniqueVariant.push(tempProductData[b]);
+      }
+    }
+
+    return uniqueVariant;
+  };
+
+  const HandleSize = index => {
+    console.log(index);
+    setselectedSize(index);
+  };
+
+  const HandleColor = index => {
+    console.log(index);
+    setselectedColor(index);
   };
 
   return (
@@ -89,18 +143,27 @@ const ProductDetail = ({route, navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
-        style={{backgroundColor: Color.white, flex: 1, marginTop: 15}}>
-        <AppBar
-          theme="light"
-          center={
-            <Text numberOfLines={1} style={{...GlobalStyle.heading, fontSize: 18, color: 'black'}}>
-              {product.node.title}
-            </Text>
-          }
-        />
-        <View style={{marginTop: 15}}>
-          <SliderBox images={ProductImages} sliderBoxHeight={250} dotColor="#E9D8C6" inactiveDotColor="#E9D8C6" />
-        </View>
+        style={{backgroundColor: Color.white, flex: 1}}>
+        <ImageBackground
+          resizeMode="cover"
+          source={{uri: NewArr ? NewArr.image.url : product.node.featuredImage?.url}}
+          style={{
+            width: '100%',
+            paddingVertical: Window.fixPadding * 2,
+            height: Window.height / 3,
+          }}>
+          <View style={styles.overlay} />
+          <AppBar
+            theme="#fff"
+            header="solid"
+            customStyle={{paddingHorizontal: Window.fixPadding * 2}}
+            right={
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <ShareIcon />
+              </View>
+            }
+          />
+        </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
           <View
@@ -119,9 +182,72 @@ const ProductDetail = ({route, navigation}) => {
                 fontFamily: Font.Gilroy_Bold,
                 color: Color.primary,
               }}>
-              {product.node.priceRange.minVariantPrice.amount + ' ' + product.node.priceRange.minVariantPrice.currencyCode}
+              {NewPrice ? NewPrice : product.node.priceRange.minVariantPrice.amount}
+              {product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
+          {product?.node.variants.edges && (
+            <View
+              style={{
+                paddingHorizontal: 20,
+                marginTop: 8,
+              }}>
+              <Heading name="Size" />
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {getUniqueVariant(0).map(item => (
+                  <TouchableOpacity
+                    onPress={() => HandleSize(item)}
+                    style={{
+                      backgroundColor: selectedSize === item ? 'red' : 'rgba(2, 28, 94, 0.9)',
+                      width: 100,
+                      padding: 5,
+                      borderRadius: 15,
+                      marginRight: 8,
+                      marginTop: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: Font.Gilroy_Regular,
+                        color: Color.white,
+                        textAlign: 'center',
+                      }}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+          {product?.node.variants.edges && (
+            <View
+              style={{
+                paddingHorizontal: 20,
+                marginTop: 8,
+              }}>
+              <Heading name="Colors" />
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {getUniqueVariant(1).map(item => (
+                  <TouchableOpacity
+                    onPress={() => HandleColor(item)}
+                    style={{
+                      backgroundColor: item.toLowerCase(),
+                      width: 35,
+                      height: 35,
+                      padding: 5,
+                      borderRadius: 10,
+                      marginRight: 8,
+                      marginTop: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    {selectedColor == item ? <View style={{width: 10, height: 10, backgroundColor: 'red', borderRadius: 10}}></View> : null}
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
           {product.latest && (
             <View
               style={{
