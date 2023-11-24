@@ -138,7 +138,6 @@ const Slide = ({item}) => {
         height: Window.height / 1.21,
         backgroundColor: '#021851',
       }}>
-      <StatusBar backgroundColor="transparent" translucent={true} />
       <Image
         style={{
           width: Window.width,

@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, StatusBar} from 'react-native';
 import AppBar from '../../../components/AppBar';
-import {GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {Color, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {CatBoxCat} from '../../../components/CategoryCart';
@@ -43,6 +43,7 @@ const Category = ({navigation}) => {
   const {categories} = useSelector(state => ({...state}));
   return (
     <SafeAreaView>
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
       <ScrollView>
         <View style={{...GlobalStyle.Container}}>
           <AppBar

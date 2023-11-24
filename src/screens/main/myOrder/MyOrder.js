@@ -8,10 +8,7 @@ import NotLogin from '../../../components/NotLogin';
 import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
 
 const MyOrder = () => {
-  useEffect(() => {
-    StatusBar.setBarStyle('dark-content', true);
-    StatusBar.setBackgroundColor(Color.tertiary);
-  }, []);
+  
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;

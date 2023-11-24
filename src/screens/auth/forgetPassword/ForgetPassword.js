@@ -1,23 +1,23 @@
-import React, {useState} from 'react';
-import {View, Text, StatusBar, ScrollView, Keyboard, ImageBackground} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StatusBar, ScrollView, Keyboard, ImageBackground } from 'react-native';
 import Button from '../../../components/Button';
-import {GlobalStyle, Color, Window, Font} from '../../../globalStyle/Theme';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {showMessage} from 'react-native-flash-message';
-import {useDispatch} from 'react-redux';
-import {LogoIcon, LogoSvg} from '../../../assets/svgs/Logo';
+import { GlobalStyle, Color, Window, Font } from '../../../globalStyle/Theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { showMessage } from 'react-native-flash-message';
+import { useDispatch } from 'react-redux';
+import { LogoIcon, LogoSvg } from '../../../assets/svgs/Logo';
 import TextField2 from '../../../components/TextFeild2';
-import {handleForgetPassword} from '../../../apis/auth';
-import {SEND_PASSWORD_RESET_EMAIL} from '../../../graphql/mutations/Auth';
-import {useMutation} from '@apollo/client';
+import { handleForgetPassword } from '../../../apis/auth';
+import { SEND_PASSWORD_RESET_EMAIL } from '../../../graphql/mutations/Auth';
+import { useMutation } from '@apollo/client';
 import AppBar from '../../../components/AppBar';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 
-const ForgetPassword = ({navigation}) => {
+const ForgetPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [visible, setVisible] = useState(false);
 
-  const [sendPasswordResetEmail, {loading, error, data}] = useMutation(SEND_PASSWORD_RESET_EMAIL);
+  const [sendPasswordResetEmail, { loading, error, data }] = useMutation(SEND_PASSWORD_RESET_EMAIL);
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
@@ -47,13 +47,13 @@ const ForgetPassword = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <ScrollView contentContainerStyle={{justifyContent: 'center', flex: 1}} keyboardShouldPersistTaps="handled">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#021851' }}>
+      <ScrollView contentContainerStyle={{ justifyContent: 'center', flex: 1 }} keyboardShouldPersistTaps="handled">
         <ImageBackground
-          style={{...GlobalStyle.Container, backgroundColor: '#021851', paddingVertical: Window.fixPadding * 2}}
+          style={{ ...GlobalStyle.Container, backgroundColor: '#021851', paddingVertical: Window.fixPadding * 2 }}
           source={require('../../../assets/images/pics/auth.bg.png')}>
           <AppBar />
-          <View style={{alignItems: 'center', marginTop: Window.height / 15}}>
+          <View style={{ alignItems: 'center', marginTop: Window.height / 15 }}>
             <LogoSvg />
           </View>
           <Text
@@ -71,10 +71,10 @@ const ForgetPassword = ({navigation}) => {
             label="Email"
             isDark={true}
             onChanged={setEmail}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            customStyle={{ marginBottom: Window.fixPadding * 1.5 }}
           />
 
-          <View style={{marginVertical: Window.fixPadding}}>
+          <View style={{ marginVertical: Window.fixPadding }}>
             <Button text="Forget Password" isIcon={false} theme="white" loading={loading} onPressFunc={handleSubmit} />
           </View>
         </ImageBackground>

@@ -95,24 +95,21 @@ const SearchScreen = () => {
 
   const ApplyBtn = () => {
     setloaderSpinner(true);
-    let variables;
+    console.log('checked',checked);
     if (checked === 'newest') {
       getSortProducts({
         variables: {reverse: true, sortkey: 'CREATED_AT'},
       });
-      console.log('Newest ', variables);
     }
     if (checked === 'lowtohigh') {
       getSortProducts({
         variables: {reverse: false, sortkey: 'PRICE'},
       });
-      console.log('low To high', variables);
     }
     if (checked === 'hightolow') {
       getSortProducts({
         variables: {reverse: true, sortkey: 'PRICE'},
       });
-      console.log('High To Low', variables);
     }
 
     if (sortData && !sortLoader && !sortError) {
@@ -146,7 +143,6 @@ const SearchScreen = () => {
 
   return (
     <Animated.View style={[reanimatedHeightStyle, {overflow: 'hidden', padding: 18, flex: 1}]}>
-      <StatusBar backgroundColor={Color.tertiary} />
       <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
         <View
           style={{

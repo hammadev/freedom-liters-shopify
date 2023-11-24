@@ -16,7 +16,7 @@ const ProfilePages = ({item, popupState}) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => (item.navlink == 'logoutFunc' ? popupState(true) : navigation.navigate(item.navlink))}
+        onPress={() => (item.navlink == 'logoutFunc' ? popupState(true) : item.navlink ? navigation.navigate(item.navlink) : console.log('no link'))}
         style={{
           justifyContent: 'space-between',
           paddingBottom: 20,
@@ -60,10 +60,7 @@ const ProfilePages = ({item, popupState}) => {
 };
 
 const Profile = ({navigation}) => {
-  useEffect(() => {
-    StatusBar.setBarStyle('dark-content', true);
-    StatusBar.setBackgroundColor(Color.tertiary);
-  }, []);
+  
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;
@@ -71,7 +68,7 @@ const Profile = ({navigation}) => {
   const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={Color.tertiary} />
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
       <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"
@@ -148,13 +145,13 @@ const ProfileData = [
     icon: <GiftSvg />,
     name: 'Vouchers',
     chevron: <ChevronSvg />,
-    navlink: 'Coupons',
+    navlink: '',
   },
   {
     icon: <Image style={{width: 25, height: 25, tintColor: Color.black}} source={require('../../../assets/images/pics/setting.png')} />,
     name: 'Setting',
     chevron: <ChevronSvg />,
-    navlink: 'Coupons',
+    navlink: '',
   },
   {
     icon: <LogoutSvg />,

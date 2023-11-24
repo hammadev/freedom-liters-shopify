@@ -404,7 +404,6 @@ const CheckOut = ({navigation}) => {
   }
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar animated={true} backgroundColor={Color.light} barStyle={'dark-content'} showHideTransition={'fade'} translucent />
       <ScrollView style={{...GlobalStyle.Container, paddingBottom: 10}}>
         <AppBar theme="dark" title="Checkout" />
 

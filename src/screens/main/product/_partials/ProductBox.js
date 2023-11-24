@@ -43,44 +43,45 @@ const ProductBox = ({item, customStyle, wishlist}) => {
   }));
 
   const Add_To_Card = async item => {
-    if (auth) {
-      setloadingSpinner(true);
-      const CART_ID = await AsyncStorage.getItem('CART_ID');
-      let variables;
-      let mutationFunc;
-      let isCreateCart;
-      if (CART_ID) {
-        variables = {
-          cartId: CART_ID,
+    setloadingSpinner(true);
+    const CART_ID = await AsyncStorage.getItem('CART_ID');
+    let variables;
+    let mutationFunc;
+    let isCreateCart;
+    if (CART_ID) {
+      variables = {
+        cartId: CART_ID,
+        lines: {
+          merchandiseId: item.id,
+          quantity: 1,
+        },
+      };
+      mutationFunc = cartLinesAdd;
+      isCreateCart = 0;
+    } else {
+      variables = {
+        cartInput: {
           lines: {
             merchandiseId: item.id,
             quantity: 1,
           },
-        };
-        mutationFunc = cartLinesAdd;
-        isCreateCart = 0;
-      } else {
-        variables = {
-          cartInput: {
-            lines: {
-              merchandiseId: item.id,
-              quantity: 1,
-            },
-          },
-        };
-        mutationFunc = cartCreate;
-        isCreateCart = 1;
-      }
-      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, dispatch);
-      setloadingSpinner(false);
-      navigation.navigate('Cart');
-    } else {
-      showMessage({
-        message: 'Please Login First',
-        type: 'danger',
-      });
-      navigation.navigate('SignIn');
+        },
+      };
+      mutationFunc = cartCreate;
+      isCreateCart = 1;
     }
+    handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
+    setloadingSpinner(false);
+    
+    // navigation.navigate('Cart');
+    // if (auth) {
+    // } else {
+    //   showMessage({
+    //     message: 'Please Login First',
+    //     type: 'danger',
+    //   });
+    //   navigation.navigate('SignIn');
+    // }
   };
   const navigation = useNavigation();
   const dispatch = useDispatch();

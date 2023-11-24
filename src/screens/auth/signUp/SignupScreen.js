@@ -108,6 +108,14 @@ const SignUp = ({navigation}) => {
       return;
     }
 
+    if (phone < 12) {
+      showMessage({
+        message: 'phone cannot be greater than 12 characters',
+        type: 'danger',
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       showMessage({
         message: 'Password & confirm password not match',
@@ -126,7 +134,7 @@ const SignUp = ({navigation}) => {
         phone: phone,
       },
     };
-    console.log(variables);
+    console.log('variables',variables);
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
   const Goto_Login = () => {
@@ -134,7 +142,6 @@ const SignUp = ({navigation}) => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusBar backgroundColor="transparent" translucent={true} />
       <ImageBackground
         style={{
           width: '100%',
@@ -159,7 +166,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'account-circle-outline'}
               label="First Name"
-              placeholder={'Doe'}
+              placeholder={'john'}
               isDark={true}
               maxLength={10}
               onChanged={setFirstName}
@@ -168,7 +175,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'account-circle-outline'}
               label="Last Name"
-              placeholder={'john'}
+              placeholder={'doe'}
               isDark={true}
               maxLength={10}
               onChanged={setLastName}
@@ -177,7 +184,7 @@ const SignUp = ({navigation}) => {
             <TextField2
               icon={'email-outline'}
               label="Email"
-              placeholder={'Email@gmail.com'}
+              placeholder={'jhondoe@gmail.com'}
               isDark={true}
               onChanged={setEmail}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
@@ -191,10 +198,10 @@ const SignUp = ({navigation}) => {
                 const newtext = text.replace(/[^0-9+]/g, '');
                 setPhone(newtext);
               }}
-              type={'number-pad'}
-              placeholder={'+913X-XXXXXXXX'}
+              type={'phone-pad'}
+              placeholder={'+1XXXXXXXXXXXX'}
               isDark={true}
-              maxLength={13}
+              maxLength={12}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />

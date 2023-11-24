@@ -95,7 +95,7 @@ const ProductListing = route => {
     FILTER_CATEGORY_PRODUCTS,
     {
       onCompleted: sortData => {
-        console.log(sortData.collection.products.edges);
+        console.log('sortData.collection.products.edges',sortData.collection.products.edges);
         setProductData(sortData.collection.products.edges);
       },
     }
@@ -181,12 +181,13 @@ const ProductListing = route => {
   const ApplyBtn = () => {
     setloaderSpinner(true);
     let variables;
-    if (checked === 'newest') {
-      getProductsOfProductTypeInCollection({
-        variables: {handle: route.route.params?.handle, reverse: true, sortkey: 'CREATED_AT'},
-      });
-      console.log('Newest ', variables);
-    }
+    // console.log({handle: route.route.params?.handle, reverse: true, sortkey: 'CREATED_AT'});
+    // if (checked === 'newest') {
+    //   getProductsOfProductTypeInCollection({
+    //     variables: {handle: route.route.params?.handle, reverse: true, sortkey: 'CREATED_AT'},
+    //   });
+    //   console.log('Newest ', variables);
+    // }
     if (checked === 'lowtohigh') {
       getProductsOfProductTypeInCollection({
         variables: {handle: route.route.params?.handle, reverse: false, sortkey: 'PRICE'},
@@ -200,7 +201,11 @@ const ProductListing = route => {
       console.log('High To Low', variables);
     }
 
+    console.log('checked',checked)
+    console.log('sortData',sortData)
+
     if (sortData && !sortLoader && !sortError) {
+      console.log('sortData.collection.products.edges',sortData.collection.products.edges)
       setProductData(sortData.collection.products.edges);
       setProductfilterData(sortData.collection.products.edges);
     }

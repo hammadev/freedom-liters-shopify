@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
 
-export const handleCreateCart = async (cartCreate, variables, navigation, isCreateCart) => {
+export const handleCreateCart = async (cartCreate, variables, navigation, isCreateCart, fromDetailScreen = 0) => {
   console.log('Is created', isCreateCart);
   try {
     const response = await cartCreate({
@@ -11,17 +11,15 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
       if (isCreateCart) {
         console.log('RESPONSEs', response.data.cartCreate.cart.id);
         await AsyncStorage.setItem('CART_ID', response.data.cartCreate.cart.id);
-        showMessage({
-          message: 'Item Added Successfully',
-          type: 'success',
-        });
-        navigation.navigate('Cart');
       }
       showMessage({
         message: 'Item Added Successfully',
         type: 'success',
       });
-      navigation.navigate('Cart');
+      console.log('fromDetailScreen',fromDetailScreen);
+      if(fromDetailScreen)
+        navigation.navigate('Cart');
+
     }
   } catch (error) {
     console.error('Mutation Error:', error);

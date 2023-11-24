@@ -16,7 +16,6 @@ const NotLogin = ({ShowBackButton = false}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={Color.white} />
       <View style={{paddingHorizontal: Window.fixPadding * 2, flex: 1}}>
         {ShowBackButton && <AppBar />}
         <View

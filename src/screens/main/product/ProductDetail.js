@@ -49,47 +49,8 @@ const ProductDetail = ({route, navigation}) => {
   }, [product, selectedColor, selectedSize, NewPrice]);
 
   const Add_To_Card = async () => {
-    if (auth) {
-      console.log('Auth hy');
-      if (product.node.variants.edges.length > 1) {
-        if (selectedColor && selectedSize) {
-          console.log('True');
-          setloadingSpinner(true);
-          const CART_ID = await AsyncStorage.getItem('CART_ID');
-          let variables;
-          let mutationFunc;
-          let isCreateCart;
-          if (CART_ID) {
-            variables = {
-              cartId: CART_ID,
-              lines: {
-                merchandiseId: NewArr.id,
-                quantity: 1,
-              },
-            };
-            mutationFunc = cartLinesAdd;
-            isCreateCart = 0;
-          } else {
-            variables = {
-              cartInput: {
-                lines: {
-                  merchandiseId: NewArr.id,
-                  quantity: 1,
-                },
-              },
-            };
-            mutationFunc = cartCreate;
-            isCreateCart = 1;
-          }
-          handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
-          setloadingSpinner(false);
-        } else {
-          showMessage({
-            message: 'Please Select Color & Size First',
-            type: 'danger',
-          });
-        }
-      } else {
+    if (product.node.variants.edges.length > 1) {
+      if (selectedColor && selectedSize) {
         console.log('True');
         setloadingSpinner(true);
         const CART_ID = await AsyncStorage.getItem('CART_ID');
@@ -100,7 +61,7 @@ const ProductDetail = ({route, navigation}) => {
           variables = {
             cartId: CART_ID,
             lines: {
-              merchandiseId: product.node.variants.edges[0].node.id,
+              merchandiseId: NewArr.id,
               quantity: 1,
             },
           };
@@ -110,7 +71,7 @@ const ProductDetail = ({route, navigation}) => {
           variables = {
             cartInput: {
               lines: {
-                merchandiseId: product.node.variants.edges[0].node.id,
+                merchandiseId: NewArr.id,
                 quantity: 1,
               },
             },
@@ -118,16 +79,55 @@ const ProductDetail = ({route, navigation}) => {
           mutationFunc = cartCreate;
           isCreateCart = 1;
         }
-        handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
+        handleCreateCart(mutationFunc, variables, navigation, isCreateCart,1);
         setloadingSpinner(false);
+      } else {
+        showMessage({
+          message: 'Please Select Color & Size First',
+          type: 'danger',
+        });
       }
     } else {
-      showMessage({
-        message: 'Please Login First',
-        type: 'danger',
-      });
-      navigation.navigate('SignIn');
+      console.log('True');
+      setloadingSpinner(true);
+      const CART_ID = await AsyncStorage.getItem('CART_ID');
+      let variables;
+      let mutationFunc;
+      let isCreateCart;
+      if (CART_ID) {
+        variables = {
+          cartId: CART_ID,
+          lines: {
+            merchandiseId: product.node.variants.edges[0].node.id,
+            quantity: 1,
+          },
+        };
+        mutationFunc = cartLinesAdd;
+        isCreateCart = 0;
+      } else {
+        variables = {
+          cartInput: {
+            lines: {
+              merchandiseId: product.node.variants.edges[0].node.id,
+              quantity: 1,
+            },
+          },
+        };
+        mutationFunc = cartCreate;
+        isCreateCart = 1;
+      }
+      handleCreateCart(mutationFunc, variables, navigation, isCreateCart,1);
+      setloadingSpinner(false);
     }
+    // if (auth) {
+    //   console.log('Auth hy');
+    // } else {
+    //   showMessage({
+    //     message: 'Please Login First',
+    //     type: 'danger',
+    //   });
+    //   navigation.navigate('SignIn');
+    // }
   };
 
   const getUniqueVariant = index => {

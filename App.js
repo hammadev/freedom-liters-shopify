@@ -19,6 +19,7 @@ const App = () => {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <SafeAreaProvider>
+          <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
           <GestureHandlerRootView style={{flex: 1}}>
             <FlashMessage
               position="top"

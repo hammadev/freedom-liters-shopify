@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
   try {
+    
     const result = await createCustomerAccount({
       variables,
     });

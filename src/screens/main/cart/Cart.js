@@ -66,7 +66,7 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               alignItems: 'center',
               flexDirection: 'row',
               backgroundColor: '',
-            }}>
+            }}> 
             <Text style={styles.TextStyle}> Subtotal </Text>
             <Text style={styles.TotalStyle}>{totalAmout.subtotalAmount.amount}</Text>
           </View>
@@ -78,7 +78,6 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               flexDirection: 'row',
             }}>
             <Text style={styles.TextStyle}> Delivery Fee </Text>
-
             <Text style={styles.TotalStyle}> {totalAmout.totalTaxAmount.amount} </Text>
           </View>
 
@@ -204,9 +203,9 @@ const Cart = () => {
     }
   };
 
-  if (!auth) {
-    return <NotLogin />;
-  }
+  // if (!auth) {
+  //   return <NotLogin />;
+  // }
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{backgroundColor: Color.white, paddingVertical: 20}}>
