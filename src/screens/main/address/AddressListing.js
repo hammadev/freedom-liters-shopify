@@ -12,7 +12,7 @@ import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import TextField2 from '../../../components/TextFeild2';
 import {CUSTOMER_ADDRESS_CREATE, CUSTOMER_ADDRESS_UPDATE} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
-import {FETCH_CUSTOMER_ADDRESS} from '../../../graphql/queries/Customer';
+import {FETCH_CUSTOMER_ADDRESS, FETCH_CUSTOMER_INFO} from '../../../graphql/queries/Customer';
 import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
@@ -134,7 +134,7 @@ const AddressListing = ({navigation}) => {
   const [visibleAddress, setVisibleAddress] = useState(false);
 
   // address form states
-  const [firstName, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [address1, setAddress1] = useState('');
@@ -156,6 +156,22 @@ const AddressListing = ({navigation}) => {
       customerAccessToken: auth.accessToken,
     },
   });
+
+  const {loading:infoLoading, error:infoError, data:infoData} = useQuery(FETCH_CUSTOMER_INFO, {
+    variables: {
+      customerAccessToken: auth.accessToken,
+    },
+  });
+
+  useEffect(() => {
+    if (infoData && infoData.customer) {
+      console.log(infoData.customer.phone);
+      setFirstName(infoData.customer.firstName);
+      setLastName(infoData.customer.lastName);
+      setPhone(infoData.customer.phone);
+    }
+  }, [infoData]);
+
   useEffect(() => {
     Get_Defult_Address();
   }, [Get_Defult_Address]);
@@ -167,9 +183,9 @@ const AddressListing = ({navigation}) => {
   };
 
   const resetState = () => {
-    setFirstName('');
-    setLastName('');
-    setPhone('');
+    // setFirstName('');
+    // setLastName('');
+    // setPhone('');
     setAddress1('');
     setAddress2('');
     setcountry('');
@@ -265,20 +281,19 @@ const AddressListing = ({navigation}) => {
       },
     };
 
-    if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible);
+    if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible,isUpdate);
     else {
       variables.addressId = activeAddressId;
       // console.log(variables);
-      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress);
+      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress,isUpdate);
     }
   };
 
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <StatusBar animated={true} backgroundColor={Color.light} barStyle={'dark-content'} showHideTransition={'fade'} />
 
       <View style={{paddingHorizontal: Window.fixPadding * 2}}>
-        <AppBar theme="dark" header="solid" />
+        <AppBar  header="solid" />
       </View>
 
       {loading && (

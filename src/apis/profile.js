@@ -51,7 +51,7 @@ export const getAddress = async (dispatch, user_id) => {
   }
 };
 
-export const handleCreateAddress = async (createCustomerAddress, variables, resetState, refetch, setVisible) => {
+export const handleCreateAddress = async (createCustomerAddress, variables, resetState, refetch, setVisible,isUpdate) => {
   console.log(variables);
   try {
     const result = await createCustomerAddress({
@@ -59,18 +59,33 @@ export const handleCreateAddress = async (createCustomerAddress, variables, rese
     });
 
     console.log('Create Address Result:', result);
-    if (result.data.customerAddressCreate.customerUserErrors.length) {
+    if(!isUpdate){
+      if (result.data.customerAddressCreate.customerUserErrors.length) {
+        showMessage({
+          message: 'Error in adding address',
+          type: 'danger',
+        });
+        return;
+      }
       showMessage({
-        message: 'Update',
-        type: 'danger',
+        message: 'Address Added Successfully!',
+        type: 'success',
       });
-      return;
+    }else{
+      if (result.data.customerAddressUpdate.customerUserErrors.length) {
+        showMessage({
+          message: 'Error in updating address',
+          type: 'danger',
+        });
+        return;
+      }
+      showMessage({
+        message: 'Address Updated Successfully!',
+        type: 'success',
+      });
     }
     setVisible(false);
-    showMessage({
-      message: 'Address Added Successfully!',
-      type: 'success',
-    });
+    
 
     refetch();
     resetState();
