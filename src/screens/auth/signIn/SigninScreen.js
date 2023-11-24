@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
 import {ScrollView} from 'react-native';
 import {StatusBar} from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -27,44 +28,28 @@ const SignIn = ({navigation}) => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (email == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Email cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Email cannot be empty.',
+        type: 'danger',
       });
       return;
     }
     if (password == '') {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Password cannot be empty.',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Password cannot be empty.',
+        type: 'danger',
       });
       return;
+
     }
 
     if (!email.match(mailformat)) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Please enter valid email',
-        visibilityTime: 5000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
+      showMessage({
+        message: 'Please enter valid email',
+        type: 'danger',
       });
       return;
+
     }
 
     const input = {
@@ -76,7 +61,7 @@ const SignIn = ({navigation}) => {
   const scheme = useColorScheme();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusBar backgroundColor="transparent" translucent={true} />
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
       <ImageBackground
         style={{
           width: '100%',
