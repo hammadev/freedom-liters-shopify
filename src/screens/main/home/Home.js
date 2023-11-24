@@ -84,6 +84,7 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
+        <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
       {SearchVale ? (
         <SearchBar />
       ) : (
@@ -206,7 +207,7 @@ const Home = ({navigation}) => {
                   horizontal={false}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{marginVertical: Window.fixPadding}}
-                  data={categories.categories.edges}
+                  data={categories.allcategories.edges.slice(0, 4)}
                   numColumns={2}
                   renderItem={item => <CatBoxCat navigation={navigation} item={item} />}
                 />

@@ -21,9 +21,6 @@ const Splash = ({navigation}) => {
   // (GET_ONSALE_PRODUCT)
   const {loading: onsaleProductLoading, error: onsaleProductError, data: onsaleProductData} = useQuery(GET_ONSALE_PRODUCT);
 
-  // (GET_CATEGORIES)
-  const {loading: categoriesLoading, error: categoriesError, data: categoriesData} = useQuery(GET_CATEGORIES);
-
   // (GET_ALL_CATEGORIES)
   const {loading: allcategoriesLoading, error: allcategoriesError, data: allcategoriesData} = useQuery(GET_ALL_CATEGORIES);
 
@@ -35,13 +32,7 @@ const Splash = ({navigation}) => {
         Payload: allcategoriesData.collections,
       });
     }
-    if (!categoriesLoading && !categoriesError && categoriesData) {
-      // Dispatch Home Page categories data in Redux
-      dispatch({
-        type: 'CATEGORIES',
-        Payload: categoriesData.collections,
-      });
-    }
+
     if (!featuredProductLoading && !featuredProductError && featuredProductData) {
       // Dispatch Featrued product data in Redux
       dispatch({
@@ -70,9 +61,6 @@ const Splash = ({navigation}) => {
       checkUser();
     }
   }, [
-    categoriesLoading,
-    categoriesError,
-    categoriesData,
     featuredProductLoading,
     featuredProductError,
     featuredProductData,
@@ -115,8 +103,8 @@ const Splash = ({navigation}) => {
 
   return (
     <>
+    <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
       <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
-        <StatusBar backgroundColor="transparent" translucent={true} />
         <View
           style={{
             flex: 0.9,
@@ -131,7 +119,7 @@ const Splash = ({navigation}) => {
               left: 0,
               right: 0,
             }}>
-            {featuredProductLoading && latestProductLoading && onsaleProductLoading && categoriesLoading && (
+            {featuredProductLoading && latestProductLoading && onsaleProductLoading && (
               <SkypeIndicator size={50} color={Color.white} />
             )}
           </View>
