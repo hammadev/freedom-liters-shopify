@@ -17,11 +17,11 @@ import {ScrollView} from 'react-native';
 const PersonalInfoEdit = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
 
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [displayName, setDisplayName] = useState(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
 
   const {loading, error, data, refetch} = useQuery(FETCH_CUSTOMER_INFO, {
     variables: {
@@ -30,6 +30,7 @@ const PersonalInfoEdit = ({navigation}) => {
   });
   useEffect(() => {
     if (data && data.customer) {
+      console.log(data.customer.phone);
       setFirstName(data.customer.firstName);
       setLastName(data.customer.lastName);
       setPhone(data.customer.phone);
@@ -45,35 +46,29 @@ const PersonalInfoEdit = ({navigation}) => {
   const [customerUpdate, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(CUSTOMER_UPDATE);
 
   const handleSubmit = async () => {
-    if (firstName === null) {
+    if (firstName === '') {
       showMessage({
         message: "First Name can't be blank",
         type: 'danger',
       });
       return;
     }
-    if (lastName === null) {
+    if (lastName === '') {
       showMessage({
         message: "Last Name can't be blank",
         type: 'danger',
       });
       return;
     }
-    if (phone) {
+
+    if (phone === '') {
       showMessage({
         message: "Phone can't be blank",
         type: 'danger',
       });
       return;
     }
-    if (phone === null) {
-      showMessage({
-        message: "Phone can't be blank",
-        type: 'danger',
-      });
-      return;
-    }
-    if (email === null) {
+    if (email === '') {
       showMessage({
         message: "Email can't be blank",
         type: 'danger',
@@ -96,7 +91,6 @@ const PersonalInfoEdit = ({navigation}) => {
 
   return (
     <SafeAreaView style={GlobalStyle.Container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
 
       <AppBar theme="light" title="Personal Information" />
       <ScrollView>

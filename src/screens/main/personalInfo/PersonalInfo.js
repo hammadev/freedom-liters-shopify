@@ -91,7 +91,6 @@ const PersonalInfo = ({navigation}) => {
 
   return (
     <SafeAreaView style={GlobalStyle.Container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={Color.light} />
 
       <AppBar theme="light" title="Personal Information" />
       {loading && (
