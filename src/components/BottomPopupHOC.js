@@ -29,38 +29,42 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
           justifyContent: 'flex-end',
         }}>
         {renderOutsideTouchable(onTouchOutside)}
-
-        <View
-          style={{
-            backgroundColor: '#fff',
-            width: '100%',
-            borderTopRightRadius: 44,
-            borderTopLeftRadius: 44,
-            paddingHorizontal: 25,
-            paddingVertical: 35,
-          }}>
-          <Text
-            style={{
-              ...GlobalStyle.heading,
-              color: color ? color : '#F75555',
-              fontSize: 20,
-              textAlign: 'center',
-            }}>
-            {title}
-          </Text>
-
           <View
             style={{
-              marginVertical: 24,
-              height: 1,
+              backgroundColor: '#fff',
               width: '100%',
-              backgroundColor: '#EEEEEE',
-            }}
-          />
+              borderTopRightRadius: 44,
+              borderTopLeftRadius: 44,
+              paddingHorizontal: 25,
+              paddingVertical: 35,
+            }}>
+              <ScrollView>
+            <Text
+              style={{
+                ...GlobalStyle.heading,
+                color: color ? color : '#F75555',
+                fontSize: 20,
+                textAlign: 'center',
+              }}>
+              {title}
+            </Text>
 
-          {/* Render the PopupBody component */}
-          {PopupBody}
-        </View>
+            <View
+              style={{
+                marginVertical: 24,
+                height: 1,
+                width: '100%',
+                backgroundColor: '#EEEEEE',
+              }}
+            />
+
+            {/* Render the PopupBody component */}
+
+            {PopupBody}
+
+              </ScrollView>
+
+          </View>
       </View>
     </Modal>
   );
