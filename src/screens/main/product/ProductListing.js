@@ -264,8 +264,8 @@ const ProductListing = route => {
         ) : null}
       </View>
       {ShowFilterIcon && (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
-          <TouchableOpacity
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 15}}>
+          {/* <TouchableOpacity
             style={{
               flexDirection: 'row',
               borderWidth: 1,
@@ -279,7 +279,7 @@ const ProductListing = route => {
               source={require('../../../assets/images/pics/filter-search.png')}
             />
             <Text style={{color: Color.black}}>Filters</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={{
               flexDirection: 'row',

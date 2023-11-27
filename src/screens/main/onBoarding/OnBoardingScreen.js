@@ -113,6 +113,7 @@ const OnBoarding = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         bounces={false}
         renderItem={({item}) => <Slide item={item} />}
+        disableIntervalMomentum={true}
       />
 
       <Indicators

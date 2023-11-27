@@ -1,6 +1,6 @@
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { debounce } from '../utils/debounce';
 // const variables = {
 //   input: {
 //     acceptsMarketing: true,
@@ -50,6 +50,9 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
     return;
   }
 };
+
+// export const handleCreateAccount = debounce(handleCreateAccountReq, 5000); // 5000 milliseconds (5 seconds) delay
+
 
 // const input = {
 //   email: variables.input.email,

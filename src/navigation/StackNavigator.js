@@ -18,6 +18,7 @@ import Category from '../screens/main/category/Category';
 import ProductListing from '../screens/main/product/ProductListing';
 import PersonalInfoEdit from '../screens/main/personalInfo/PersonalInfoEdit';
 import AddressListing from '../screens/main/address/AddressListing';
+import Voucher from '../screens/main/profile/Voucher';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ const StackNavigator = () => {
       <Stack.Screen name="OnBoarding" component={Onboarding} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="Voucher" component={Voucher} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="ProductListing" component={ProductListing} />
       <Stack.Screen name="Cart" component={Cart} />

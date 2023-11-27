@@ -14,6 +14,7 @@ import StatusAppBar from '../../../components/StatusAppBar';
 import {hasLowerCase, hasNumber, hasUpperCase} from '../../../utils/utils';
 import {showMessage} from 'react-native-flash-message';
 import {StatusBar} from 'react-native';
+import PhoneInputComponent from '../../../components/PhoneInputComponent';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -108,13 +109,13 @@ const SignUp = ({navigation}) => {
       return;
     }
 
-    if (phone < 12) {
-      showMessage({
-        message: 'phone cannot be greater than 12 characters',
-        type: 'danger',
-      });
-      return;
-    }
+    // if (phone < 12) {
+    //   showMessage({
+    //     message: 'phone cannot be greater than 12 characters',
+    //     type: 'danger',
+    //   });
+    //   return;
+    // }
 
     if (password !== confirmPassword) {
       showMessage({
@@ -131,9 +132,12 @@ const SignUp = ({navigation}) => {
         firstName: firstName,
         lastName: lastName,
         password: password,
-        phone: phone,
+        
       },
     };
+    if(phone){
+      variables.input.phone= '+1'+phone;
+    }
     console.log('variables',variables);
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
@@ -165,7 +169,7 @@ const SignUp = ({navigation}) => {
           <View style={{marginTop: Window.fixPadding}}>
             <TextField2
               icon={'account-circle-outline'}
-              label="First Name"
+              label="First Name *"
               placeholder={'john'}
               isDark={true}
               maxLength={10}
@@ -174,7 +178,7 @@ const SignUp = ({navigation}) => {
             />
             <TextField2
               icon={'account-circle-outline'}
-              label="Last Name"
+              label="Last Name *"
               placeholder={'doe'}
               isDark={true}
               maxLength={10}
@@ -183,14 +187,15 @@ const SignUp = ({navigation}) => {
             />
             <TextField2
               icon={'email-outline'}
-              label="Email"
+              label="Email *"
               placeholder={'jhondoe@gmail.com'}
               isDark={true}
               onChanged={setEmail}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
 
-            <TextField2
+            <PhoneInputComponent text={phone} setText={setPhone}/>
+            {/* <TextField2
               icon={'phone-outline'}
               label="Phone"
               value={phone}
@@ -204,11 +209,11 @@ const SignUp = ({navigation}) => {
               maxLength={12}
               onChanged={setPhone}
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
+            /> */}
 
             <TextField2
               icon={'lock-outline'}
-              label="Password"
+              label="Password *"
               placeholder={'xxxxxx'}
               isDark={true}
               onChanged={setPassword}
@@ -219,7 +224,7 @@ const SignUp = ({navigation}) => {
             />
             <TextField2
               icon={'lock-outline'}
-              label="Confirm Password"
+              label="Confirm Password *"
               isDark={true}
               placeholder={'xxxxxx'}
               onChanged={setConfirmPassword}

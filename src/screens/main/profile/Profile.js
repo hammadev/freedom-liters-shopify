@@ -83,9 +83,10 @@ const Profile = ({navigation}) => {
             backgroundColor: Color.tertiary,
             borderBottomRightRadius: 16,
             borderBottomLeftRadius: 16,
+            justifyContent: 'center', 
+            alignItems: 'center',
           }}>
-          <AppBar customStyle={{paddingHorizontal: 20}} />
-          <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 180}}>
+          <View style={{justifyContent: 'center', alignItems: 'center',}}>
             <Image style={{width: 94, height: 94}} source={require('../../../assets/images/pics/profile.png')} />
             <Text
               style={{
@@ -145,14 +146,14 @@ const ProfileData = [
     icon: <GiftSvg />,
     name: 'Vouchers',
     chevron: <ChevronSvg />,
-    navlink: '',
+    navlink: 'Voucher',
   },
-  {
-    icon: <Image style={{width: 25, height: 25, tintColor: Color.black}} source={require('../../../assets/images/pics/setting.png')} />,
-    name: 'Setting',
-    chevron: <ChevronSvg />,
-    navlink: '',
-  },
+  // {
+  //   icon: <Image style={{width: 25, height: 25, tintColor: Color.black}} source={require('../../../assets/images/pics/setting.png')} />,
+  //   name: 'Setting',
+  //   chevron: <ChevronSvg />,
+  //   navlink: '',
+  // },
   {
     icon: <LogoutSvg />,
     name: 'Log Out',

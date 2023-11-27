@@ -13,6 +13,7 @@ import {FETCH_CUSTOMER_INFO} from '../../../graphql/queries/Customer';
 import {CUSTOMER_UPDATE} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
 import {ScrollView} from 'react-native';
+import PhoneInputComponent from '../../../components/PhoneInputComponent';
 
 const PersonalInfoEdit = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -33,7 +34,7 @@ const PersonalInfoEdit = ({navigation}) => {
       console.log(data.customer.phone);
       setFirstName(data.customer.firstName);
       setLastName(data.customer.lastName);
-      setPhone(data.customer.phone);
+      setPhone(data.customer.phone ? data.customer.phone.slice(2) : '');
       setEmail(data.customer.email);
       setDisplayName(data.customer.displayName);
     }
@@ -61,13 +62,13 @@ const PersonalInfoEdit = ({navigation}) => {
       return;
     }
 
-    if (phone === '') {
-      showMessage({
-        message: "Phone can't be blank",
-        type: 'danger',
-      });
-      return;
-    }
+    // if (phone === '') {
+    //   showMessage({
+    //     message: "Phone can't be blank",
+    //     type: 'danger',
+    //   });
+    //   return;
+    // }
     if (email === '') {
       showMessage({
         message: "Email can't be blank",
@@ -79,12 +80,15 @@ const PersonalInfoEdit = ({navigation}) => {
     const variables = {
       customerAccessToken: auth.accessToken,
       customer: {
-        phone,
         firstName,
         lastName,
         email,
       },
     };
+
+    if(phone){
+      variables.customer.phone= '+1'+phone;
+    }
 
     handleProfileUpdate(customerUpdate, variables, refetch);
   };
@@ -154,13 +158,10 @@ const PersonalInfoEdit = ({navigation}) => {
 
         <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
 
-        <TextField2
-          label="Phone"
-          onChanged={setPhone}
-          customStyle={{marginBottom: Window.fixPadding * 1.5}}
-          value={phone}
-          type={'number-pad'}
-          maxLength={13}
+        <PhoneInputComponent
+        text={phone} 
+        setText={setPhone}
+        isDark={false}
         />
 
         <View style={{marginTop: 20}}>

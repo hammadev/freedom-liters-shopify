@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Color} from '../globalStyle/Theme';
+
 const TextField2 = ({
   isDark = false,
   label,
@@ -34,7 +35,7 @@ const TextField2 = ({
       secureTextEntry={passwordFeild && hidePass ? true : false}
       mode="outlined"
       theme={{
-        roundness: 14,
+        roundness: 14,  
       }}
       keyboardType={type ? type : 'default'}
       maxLength={maxLength ? maxLength : 50}
