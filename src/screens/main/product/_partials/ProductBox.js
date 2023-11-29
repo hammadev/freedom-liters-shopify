@@ -38,7 +38,10 @@ const ProductBox = ({item, customStyle, wishlist}) => {
   const {auth} = useSelector(state => ({
     ...state,
   }));
+  const navigation = useNavigation();
+
   const Add_To_Card = async item => {
+    console.log('Item', item);
     const CART_ID = await AsyncStorage.getItem('CART_ID');
     let variables;
     let mutationFunc;
@@ -67,7 +70,6 @@ const ProductBox = ({item, customStyle, wishlist}) => {
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
   };
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
     <TouchableOpacity
