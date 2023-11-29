@@ -95,7 +95,7 @@ const SearchScreen = () => {
 
   const ApplyBtn = () => {
     setloaderSpinner(true);
-    console.log('checked',checked);
+    console.log('checked', checked);
     if (checked === 'newest') {
       getSortProducts({
         variables: {reverse: true, sortkey: 'CREATED_AT'},

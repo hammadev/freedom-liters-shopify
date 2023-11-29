@@ -8,7 +8,6 @@ import NotLogin from '../../../components/NotLogin';
 import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
 
 const MyOrder = () => {
-  
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;
@@ -17,8 +16,13 @@ const MyOrder = () => {
     <SafeAreaView style={{...GlobalStyle.Container, paddingHorizontal: 0}}>
       <View style={{paddingHorizontal: 20}}>
         <AppBar
+          left={true}
           theme="light"
-          center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}> Order</Text>}
+          center={
+            <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+              <Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>My Order</Text>
+            </View>
+          }
           title="My Orders"
         />
       </View>

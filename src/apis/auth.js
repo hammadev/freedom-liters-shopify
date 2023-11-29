@@ -1,6 +1,5 @@
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { debounce } from '../utils/debounce';
 // const variables = {
 //   input: {
 //     acceptsMarketing: true,
@@ -14,21 +13,9 @@ import { debounce } from '../utils/debounce';
 
 export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
   try {
-    
     const result = await createCustomerAccount({
       variables,
     });
-
-    console.log('result', result);
-
-    // Handle the result here (data, errors, etc.)
-    if (result.data.customerCreate.customerUserErrors.length) {
-      showMessage({
-        message: result.data.customerCreate.customerUserErrors[0].message,
-        type: 'danger',
-      });
-      return;
-    }
 
     if (result.data.customerCreate.customer) {
       await AsyncStorage.setItem('credentials', JSON.stringify(result.data.customerCreate.customer));
@@ -36,11 +23,16 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
         message: 'Account created successfully!',
         type: 'success',
       });
-
       navigation.replace('SignIn');
     }
 
-    console.log('Mutation result:', result);
+    if (result.data.customerCreate.customerUserErrors.length) {
+      showMessage({
+        message: result.data.customerCreate.customerUserErrors[0].message,
+        type: 'danger',
+      });
+      return;
+    }
   } catch (error) {
     console.error('Mutation error:', error);
     showMessage({
@@ -52,7 +44,6 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
 };
 
 // export const handleCreateAccount = debounce(handleCreateAccountReq, 5000); // 5000 milliseconds (5 seconds) delay
-
 
 // const input = {
 //   email: variables.input.email,
@@ -66,14 +57,6 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
     },
   });
 
-  if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
-    showMessage({
-      message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
-      type: 'danger',
-    });
-    return;
-  }
-
   let token = tokenResult.data.customerAccessTokenCreate.customerAccessToken;
   if (token) {
     await AsyncStorage.setItem('auth', JSON.stringify(token));
@@ -81,13 +64,15 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
       type: 'LOGGED_IN_USER',
       payload: token,
     });
-
-    showMessage({
-      message: 'Login successfull!',
-      type: 'success',
-    });
-
     navigation.replace('BottomTabScreen');
+
+    if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
+      showMessage({
+        message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
+        type: 'danger',
+      });
+      return;
+    }
   }
 };
 

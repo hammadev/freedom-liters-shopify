@@ -103,7 +103,7 @@ const Splash = ({navigation}) => {
 
   return (
     <>
-    <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{
@@ -119,9 +119,7 @@ const Splash = ({navigation}) => {
               left: 0,
               right: 0,
             }}>
-            {featuredProductLoading && latestProductLoading && onsaleProductLoading && (
-              <SkypeIndicator size={50} color={Color.white} />
-            )}
+            {featuredProductLoading && latestProductLoading && onsaleProductLoading && <SkypeIndicator size={50} color={Color.white} />}
           </View>
         </View>
       </ImageBackground>

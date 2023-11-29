@@ -8,21 +8,18 @@ import styles from './CartStyle';
 import Icon from '../../../core/Icon';
 import Button from '../../../components/Button';
 import {useMutation, useQuery} from '@apollo/client';
-import StatusBar from '../../../components/AppStatusBar';
 import ActivityLoader from '../../../components/ActivityLoader';
 import {GET_CART} from '../../../graphql/queries/Cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {List} from 'react-native-paper';
 import TextField2 from '../../../components/TextFeild2';
 import {COUPON_CODE} from '../../../graphql/mutations/Coupon';
 import {handleCouponCode, hnadleDecreaseCartValue, hnadleIncreseCartValue, hnadleRemoveCartItem} from '../../../apis/cart';
-import {showMessage} from 'react-native-flash-message';
-import {SkypeIndicator} from 'react-native-indicators';
+
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
-import NotLogin from '../../../components/NotLogin';
 import {useSelector} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 const PaymentDetails = ({totalAmout, cartId}) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -66,7 +63,7 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               alignItems: 'center',
               flexDirection: 'row',
               backgroundColor: '',
-            }}> 
+            }}>
             <Text style={styles.TextStyle}> Subtotal </Text>
             <Text style={styles.TotalStyle}>{totalAmout.subtotalAmount.amount}</Text>
           </View>
@@ -160,11 +157,15 @@ const Cart = () => {
     Get_Cart_Id();
     if (CartData && !loadingCartData && !errorCartData) {
       setCartItems(CartData.cart);
+      setTimeout(() => {
+        setRemoveLoader(true);
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        setRemoveLoader(true);
+      }, 1000);
     }
-    setTimeout(() => {
-      setRemoveLoader(true);
-    }, 5000);
-  }, [CartData, loadingCartData, errorCartData, isFocused]);
+  }, [isFocused, CartData, loadingCartData, errorCartData]);
 
   const Get_Cart_Id = async () => {
     let CART_ID = await AsyncStorage.getItem('CART_ID');
@@ -267,9 +268,9 @@ const Cart = () => {
                       marginLeft: 10,
                     }}>
                     {item.node.merchandise.image ? (
-                      <Image style={{width: 70, height: 70, borderRadius: 15}} source={{uri: item.node.merchandise.image.url}} />
+                      <FastImage style={{width: 70, height: 70, borderRadius: 15}} source={{uri: item.node.merchandise.image.url}} />
                     ) : (
-                      <Image source={require('../../../assets/images/products/flannelShirt.png')} />
+                      <FastImage source={require('../../../assets/images/products/flannelShirt.png')} />
                     )}
                   </View>
                   <View style={{paddingLeft: 15, width: Window.width / 1.47, marginTop: 24}}>
@@ -354,7 +355,7 @@ const Cart = () => {
         </>
       ) : (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image style={{width: 150, height: 150}} source={require('../../../assets/images/images/ShoppingCart.png')} />
+          <FastImage style={{width: 150, height: 150}} source={require('../../../assets/images/images/ShoppingCart.png')} />
           <Text
             style={{
               fontFamily: Font.Gilroy_SemiBold,

@@ -29,12 +29,16 @@ const ProductDetail = ({route, navigation}) => {
   const [selectedSize, setselectedSize] = useState(null);
   const [NewPrice, setNewPrice] = useState(null);
   const [NewArr, setNewArr] = useState([]);
+
+  const [allSizes, setAllSizes] = useState([]);
+  const [allColors, setAllColors] = useState([]);
+
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
   const {auth} = useSelector(state => ({
     ...state,
   }));
 
-  console.log('product.node.variants.edges', product.node.variants.edges[0].node.id);
+  console.log('product.node.variants.edges', NewArr);
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
 
@@ -79,7 +83,7 @@ const ProductDetail = ({route, navigation}) => {
           mutationFunc = cartCreate;
           isCreateCart = 1;
         }
-        handleCreateCart(mutationFunc, variables, navigation, isCreateCart,1);
+        handleCreateCart(mutationFunc, variables, navigation, isCreateCart, 1);
         setloadingSpinner(false);
       } else {
         showMessage({
@@ -116,7 +120,7 @@ const ProductDetail = ({route, navigation}) => {
         mutationFunc = cartCreate;
         isCreateCart = 1;
       }
-      handleCreateCart(mutationFunc, variables, navigation, isCreateCart,1);
+      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, 1);
       setloadingSpinner(false);
     }
     // if (auth) {
@@ -150,6 +154,47 @@ const ProductDetail = ({route, navigation}) => {
     return uniqueVariant;
   };
 
+  const checkAllVarientValues = (index, returnIndex, selectedOption) => {
+    const productEdge = product.node.variants.edges;
+    const tempProductData = [];
+    const tempProductReturnData = [];
+    const uniqueVariant = [];
+
+    if (productEdge.length && index !== null) {
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions[index]) {
+          tempProductData.push(productEdge[a].node.selectedOptions[index].value);
+        }
+      }
+
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions[index]) {
+          tempProductReturnData.push(productEdge[a].node.selectedOptions[returnIndex].value);
+        }
+      }
+
+      for (let b = 0; b < tempProductData.length; b++) {
+        if (tempProductData[b].toLowerCase() === selectedOption.toLowerCase()) {
+          uniqueVariant.push(tempProductReturnData[b]);
+        }
+      }
+    }
+
+    return uniqueVariant;
+  };
+
+  useEffect(() => {
+    if (allColors.length > 0) {
+      setAllColors(checkAllVarientValues(0, 1, selectedSize));
+    }
+  }, [selectedSize]);
+
+  useEffect(() => {
+    if (allSizes.length > 0) {
+      setAllSizes(checkAllVarientValues(1, 0, selectedColor));
+    }
+  }, [selectedColor]);
+
   const HandleSize = index => {
     // console.log(index);
     setselectedSize(index);
@@ -159,6 +204,11 @@ const ProductDetail = ({route, navigation}) => {
     // console.log(index);
     setselectedColor(index);
   };
+
+  useEffect(() => {
+    setAllSizes(getUniqueVariant(0));
+    setAllColors(getUniqueVariant(1));
+  }, []);
 
   return (
     <SafeAreaView
@@ -214,7 +264,7 @@ const ProductDetail = ({route, navigation}) => {
               }}>
               <Heading name="Size" />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {getUniqueVariant(0).map(item => (
+                {allSizes.map(item => (
                   <TouchableOpacity
                     onPress={() => HandleSize(item)}
                     style={{
@@ -247,7 +297,7 @@ const ProductDetail = ({route, navigation}) => {
               }}>
               <Heading name="Colors" />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {getUniqueVariant(1).map(item => (
+                {allColors.map(item => (
                   <TouchableOpacity
                     onPress={() => HandleColor(item)}
                     style={{

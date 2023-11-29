@@ -8,12 +8,11 @@ import TextField2 from '../../../components/TextFeild2';
 import {handleCreateAccessToken} from '../../../apis/auth';
 import {CREATE_CUSTOMER_ACCESS_TOKEN} from '../../../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
-import StatusAppBar from '../../../components/StatusAppBar';
 import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
 import {ScrollView} from 'react-native';
 import {StatusBar} from 'react-native';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -40,7 +39,6 @@ const SignIn = ({navigation}) => {
         type: 'danger',
       });
       return;
-
     }
 
     if (!email.match(mailformat)) {
@@ -49,7 +47,6 @@ const SignIn = ({navigation}) => {
         type: 'danger',
       });
       return;
-
     }
 
     const input = {
@@ -61,7 +58,7 @@ const SignIn = ({navigation}) => {
   const scheme = useColorScheme();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ImageBackground
         style={{
           width: '100%',

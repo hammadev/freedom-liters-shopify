@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import {gql} from '@apollo/client';
 
 export const FETCH_CUSTOMER_INFO = gql`
   query FetchCustomerInfo($customerAccessToken: String!) {
@@ -20,7 +20,7 @@ export const FETCH_CUSTOMER_ADDRESS = gql`
       defaultAddress {
         id
       }
-      addresses(first: 100,reverse:true,) {
+      addresses(first: 100, reverse: true) {
         edges {
           node {
             id
@@ -37,6 +37,14 @@ export const FETCH_CUSTOMER_ADDRESS = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const GET_CUSTOMER = gql`
+  query GetCustomer($customerAccessToken: String!) {
+    customer(customerAccessToken: $customerAccessToken) {
+      id
     }
   }
 `;

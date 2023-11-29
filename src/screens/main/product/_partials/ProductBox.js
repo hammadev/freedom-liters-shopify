@@ -41,7 +41,6 @@ const ProductBox = ({item, customStyle, wishlist}) => {
   const {auth} = useSelector(state => ({
     ...state,
   }));
-
   const Add_To_Card = async item => {
     setloadingSpinner(true);
     const CART_ID = await AsyncStorage.getItem('CART_ID');
@@ -72,7 +71,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
     setloadingSpinner(false);
-    
+
     // navigation.navigate('Cart');
     // if (auth) {
     // } else {
@@ -119,9 +118,22 @@ const ProductBox = ({item, customStyle, wishlist}) => {
           name={wishlist.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={style.addToCartIconContainer} onPress={() => Add_To_Card(item.node.variants.edges[0].node)}>
-        <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'plus'} />
-      </TouchableOpacity>
+      {item.node.variants.edges[0].node.selectedOptions.length > 1 ? (
+        <TouchableOpacity
+          style={style.addToCartIconContainer}
+          onPress={() =>
+            navigation.navigate('ProductDetail', {
+              product: item,
+            })
+          }>
+          <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'arrowright'} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={style.addToCartIconContainer} onPress={() => Add_To_Card(item.node.variants.edges[0].node)}>
+          <Icon iconFamily={'AntDesign'} style={{fontSize: 18}} color={Color.white} name={'plus'} />
+        </TouchableOpacity>
+      )}
+
       {item.node ? (
         <Image style={style.proImg} source={{uri: item.node.featuredImage?.url}} />
       ) : (

@@ -157,7 +157,11 @@ const AddressListing = ({navigation}) => {
     },
   });
 
-  const {loading:infoLoading, error:infoError, data:infoData} = useQuery(FETCH_CUSTOMER_INFO, {
+  const {
+    loading: infoLoading,
+    error: infoError,
+    data: infoData,
+  } = useQuery(FETCH_CUSTOMER_INFO, {
     variables: {
       customerAccessToken: auth.accessToken,
     },
@@ -281,19 +285,18 @@ const AddressListing = ({navigation}) => {
       },
     };
 
-    if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible,isUpdate);
+    if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible, isUpdate);
     else {
       variables.addressId = activeAddressId;
       // console.log(variables);
-      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress,isUpdate);
+      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress, isUpdate);
     }
   };
 
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-
       <View style={{paddingHorizontal: Window.fixPadding * 2}}>
-        <AppBar  header="solid" />
+        <AppBar header="solid" />
       </View>
 
       {loading && (
@@ -337,7 +340,7 @@ const AddressListing = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
+      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
         {!loading &&
           data &&
           data.customer.addresses.edges.map((item, i) => (

@@ -37,9 +37,9 @@ const SignUp = ({navigation}) => {
         message: 'First Name cannot be empty',
         type: 'danger',
       });
-
       return;
     }
+
     if (!hasLowerCase(password)) {
       showMessage({
         message: 'Atlest one small letter in password',
@@ -47,6 +47,7 @@ const SignUp = ({navigation}) => {
       });
       return;
     }
+
     if (!hasNumber(password)) {
       showMessage({
         message: 'Atlest one number in password',
@@ -54,6 +55,7 @@ const SignUp = ({navigation}) => {
       });
       return;
     }
+
     if (!hasUpperCase(password)) {
       showMessage({
         message: 'Atlest one Capital letter in password',
@@ -69,6 +71,7 @@ const SignUp = ({navigation}) => {
       });
       return;
     }
+
     if (password == '') {
       showMessage({
         message: 'Password cannot be empty.',
@@ -76,12 +79,12 @@ const SignUp = ({navigation}) => {
       });
       return;
     }
+
     if (confirmPassword == '') {
       showMessage({
         message: 'confirm Password cannot be empty.',
         type: 'danger',
       });
-
       return;
     }
 
@@ -132,13 +135,12 @@ const SignUp = ({navigation}) => {
         firstName: firstName,
         lastName: lastName,
         password: password,
-        
       },
     };
-    if(phone){
-      variables.input.phone= '+1'+phone;
+    if (phone) {
+      variables.input.phone = '+1' + phone;
     }
-    console.log('variables',variables);
+    console.log('variables', variables);
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
   const Goto_Login = () => {
@@ -194,7 +196,7 @@ const SignUp = ({navigation}) => {
               customStyle={{marginBottom: Window.fixPadding * 1.5}}
             />
 
-            <PhoneInputComponent text={phone} setText={setPhone}/>
+            <PhoneInputComponent text={phone} setText={setPhone} />
             {/* <TextField2
               icon={'phone-outline'}
               label="Phone"

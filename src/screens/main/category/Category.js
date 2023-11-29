@@ -43,12 +43,17 @@ const Category = ({navigation}) => {
   const {categories} = useSelector(state => ({...state}));
   return (
     <SafeAreaView>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       <ScrollView>
         <View style={{...GlobalStyle.Container}}>
           <AppBar
+            left={true}
             theme="light"
-            center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Category</Text>}
+            center={
+              <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+                <Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Category</Text>
+              </View>
+            }
             title="Category"
           />
           <View style={{marginVertical: Window.fixPadding}}>

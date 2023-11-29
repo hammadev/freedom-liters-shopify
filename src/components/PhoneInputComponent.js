@@ -1,15 +1,14 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import { Color,Font, Window } from '../globalStyle/Theme';
+import {Color, Font, Window} from '../globalStyle/Theme';
 import {DefaultTheme, TextInput} from 'react-native-paper';
 import PhoneInput from 'react-native-phone-input';
 import useKeyboardDetection from '../hooks/detectKeyboard';
 import {TextInput as InputFieldRN} from 'react-native';
 import {TextMask, TextInputMask} from 'react-native-masked-text';
 
-const PhoneInputComponent = ({text, setText,isDark = true}) => {
-
-    let bgColor = !isDark ? Color.white : Color.tertiary;
+const PhoneInputComponent = ({text, setText, isDark = true}) => {
+  let bgColor = !isDark ? Color.white : Color.tertiary;
   let color = isDark ? Color.white : Color.tertiary;
 
   const [focused, setFocused] = useState(false);
@@ -20,7 +19,7 @@ const PhoneInputComponent = ({text, setText,isDark = true}) => {
 
     roundness: 14, // Customize other properties as needed
   };
-  const onChangeHandler = (value) => {
+  const onChangeHandler = value => {
     // how to handle for each state field
     setText(value);
   };
@@ -33,7 +32,7 @@ const PhoneInputComponent = ({text, setText,isDark = true}) => {
   }, [isKeyboardOpen]);
   return (
     <TextInput
-    // label={'Enter your phone number'}
+      // label={'Enter your phone number'}
       mode="outlined"
       theme={customTheme}
       selectionColor={'#CBD1DA'}
@@ -42,7 +41,7 @@ const PhoneInputComponent = ({text, setText,isDark = true}) => {
       style={{
         backgroundColor: bgColor,
         width: '100%',
-        marginBottom: Window.fixPadding * 1.5
+        marginBottom: Window.fixPadding * 1.5,
       }}
       outlineStyle={{}}
       onFocus={() => {

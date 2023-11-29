@@ -9,10 +9,7 @@ import {useSelector} from 'react-redux';
 import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
 import {CatBoxCat} from '../../../components/CategoryCart';
-import StatusAppBar from '../../../components/StatusAppBar';
 import Icon from '../../../core/Icon';
-import AppStatusBar from '../../../components/AppStatusBar';
-import {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 
 export const CatBox = ({item, navigation}) => {
@@ -59,7 +56,7 @@ export const CatBox = ({item, navigation}) => {
 };
 
 const Home = ({navigation}) => {
-  const {product, categories, wishlist, auth} = useSelector(state => ({
+  const {product, categories, wishlist} = useSelector(state => ({
     ...state,
   }));
 
@@ -84,7 +81,7 @@ const Home = ({navigation}) => {
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-        <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
+      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
       {SearchVale ? (
         <SearchBar />
       ) : (
