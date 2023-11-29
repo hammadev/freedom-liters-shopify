@@ -7,9 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../../graphql/mutations/Cart';
 import {handleCreateCart} from '../../../../apis/cart';
-import {useState} from 'react';
 import {useMutation} from '@apollo/client';
-import {showMessage} from 'react-native-flash-message';
 
 const ChipComponent = ({type}) =>
   type === 'featured' ? (
@@ -35,14 +33,12 @@ const ChipComponent = ({type}) =>
   ) : null;
 
 const ProductBox = ({item, customStyle, wishlist}) => {
-  const [loadingSpinner, setloadingSpinner] = useState(false);
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
   const {auth} = useSelector(state => ({
     ...state,
   }));
   const Add_To_Card = async item => {
-    setloadingSpinner(true);
     const CART_ID = await AsyncStorage.getItem('CART_ID');
     let variables;
     let mutationFunc;
@@ -70,17 +66,6 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       isCreateCart = 1;
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
-    setloadingSpinner(false);
-
-    // navigation.navigate('Cart');
-    // if (auth) {
-    // } else {
-    //   showMessage({
-    //     message: 'Please Login First',
-    //     type: 'danger',
-    //   });
-    //   navigation.navigate('SignIn');
-    // }
   };
   const navigation = useNavigation();
   const dispatch = useDispatch();
