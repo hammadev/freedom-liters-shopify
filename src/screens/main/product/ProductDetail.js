@@ -38,7 +38,9 @@ const ProductDetail = ({route, navigation}) => {
     ...state,
   }));
 
-  console.log('product.node.variants.edges', NewArr);
+  console.log('size', allSizes);
+  console.log('lenth');
+  console.log('color', allColors);
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
 
@@ -206,8 +208,10 @@ const ProductDetail = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    setAllSizes(getUniqueVariant(0));
-    setAllColors(getUniqueVariant(1));
+    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
+      setAllSizes(getUniqueVariant(0));
+      setAllColors(getUniqueVariant(1));
+    }
   }, []);
 
   return (
@@ -256,7 +260,7 @@ const ProductDetail = ({route, navigation}) => {
               {product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
-          {product.node.variants.edges[0].node.selectedOptions.length > 1 && (
+          {allSizes.length > 0 && (
             <View
               style={{
                 paddingHorizontal: 20,
@@ -264,9 +268,10 @@ const ProductDetail = ({route, navigation}) => {
               }}>
               <Heading name="Size" />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {allSizes.map(item => (
+                {allSizes.map((item, index) => (
                   <TouchableOpacity
                     onPress={() => HandleSize(item)}
+                    key={index}
                     style={{
                       backgroundColor: selectedSize === item ? 'red' : 'rgba(2, 28, 94, 0.9)',
                       width: 100,
@@ -289,7 +294,7 @@ const ProductDetail = ({route, navigation}) => {
               </ScrollView>
             </View>
           )}
-          {product.node.variants.edges[0].node.selectedOptions.length > 1 && (
+          {allColors.length > 0 && (
             <View
               style={{
                 paddingHorizontal: 20,
@@ -297,9 +302,10 @@ const ProductDetail = ({route, navigation}) => {
               }}>
               <Heading name="Colors" />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {allColors.map(item => (
+                {allColors.map((item, ind) => (
                   <TouchableOpacity
                     onPress={() => HandleColor(item)}
+                    key={ind}
                     style={{
                       backgroundColor: item.toLowerCase(),
                       width: 35,
