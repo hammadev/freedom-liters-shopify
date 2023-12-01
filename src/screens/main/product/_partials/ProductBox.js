@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Icon from '../../../../core/Icon';
 import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
 import {useNavigation} from '@react-navigation/native';
@@ -35,6 +35,12 @@ const ChipComponent = ({type}) =>
 const ProductBox = ({item, customStyle, wishlist}) => {
   const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
+  let existingWishlist = null;
+  let ParseData = {addedItems: []};
+  useEffect(async () => {
+    existingWishlist = await AsyncStorage.getItem('WishList_Items');
+    ParseData = JSON.parse(existingWishlist);
+  }, []);
   const {auth} = useSelector(state => ({
     ...state,
   }));
@@ -70,7 +76,9 @@ const ProductBox = ({item, customStyle, wishlist}) => {
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
   };
+
   const dispatch = useDispatch();
+
   return (
     <TouchableOpacity
       style={{
@@ -85,25 +93,47 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       }>
       <TouchableOpacity
         style={style.heartIconContainer}
-        onPress={() => {
-          if (wishlist.addedItems.some(e => e.node.id === item.node.id)) {
-            dispatch({
-              type: 'REMOVE_SINGLE_FROM_WISHLIST',
-              payload: item.node.id,
-            });
+        onPress={async () => {
+          // AsyncStorage.removeItem('WishList_Items');
+          if (existingWishlist !== null) {
+            if (ParseData.addedItems.some(e => e.node.id === item.node.id)) {
+              const filterData = ParseData.addedItems.filter((x, i) => x.node.id !== item.node.id);
+              await AsyncStorage.setItem('WishList_Items', JSON.stringify({addedItems: filterData}));
+
+              console.log('ID FOUND');
+              console.log(existingWishlist);
+            } else {
+              const AddItemsNew = {addedItems: [...ParseData.addedItems, item]};
+              await AsyncStorage.setItem('WishList_Items', JSON.stringify(AddItemsNew));
+
+              console.log('ID NOT FOUND');
+              console.log(existingWishlist);
+            }
           } else {
-            dispatch({
-              type: 'ADD_SINGLE_TO_WISHLIST',
-              payload: item,
-            });
+            const NewObject = {addedItems: [item]};
+            await AsyncStorage.setItem('WishList_Items', JSON.stringify(NewObject));
           }
+          // if (wishlist.addedItems.some(e => e.node.id === item.node.id)) {
+          //   dispatch({
+          //     type: 'REMOVE_SINGLE_FROM_WISHLIST',
+          //     payload: item.node.id,
+          //   });
+          // } else {
+          //   // const parsedWishlist = existingWishlist ? JSON.parse(existingWishlist) : '';
+          //   // const updatedWishlist = [...parsedWishlist, {addedItems: item}];
+          //   // await AsyncStorage.setItem('WishList_Items', JSON.stringify(updatedWishlist));
+          //   dispatch({
+          //     type: 'ADD_SINGLE_TO_WISHLIST',
+          //     payload: item,
+          //   });
+          // }
         }}>
-        <Icon
+        {/* <Icon
           iconFamily={'AntDesign'}
           style={{fontSize: 14}}
-          color={wishlist.addedItems.some(e => e.node.id === item.node.id) ? '#F91212' : Color.secondary}
-          name={wishlist.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
-        />
+          color={CheckIcon && CheckIcon.addedItems.some(e => e.node.id === item.node.id) ? '#F91212' : Color.secondary}
+          name={CheckIcon && CheckIcon.addedItems.some(e => e.node.id === item.node.id) ? 'heart' : 'hearto'}
+        /> */}
       </TouchableOpacity>
       {item.node.variants.edges[0].node.selectedOptions.length > 1 ? (
         <TouchableOpacity

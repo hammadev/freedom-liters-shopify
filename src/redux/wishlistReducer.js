@@ -7,8 +7,7 @@ const setUser = async () => (userData = await AsyncStorage.getItem('wishlist'));
 setUser();
 
 if (userData) {
-  const setData = async () =>
-    (initState = await AsyncStorage.getItem('wishlist'));
+  const setData = async () => (initState = await AsyncStorage.getItem('wishlist'));
   setData();
 } else {
   initState = {
@@ -31,9 +30,7 @@ export const wishlistReducer = (state = initState, action) => {
     case 'REMOVE_SINGLE_FROM_WISHLIST':
       return {
         ...state,
-        addedItems: state.addedItems.filter(
-          (item, i) => item.node.id !== action.payload,
-        ),
+        addedItems: state.addedItems.filter((item, i) => item.node.id !== action.payload),
       };
 
     default:

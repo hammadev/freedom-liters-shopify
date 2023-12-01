@@ -7,8 +7,22 @@ import {GlobalStyle, Window} from '../../../globalStyle/Theme';
 import ProductBox from '../product/_partials/ProductBox';
 import {CartEmptyIcon, NoResult} from '../../../assets/svgs/NotificationSvg';
 import Button from '../../../components/Button';
+import {useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useState} from 'react';
 const WishList = ({navigation}) => {
   const {wishlist} = useSelector(state => ({...state}));
+  const [WishlistData, setWishlistData] = useState('');
+
+  const GET_WISHLIST_DATA = async () => {
+    const existingWishlist = await AsyncStorage.getItem('WishList_Items');
+    setWishlistData(JSON.parse(existingWishlist));
+  };
+
+  useEffect(() => {
+    //AsyncStorage.removeItem('WishList_Items');
+    GET_WISHLIST_DATA();
+  }, [GET_WISHLIST_DATA]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -26,8 +40,8 @@ const WishList = ({navigation}) => {
           flexDirection: 'row',
         }}
         style={{flex: 1}}
-        data={wishlist.addedItems}
-        renderItem={({item}) => <ProductBox item={item} customStyle={{width: Window.width / 2.3}} wishlist={wishlist} />}
+        data={WishlistData}
+        renderItem={({item}) => <ProductBox item={item.addedItems} customStyle={{width: Window.width / 2.3}} wishlist={wishlist} />}
         showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={{width: 15}} />}
         ListEmptyComponent={() => (

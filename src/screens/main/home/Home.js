@@ -198,6 +198,7 @@ const Home = ({navigation}) => {
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
+
             <View style={{width: '100%'}}>
               {categories && (
                 <FlatList
@@ -223,6 +224,7 @@ const Home = ({navigation}) => {
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
+
             <View>
               {product && (
                 <FlatList
@@ -250,6 +252,7 @@ const Home = ({navigation}) => {
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
+
             <View>
               {product && (
                 <FlatList
@@ -277,6 +280,7 @@ const Home = ({navigation}) => {
                 <Text style={GlobalStyle.showMoreStyle}>See All</Text>
               </TouchableOpacity>
             </View>
+
             <View>
               {product && (
                 <FlatList
