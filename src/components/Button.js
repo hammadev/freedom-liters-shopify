@@ -53,22 +53,33 @@ const Button = props => {
         borderWidth: props.type === 'primary' ? 1 : 0,
         borderColor: props.type === 'primary' ? Color.white : 'transparent',
       }}
-      onPress={props.onPressFunc ? props.onPressFunc : () => navigation.navigate(props.navLink, {value: 4})}
+      onPress={
+        props.onPressFunc
+          ? props.onPressFunc
+          : () => navigation.navigate(props.navLink, {value: 4})
+      }
       disabled={props.loading ? true : false}>
       {props.loading ? (
-        <SkypeIndicator size={25} color={props.theme == 'white' ? Color.tertiary : Color.white} />
+        <SkypeIndicator
+          size={25}
+          color={props.theme == 'white' ? Color.tertiary : Color.white}
+        />
       ) : (
         <>
           {props.isIcon !== false ? (
             <Ionicons
               style={{
-                ...(props.iconSet === 'secondary' ? Style.iconSetStyle : Style.IconStyle),
+                ...(props.iconSet === 'secondary'
+                  ? Style.iconSetStyle
+                  : Style.IconStyle),
                 color: activeThemeTextColor(),
               }}
               name={props.icon}
             />
           ) : null}
-          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>{props.text}</Text>
+          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>
+            {props.text}
+          </Text>
         </>
       )}
     </TouchableOpacity>
@@ -83,14 +94,6 @@ const Style = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'center',
-    shadowColor: 'rgba(27, 172, 75, 0.25)',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
   },
   btnTextStyle: {
     fontSize: Window.width < 375 ? 16 : 17,

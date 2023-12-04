@@ -16,20 +16,13 @@ const Category = ({navigation}) => {
   const {categories} = useSelector(state => ({...state}));
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        showHideTransition="fade"
-        animated
-        backgroundColor={COLORS.primary}
-        translucent
-        barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
-      />
       <Header label="Category" hideBackButton />
 
       <ScrollView
-        style={{flex: 1}}
+        style={{flex: 1, marginTop: 25}}
         contentContainerStyle={{
           flexGrow: 1,
-          padding: CONTAINER_PADDING,
+          paddingHorizontal: CONTAINER_PADDING,
         }}>
         <FlatList
           data={categories.allcategories.edges}
@@ -45,5 +38,6 @@ export default Category;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
   },
 });

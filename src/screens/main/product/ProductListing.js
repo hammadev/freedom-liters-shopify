@@ -1,4 +1,4 @@
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Animated, {
   useAnimatedStyle,
@@ -28,88 +28,8 @@ import {RadioButton} from 'react-native-paper';
 import Button from '../../../components/Button';
 import Header from '../../../components/Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {CONTAINER_PADDING} from '../../../constants';
-
-const SortOption = ({ApplyBtn, checked, setChecked}) => {
-  return (
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <Text
-          style={{
-            ...GlobalStyle.textStlye,
-            color: '#424242',
-            fontSize: 20,
-            textAlign: 'center',
-          }}>
-          Newest
-        </Text>
-        <RadioButton
-          value="newest"
-          status={checked === 'newest' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('newest')}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingVertical: 15,
-        }}>
-        <Text
-          style={{
-            ...GlobalStyle.textStlye,
-            color: '#424242',
-            fontSize: 20,
-            textAlign: 'center',
-          }}>
-          Price: Low To High
-        </Text>
-        <RadioButton
-          value="lowtohigh"
-          status={checked === 'lowtohigh' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('lowtohigh')}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <Text
-          style={{
-            ...GlobalStyle.textStlye,
-            color: '#424242',
-            fontSize: 20,
-            textAlign: 'center',
-          }}>
-          Price: High To Low
-        </Text>
-        <RadioButton
-          value="hightolow"
-          status={checked === 'hightolow' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('hightolow')}
-        />
-      </View>
-
-      <View style={{marginTop: 15}}>
-        <Button
-          text="Apply"
-          isIcon={false}
-          theme="tertiary"
-          loading={false}
-          onPressFunc={ApplyBtn}
-        />
-      </View>
-    </View>
-  );
-};
+import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import FilterPopupSortOption from '../../../components/FilterPopupSortOption';
 
 const ProductListing = route => {
   const [ProductData, setProductData] = useState([]);
@@ -278,12 +198,18 @@ const ProductListing = route => {
   };
 
   return (
-    <SafeAreaView style={[{flex: 1}]}>
+    <SafeAreaView style={styles.container}>
       <Header
-        label={route.route.params ? route.route.params.title : 'Products'}
+        search
+        searchFilterFunction={searchFilterFunction}
+        searchValue={searchValue}
+        filterFunc={() => setSortPopup(true)}
+        searchPlaceholder={
+          route.route.params ? route.route.params.title : 'Products'
+        }
       />
       <View style={{paddingHorizontal: CONTAINER_PADDING, flex: 1}}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -329,30 +255,15 @@ const ProductListing = route => {
               </View>
             </TouchableOpacity>
           ) : null}
-        </View>
+        </View> */}
 
-        {ShowFilterIcon && (
+        {/* {ShowFilterIcon && (
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-end',
               marginTop: 15,
             }}>
-            {/* <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              borderWidth: 1,
-              borderColor: Color.gryLight,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              borderRadius: 20,
-            }}>
-            <Image
-              style={{width: 20, height: 20, marginRight: 5, tintColor: Color.black}}
-              source={require('../../../assets/images/pics/filter-search.png')}
-            />
-            <Text style={{color: Color.black}}>Filters</Text>
-          </TouchableOpacity> */}
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
@@ -375,12 +286,17 @@ const ProductListing = route => {
               <Text style={{color: Color.black}}>Sort</Text>
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
 
-        <View style={{flex: 1, marginTop: 15}}>
+        <View style={{flex: 1}}>
           {!loaderSpinner ? (
             <FlatList
-              contentContainerStyle={{marginVertical: Window.fixPadding}}
+              style={{
+                overflow: 'hidden',
+                borderRadius: CONTAINER_PADDING,
+                marginTop: 25,
+              }}
+              contentContainerStyle={{}}
               data={ProductData}
               numColumns={2}
               showsVerticalScrollIndicator={false}
@@ -402,11 +318,18 @@ const ProductListing = route => {
         title="Sort "
         color={Color.primary}
         PopupBody={
-          <SortOption
-            ApplyBtn={ApplyBtn}
-            checked={checked}
-            setChecked={setChecked}
-          />
+          <>
+            <FilterPopupSortOption checked={checked} setChecked={setChecked} />
+            <View style={{marginTop: 15}}>
+              <Button
+                text="Apply"
+                isIcon={false}
+                theme="tertiary"
+                loading={false}
+                onPressFunc={ApplyBtn}
+              />
+            </View>
+          </>
         }
         visible={SortPopup}
         setVisible={setSortPopup}
@@ -416,3 +339,10 @@ const ProductListing = route => {
 };
 
 export default ProductListing;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+});
