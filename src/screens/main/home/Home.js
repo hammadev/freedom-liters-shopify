@@ -88,10 +88,12 @@ const Home = ({navigation}) => {
     setSearcValue(false);
   };
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     setStatusBarContent('light-content');
     setStatusBarBg('transparent');
   }, [isFocused]);
+
   return (
     <View style={{backgroundColor: Color.light, flex: 1}}>
       <StatusBar
@@ -127,6 +129,7 @@ const Home = ({navigation}) => {
             {useNativeDriver: false},
           )}>
           <Banner />
+
           <View
             style={{
               padding: Window.fixPadding * 2,

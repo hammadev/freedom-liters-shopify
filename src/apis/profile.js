@@ -2,7 +2,15 @@ import axios from '../axios';
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export async function updateAddressReq(user_id, body, navigation, setLoading, dispatch, navigateTo, updatedUser) {
+export async function updateAddressReq(
+  user_id,
+  body,
+  navigation,
+  setLoading,
+  dispatch,
+  navigateTo,
+  updatedUser,
+) {
   console.log('updatedUser', updatedUser);
   setLoading(true);
   try {
@@ -51,19 +59,25 @@ export const getAddress = async (dispatch, user_id) => {
   }
 };
 
-export const handleCreateAddress = async (createCustomerAddress, variables, resetState, refetch, setVisible,isUpdate) => {
-  console.log(variables);
+export const handleCreateAddress = async (
+  createCustomerAddress,
+  variables,
+  refetch,
+  resetState,
+  setVisible,
+  isUpdate,
+) => {
   try {
     const result = await createCustomerAddress({
       variables,
     });
-
-    console.log('Create Address Result:', result);
-    if(!isUpdate){
+    if (!isUpdate) {
       if (result.data.customerAddressCreate.customerUserErrors.length) {
         showMessage({
-          message: 'Error in adding address',
+          message:
+            result.data.customerAddressCreate.customerUserErrors[0].message,
           type: 'danger',
+          duration: 4000,
         });
         return;
       }
@@ -71,7 +85,7 @@ export const handleCreateAddress = async (createCustomerAddress, variables, rese
         message: 'Address Added Successfully!',
         type: 'success',
       });
-    }else{
+    } else {
       if (result.data.customerAddressUpdate.customerUserErrors.length) {
         showMessage({
           message: 'Error in updating address',
@@ -85,11 +99,8 @@ export const handleCreateAddress = async (createCustomerAddress, variables, rese
       });
     }
     setVisible(false);
-    
-
-    refetch();
     resetState();
-
+    refetch();
     return;
   } catch (error) {
     console.error('Mutation error:', error);

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -13,21 +13,24 @@ import {GET_CART} from '../../../graphql/queries/Cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TextField2 from '../../../components/TextFeild2';
 import {COUPON_CODE} from '../../../graphql/mutations/Coupon';
-import {handleCouponCode, hnadleDecreaseCartValue, hnadleIncreseCartValue, hnadleRemoveCartItem} from '../../../apis/cart';
+import {
+  handleCouponCode,
+  hnadleDecreaseCartValue,
+  hnadleIncreseCartValue,
+  hnadleRemoveCartItem,
+} from '../../../apis/cart';
 
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import {Image} from 'react-native';
 
 const PaymentDetails = ({totalAmout, cartId}) => {
-  const [expanded, setExpanded] = React.useState(false);
   const [couponCode, setCouponCode] = React.useState(false);
   const [CouponCodeVisibility, setCouponCodeVisibility] = React.useState(true);
 
-  const handlePress = () => setExpanded(!expanded);
-  const [cart, {data, loading, error}] = useMutation(COUPON_CODE);
+  const [cart] = useMutation(COUPON_CODE);
 
   useEffect(() => {
     Check_Coupon();
@@ -37,10 +40,8 @@ const PaymentDetails = ({totalAmout, cartId}) => {
     const Coupon = await AsyncStorage.getItem('COUPON');
     if (Coupon) {
       setCouponCodeVisibility(false);
-      console.log('Coupon HY');
     } else {
       setCouponCodeVisibility(true);
-      console.log('Coupon Nahi HY');
     }
   };
 
@@ -65,7 +66,9 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               backgroundColor: '',
             }}>
             <Text style={styles.TextStyle}> Subtotal </Text>
-            <Text style={styles.TotalStyle}>{totalAmout.subtotalAmount.amount}</Text>
+            <Text style={styles.TotalStyle}>
+              {totalAmout.subtotalAmount.amount}
+            </Text>
           </View>
           <View
             style={{
@@ -75,7 +78,10 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               flexDirection: 'row',
             }}>
             <Text style={styles.TextStyle}> Delivery Fee </Text>
-            <Text style={styles.TotalStyle}> {totalAmout.totalTaxAmount.amount} </Text>
+            <Text style={styles.TotalStyle}>
+              {' '}
+              {totalAmout.totalTaxAmount.amount}{' '}
+            </Text>
           </View>
 
           <View style={{marginBottom: 10}}>
@@ -111,7 +117,10 @@ const PaymentDetails = ({totalAmout, cartId}) => {
                 </TouchableOpacity>
               </View>
             ) : (
-              <Text style={[styles.TextStyle, {color: 'green'}]}> Applied Coupon </Text>
+              <Text style={[styles.TextStyle, {color: 'green'}]}>
+                {' '}
+                Applied Coupon{' '}
+              </Text>
             )}
           </View>
 
@@ -124,13 +133,12 @@ const PaymentDetails = ({totalAmout, cartId}) => {
               flexDirection: 'row',
             }}>
             <Text style={styles.TextStyle}>Total</Text>
-            {/* <Text style={styles.TotalStyle}>$ ${totalAmout.cost.totalAmount.amount}</Text> */}
-            <Text style={styles.TotalStyle}> {totalAmout ? totalAmout.totalAmount.amount : '0.00'} PKR</Text>
+            <Text style={styles.TotalStyle}>
+              {totalAmout ? totalAmout.totalAmount.amount : '0.00'} PKR
+            </Text>
           </View>
         </>
-      ) : (
-        ''
-      )}
+      ) : null}
     </View>
   );
 };
@@ -139,20 +147,22 @@ const Cart = () => {
   const [CartItems, setCartItems] = useState('');
   const [RemoveLoader, setRemoveLoader] = useState(false);
   const [CartId, setCartId] = useState();
-  //// LOADER VARIABLES
-  const [IncreaseQtyLoader, setIncreaseQtyLoader] = useState(false);
-  const [DecrementQtyLoader, setDecrementQtyLoader] = useState(false);
+
   //// GET USER CART
-  const {data: CartData, loadingCartData, errorCartData} = useQuery(GET_CART, {variables: {cartId: CartId}});
-  //// GET USER CART
-  const [cartLinesUpdate, {data: IncreaseData, loading: IncreaseLoading, error: IncreaseError}] = useMutation(INCREASE_CART_VALUE);
-  /////  REMOVE CART ITEM
-  const [cartLinesRemove, {data: RemoveData, loading: RemoveLoading, error: RemoveError}] = useMutation(REMOVE_ITEM);
+  const {
+    data: CartData,
+    loadingCartData,
+    errorCartData,
+  } = useQuery(GET_CART, {variables: {cartId: CartId}});
+  //// ICREASE CART ITEM
+  const [cartLinesUpdate] = useMutation(INCREASE_CART_VALUE);
+  //// REMOVE CART ITEM
+  const [
+    cartLinesRemove,
+    {data: RemoveData, loading: RemoveLoading, error: RemoveError},
+  ] = useMutation(REMOVE_ITEM);
   const isFocused = useIsFocused();
 
-  const {auth} = useSelector(state => ({
-    ...state,
-  }));
   useEffect(() => {
     Get_Cart_Id();
     if (CartData && !loadingCartData && !errorCartData) {
@@ -204,20 +214,27 @@ const Cart = () => {
     }
   };
 
-  // if (!auth) {
-  //   return <NotLogin />;
-  // }
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{backgroundColor: Color.white, paddingVertical: 20}}>
-        <AppBar center={<Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>Your Cart</Text>} right={<Text></Text>} />
+        <AppBar
+          center={
+            <Text
+              style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>
+              Your Cart
+            </Text>
+          }
+          right={<Text></Text>}
+        />
       </View>
 
       {!RemoveLoader ? (
         <ActivityLoader />
       ) : CartItems && CartItems.lines.edges.length > 0 ? (
         <>
-          <ScrollView style={{backgroundColor: Color.white}} contentContainerStyle={{flexGrow: 1}}>
+          <ScrollView
+            style={{backgroundColor: Color.white}}
+            contentContainerStyle={{flexGrow: 1}}>
             {CartItems.lines.edges.length > 0 ? (
               <View style={{paddingHorizontal: 20}}>
                 <Text
@@ -248,43 +265,57 @@ const Cart = () => {
             {CartItems ? (
               CartItems.lines.edges.map((item, index) => (
                 <View key={index} style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      shadowColor: 'rgba(0,0,0,0.4)',
-                      shadowOffset: {
-                        width: 0,
-                        height: 2,
-                      },
-                      shadowOpacity: 0.25,
-                      shadowRadius: 3.84,
-                      elevation: 22,
-                      backgroundColor: '#FAF7F1',
-                      borderRadius: 16,
-                      width: 88,
-                      height: 88,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 24,
-                      marginLeft: 10,
-                    }}>
+                  <View style={styles.ImageContainer}>
                     {item.node.merchandise.image ? (
-                      <FastImage style={{width: 70, height: 70, borderRadius: 15}} source={{uri: item.node.merchandise.image.url}} />
+                      <Image
+                        style={{width: 70, height: 70, borderRadius: 15}}
+                        source={{uri: item.node.merchandise.image.url}}
+                      />
                     ) : (
-                      <FastImage source={require('../../../assets/images/products/flannelShirt.png')} />
+                      <Image
+                        source={require('../../../assets/images/products/flannelShirt.png')}
+                      />
                     )}
                   </View>
-                  <View style={{paddingLeft: 15, width: Window.width / 1.47, marginTop: 24}}>
-                    <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
-                      <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: Color.primary}}>
+                  <View style={styles.ContainerContent}>
+                    <View
+                      style={{
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: Font.Gilroy_SemiBold,
+                          color: Color.primary,
+                        }}>
                         {item.node.merchandise.product.title}
                       </Text>
-                      <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: '#363B44'}}>
-                        {item.node.quantity} x {item.node.cost.amountPerQuantity.amount} ={' '}
-                        {item.node.quantity * item.node.cost.amountPerQuantity.amount}
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: Font.Gilroy_SemiBold,
+                          color: '#363B44',
+                        }}>
+                        {item.node.quantity} x{' '}
+                        {item.node.cost.amountPerQuantity.amount} ={' '}
+                        {item.node.quantity *
+                          item.node.cost.amountPerQuantity.amount}
                       </Text>
                     </View>
-                    <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
-                      <Text style={{fontSize: 15, fontFamily: Font.Gilroy_SemiBold, color: Color.primary}}>
+                    <View
+                      style={{
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: Font.Gilroy_SemiBold,
+                          color: Color.primary,
+                        }}>
                         {item.node.merchandise.product.tags[0]}
                       </Text>
                     </View>
@@ -303,16 +334,30 @@ const Cart = () => {
                             alignItems: 'center',
                             flexDirection: 'row',
                           }}>
-                          <TouchableOpacity style={styles.cartStyle} onPress={() => decrementValue(item)}>
-                            <Icon iconFamily={'AntDesign'} name={'minus'} style={styles.MinusStyle} />
+                          <TouchableOpacity
+                            style={styles.cartStyle}
+                            onPress={() => decrementValue(item)}>
+                            <Icon
+                              iconFamily={'AntDesign'}
+                              name={'minus'}
+                              style={styles.MinusStyle}
+                            />
                           </TouchableOpacity>
-                          <Text style={styles.NumStyle}>{item.node.quantity}</Text>
-                          <TouchableOpacity style={{...styles.cartStyle, borderColor: Color.tertiary}} onPress={() => incrementValue(item)}>
-                            {IncreaseQtyLoader ? (
-                              <ActivityLoader />
-                            ) : (
-                              <Icon iconFamily={'Ionicons'} name={'md-add'} color={Color.light} style={styles.AddStyle} />
-                            )}
+                          <Text style={styles.NumStyle}>
+                            {item.node.quantity}
+                          </Text>
+                          <TouchableOpacity
+                            style={{
+                              ...styles.cartStyle,
+                              borderColor: Color.tertiary,
+                            }}
+                            onPress={() => incrementValue(item)}>
+                            <Icon
+                              iconFamily={'Ionicons'}
+                              name={'md-add'}
+                              color={Color.light}
+                              style={styles.AddStyle}
+                            />
                           </TouchableOpacity>
                         </View>
                         <TouchableOpacity onPress={() => Remove_Items(item)}>
@@ -338,7 +383,10 @@ const Cart = () => {
             {CartItems ? (
               CartItems.lines.edges.length > 0 ? (
                 <View style={{paddingBottom: 10}}>
-                  <PaymentDetails totalAmout={CartItems ? CartItems.cost : ''} cartId={CartId} />
+                  <PaymentDetails
+                    totalAmout={CartItems ? CartItems.cost : ''}
+                    cartId={CartId}
+                  />
                 </View>
               ) : (
                 <ActivityLoader />
@@ -347,7 +395,13 @@ const Cart = () => {
               <ActivityLoader />
             )}
             {CartItems.lines.edges.length > 0 ? (
-              <Button text="Proceed to Checkout" icon="mail" isIcon={false} theme="tertiary" navLink="Payment" />
+              <Button
+                text="Proceed to Checkout"
+                icon="mail"
+                isIcon={false}
+                theme="tertiary"
+                navLink="Payment"
+              />
             ) : (
               <View></View>
             )}
@@ -355,7 +409,10 @@ const Cart = () => {
         </>
       ) : (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <FastImage style={{width: 150, height: 150}} source={require('../../../assets/images/images/ShoppingCart.png')} />
+          <FastImage
+            style={{width: 150, height: 150}}
+            source={require('../../../assets/images/images/ShoppingCart.png')}
+          />
           <Text
             style={{
               fontFamily: Font.Gilroy_SemiBold,

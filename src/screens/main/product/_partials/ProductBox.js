@@ -13,17 +13,14 @@ import {handleCreateCart} from '../../../../apis/cart';
 import {useMutation} from '@apollo/client';
 import {useState} from 'react';
 
-const ProductBox = ({item, customStyle, wishlist}) => {
+const ProductBox = ({item, customStyle, wishlist, relatedProducts = false}) => {
   const [showFavIcon, setShowFavIcon] = useState(false);
   const navigation = useNavigation();
-  const [cartCreate, {data, loading, error}] = useMutation(
-    CREATE_CART_ADD_ONE_ITEM,
-  );
+  const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
 
   useEffect(() => {
     getWishlistData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getWishlistData = async () => {
     AsyncStorage.getItem('WishList_Items').then(res => {
@@ -36,9 +33,7 @@ const ProductBox = ({item, customStyle, wishlist}) => {
         setShowFavIcon(checkInWishlist);
       }
     });
-    // ;
   };
-  // console.log(existingWishlist);
   const Add_To_Card = async item => {
     const CART_ID = await AsyncStorage.getItem('CART_ID');
     let variables;
@@ -79,13 +74,13 @@ const ProductBox = ({item, customStyle, wishlist}) => {
       onPress={() =>
         navigation.navigate('ProductDetail', {
           product: item,
+          relatedProducts,
         })
       }>
       <TouchableOpacity
         style={style.heartIconContainer}
         onPress={async () => {
           const existingWishlist = await AsyncStorage.getItem('WishList_Items');
-          // AsyncStorage.removeItem('WishList_Items');
           if (existingWishlist !== null) {
             const ParseData = JSON.parse(existingWishlist);
             if (ParseData.addedItems.some(e => e.node.id === item.node.id)) {

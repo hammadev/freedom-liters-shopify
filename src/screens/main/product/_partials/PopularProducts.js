@@ -14,10 +14,20 @@ const PopularProducts = () => {
         marginBottom: Window.fixPadding,
       }}
       data={product.latest.edges}
-      renderItem={({item, index}) => <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item} index={index} />}
+      renderItem={({item, index}) => (
+        <ProductBox
+          relatedProducts={true}
+          wishlist={wishlist}
+          customStyle={{width: Window.width / 2.3}}
+          item={item}
+          index={index}
+        />
+      )}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
-      ItemSeparatorComponent={() => <View style={{width: Window.fixPadding * 1.5}}></View>}
+      ItemSeparatorComponent={() => (
+        <View style={{width: Window.fixPadding * 1.5}}></View>
+      )}
     />
   );
 };

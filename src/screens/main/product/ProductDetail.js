@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Platform, SafeAreaView} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
@@ -11,42 +11,42 @@ import VariationsDetails from '../../../components/VariationsDetails';
 import {hasNotch} from 'react-native-device-info';
 import {StyleSheet} from 'react-native';
 import {useMutation} from '@apollo/client';
-import {ADD_MORE_ITEM, CREATE_CART_ADD_ONE_ITEM} from '../../../graphql/mutations/Cart';
+import {
+  ADD_MORE_ITEM,
+  CREATE_CART_ADD_ONE_ITEM,
+} from '../../../graphql/mutations/Cart';
 import {handleCreateCart} from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {useEffect} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ImageBackground} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+
 const ProductDetail = ({route, navigation}) => {
   const {product} = route.params;
+  const ref = useRef(null);
+  const isFocused = useIsFocused();
   const [visible, setVisible] = useState(false);
   const [ProductImages, setProductImages] = useState(null);
   const [loadingSpinner, setloadingSpinner] = useState(false);
-  const [cartCreate, {data, loading, error}] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [selectedColor, setselectedColor] = useState(null);
   const [selectedSize, setselectedSize] = useState(null);
   const [NewPrice, setNewPrice] = useState(null);
   const [NewArr, setNewArr] = useState([]);
-
   const [allSizes, setAllSizes] = useState([]);
   const [allColors, setAllColors] = useState([]);
 
+  const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-  const {auth} = useSelector(state => ({
-    ...state,
-  }));
 
-  console.log('size', allSizes);
-  console.log('lenth');
-  console.log('color', allColors);
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
-
     if (selectedColor && selectedSize) {
       const filtered = product.node.variants.edges.filter(
-        item => item.node.selectedOptions[0].value === selectedSize && item.node.selectedOptions[1].value === selectedColor
+        item =>
+          item.node.selectedOptions[0].value === selectedSize &&
+          item.node.selectedOptions[1].value === selectedColor,
       );
       setNewArr(filtered[0].node);
       setProductImages(filtered[0].node.image.url);
@@ -54,10 +54,94 @@ const ProductDetail = ({route, navigation}) => {
     }
   }, [product, selectedColor, selectedSize, NewPrice]);
 
+  // GET PRODUCT COLOR AND SIZE
+  const getUniqueVariant = index => {
+    const productEdge = product.node.variants.edges;
+    const tempProductData = [];
+    const uniqueVariant = [];
+
+    for (let a = 0; a < productEdge.length; a++) {
+      tempProductData.push(productEdge[a].node.selectedOptions[index].value);
+    }
+
+    for (let b = 0; b < tempProductData.length; b++) {
+      if (!uniqueVariant.includes(tempProductData[b])) {
+        uniqueVariant.push(tempProductData[b]);
+      }
+    }
+
+    return uniqueVariant;
+  };
+
+  // CHECK CURRENT COLOR AND SIZE
+  const checkAllVarientValues = (index, returnIndex, selectedOption) => {
+    const productEdge = product.node.variants.edges;
+    const tempProductData = [];
+    const tempProductReturnData = [];
+    const uniqueVariant = [];
+
+    if (productEdge.length && index !== null) {
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions[index]) {
+          tempProductData.push(
+            productEdge[a].node.selectedOptions[index].value,
+          );
+        }
+      }
+
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions[index]) {
+          tempProductReturnData.push(
+            productEdge[a].node.selectedOptions[returnIndex].value,
+          );
+        }
+      }
+
+      for (let b = 0; b < tempProductData.length; b++) {
+        if (tempProductData[b].toLowerCase() === selectedOption.toLowerCase()) {
+          uniqueVariant.push(tempProductReturnData[b]);
+        }
+      }
+    }
+
+    return uniqueVariant;
+  };
+
+  useEffect(() => {
+    if (route.params.relatedProducts) {
+      setAllColors([]);
+      setAllSizes([]);
+      ref.current?.scrollTo({y: 0});
+    }
+    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
+      setAllSizes(getUniqueVariant(0));
+      setAllColors(getUniqueVariant(1));
+    }
+  }, [isFocused, route.params.relatedProducts, product]);
+
+  useEffect(() => {
+    if (allColors.length > 0) {
+      setAllColors(checkAllVarientValues(0, 1, selectedSize));
+    }
+  }, [selectedSize]);
+
+  useEffect(() => {
+    if (allSizes.length > 0) {
+      setAllSizes(checkAllVarientValues(1, 0, selectedColor));
+    }
+  }, [selectedColor]);
+
+  const HandleSize = index => {
+    setselectedSize(index);
+  };
+
+  const HandleColor = index => {
+    setselectedColor(index);
+  };
+
   const Add_To_Card = async () => {
-    if (product.node.variants.edges.length > 1) {
+    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
       if (selectedColor && selectedSize) {
-        console.log('True');
         setloadingSpinner(true);
         const CART_ID = await AsyncStorage.getItem('CART_ID');
         let variables;
@@ -94,7 +178,6 @@ const ProductDetail = ({route, navigation}) => {
         });
       }
     } else {
-      console.log('True');
       setloadingSpinner(true);
       const CART_ID = await AsyncStorage.getItem('CART_ID');
       let variables;
@@ -125,94 +208,7 @@ const ProductDetail = ({route, navigation}) => {
       handleCreateCart(mutationFunc, variables, navigation, isCreateCart, 1);
       setloadingSpinner(false);
     }
-    // if (auth) {
-    //   console.log('Auth hy');
-    // } else {
-    //   showMessage({
-    //     message: 'Please Login First',
-    //     type: 'danger',
-    //   });
-    //   navigation.navigate('SignIn');
-    // }
   };
-
-  const getUniqueVariant = index => {
-    const productEdge = product.node.variants.edges;
-    const tempProductData = [];
-    const uniqueVariant = [];
-
-    // Extract titles from productEdge
-    for (let a = 0; a < productEdge.length; a++) {
-      tempProductData.push(productEdge[a].node.selectedOptions[index].value);
-    }
-
-    // Filter out unique titles
-    for (let b = 0; b < tempProductData.length; b++) {
-      if (!uniqueVariant.includes(tempProductData[b])) {
-        uniqueVariant.push(tempProductData[b]);
-      }
-    }
-
-    return uniqueVariant;
-  };
-
-  const checkAllVarientValues = (index, returnIndex, selectedOption) => {
-    const productEdge = product.node.variants.edges;
-    const tempProductData = [];
-    const tempProductReturnData = [];
-    const uniqueVariant = [];
-
-    if (productEdge.length && index !== null) {
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions[index]) {
-          tempProductData.push(productEdge[a].node.selectedOptions[index].value);
-        }
-      }
-
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions[index]) {
-          tempProductReturnData.push(productEdge[a].node.selectedOptions[returnIndex].value);
-        }
-      }
-
-      for (let b = 0; b < tempProductData.length; b++) {
-        if (tempProductData[b].toLowerCase() === selectedOption.toLowerCase()) {
-          uniqueVariant.push(tempProductReturnData[b]);
-        }
-      }
-    }
-
-    return uniqueVariant;
-  };
-
-  useEffect(() => {
-    if (allColors.length > 0) {
-      setAllColors(checkAllVarientValues(0, 1, selectedSize));
-    }
-  }, [selectedSize]);
-
-  useEffect(() => {
-    if (allSizes.length > 0) {
-      setAllSizes(checkAllVarientValues(1, 0, selectedColor));
-    }
-  }, [selectedColor]);
-
-  const HandleSize = index => {
-    // console.log(index);
-    setselectedSize(index);
-  };
-
-  const HandleColor = index => {
-    // console.log(index);
-    setselectedColor(index);
-  };
-
-  useEffect(() => {
-    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
-      setAllSizes(getUniqueVariant(0));
-      setAllColors(getUniqueVariant(1));
-    }
-  }, []);
 
   return (
     <SafeAreaView
@@ -224,19 +220,20 @@ const ProductDetail = ({route, navigation}) => {
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
       <ScrollView
+        ref={ref}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         style={{backgroundColor: Color.white, flex: 1}}>
         <ImageBackground
           resizeMode="cover"
           source={{uri: ProductImages}}
-          style={{
-            width: '100%',
-            paddingVertical: Window.fixPadding * 2,
-            height: Window.height / 3,
-          }}>
+          style={styles.ProductImage}>
           <View style={styles.overlay} />
-          <AppBar theme="dark" header="solid" customStyle={{paddingHorizontal: 100}} />
+          <AppBar
+            theme="dark"
+            header="solid"
+            customStyle={{paddingHorizontal: 100}}
+          />
         </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
@@ -256,7 +253,9 @@ const ProductDetail = ({route, navigation}) => {
                 fontFamily: Font.Gilroy_Bold,
                 color: Color.primary,
               }}>
-              {NewPrice ? NewPrice : product.node.priceRange.minVariantPrice.amount}
+              {NewPrice
+                ? NewPrice
+                : product.node.priceRange.minVariantPrice.amount}
               {product.node.priceRange.minVariantPrice.currencyCode}
             </Text>
           </View>
@@ -267,19 +266,22 @@ const ProductDetail = ({route, navigation}) => {
                 marginTop: 8,
               }}>
               <Heading name="Size" />
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
                 {allSizes.map((item, index) => (
                   <TouchableOpacity
                     onPress={() => HandleSize(item)}
                     key={index}
-                    style={{
-                      backgroundColor: selectedSize === item ? 'red' : 'rgba(2, 28, 94, 0.9)',
-                      width: 100,
-                      padding: 5,
-                      borderRadius: 15,
-                      marginRight: 8,
-                      marginTop: 10,
-                    }}>
+                    style={[
+                      styles.ProductSize,
+                      {
+                        backgroundColor:
+                          selectedSize === item
+                            ? 'red'
+                            : 'rgba(2, 28, 94, 0.9)',
+                      },
+                    ]}>
                     <Text
                       style={{
                         fontSize: 18,
@@ -301,23 +303,26 @@ const ProductDetail = ({route, navigation}) => {
                 marginTop: 8,
               }}>
               <Heading name="Colors" />
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
                 {allColors.map((item, ind) => (
                   <TouchableOpacity
                     onPress={() => HandleColor(item)}
                     key={ind}
-                    style={{
-                      backgroundColor: item.toLowerCase(),
-                      width: 35,
-                      height: 35,
-                      padding: 5,
-                      borderRadius: 10,
-                      marginRight: 8,
-                      marginTop: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    {selectedColor == item ? <View style={{width: 10, height: 10, backgroundColor: 'red', borderRadius: 10}}></View> : null}
+                    style={[
+                      styles.ProductColor,
+                      {backgroundColor: item.toLowerCase()},
+                    ]}>
+                    {selectedColor == item ? (
+                      <View
+                        style={{
+                          width: 10,
+                          height: 10,
+                          backgroundColor: 'red',
+                          borderRadius: 10,
+                        }}></View>
+                    ) : null}
                   </TouchableOpacity>
                 ))}
               </ScrollView>
@@ -396,7 +401,12 @@ const ProductDetail = ({route, navigation}) => {
           elevation: 10,
           marginTop: Window.fixPadding * 1.6,
         }}>
-        <Button onPressFunc={Add_To_Card} theme="tertiary" loading={loadingSpinner} text="Add to Cart" />
+        <Button
+          onPressFunc={Add_To_Card}
+          theme="tertiary"
+          loading={loadingSpinner}
+          text="Add to Cart"
+        />
       </View>
     </SafeAreaView>
   );
@@ -412,5 +422,27 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  ProductImage: {
+    width: '100%',
+    paddingVertical: Window.fixPadding * 2,
+    height: Window.height / 3,
+  },
+  ProductSize: {
+    width: 100,
+    padding: 5,
+    borderRadius: 15,
+    marginRight: 8,
+    marginTop: 10,
+  },
+  ProductColor: {
+    width: 35,
+    height: 35,
+    padding: 5,
+    borderRadius: 10,
+    marginRight: 8,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

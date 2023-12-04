@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, TouchableWithoutFeedback, Modal} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Modal,
+} from 'react-native';
 import React from 'react';
 import {GlobalStyle} from '../globalStyle/Theme';
 import {ScrollView} from 'react-native';
@@ -14,14 +20,20 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
       return view;
     }
     return (
-      <TouchableWithoutFeedback onPress={onTouch} style={{flex: 1, width: '100%'}}>
+      <TouchableWithoutFeedback
+        onPress={onTouch}
+        style={{flex: 1, width: '100%'}}>
         {view}
       </TouchableWithoutFeedback>
     );
   };
 
   return (
-    <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onTouchOutside}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onTouchOutside}>
       <View
         style={{
           flex: 1,
@@ -29,16 +41,18 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
           justifyContent: 'flex-end',
         }}>
         {renderOutsideTouchable(onTouchOutside)}
-          <View
-            style={{
-              backgroundColor: '#fff',
-              width: '100%',
-              borderTopRightRadius: 44,
-              borderTopLeftRadius: 44,
-              paddingHorizontal: 25,
-              paddingVertical: 35,
-            }}>
-              <ScrollView>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            width: '100%',
+            borderTopRightRadius: 44,
+            borderTopLeftRadius: 44,
+            paddingHorizontal: 25,
+            paddingVertical: 35,
+          }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps={'handled'}>
             <Text
               style={{
                 ...GlobalStyle.heading,
@@ -61,10 +75,8 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
             {/* Render the PopupBody component */}
 
             {PopupBody}
-
-              </ScrollView>
-
-          </View>
+          </ScrollView>
+        </View>
       </View>
     </Modal>
   );

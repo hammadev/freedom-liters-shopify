@@ -11,14 +11,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //   },
 // }
 
-export const handleCreateAccount = async (createCustomerAccount, variables, navigation) => {
+export const handleCreateAccount = async (
+  createCustomerAccount,
+  variables,
+  navigation,
+) => {
   try {
     const result = await createCustomerAccount({
       variables,
     });
 
     if (result.data.customerCreate.customer) {
-      await AsyncStorage.setItem('credentials', JSON.stringify(result.data.customerCreate.customer));
+      await AsyncStorage.setItem(
+        'credentials',
+        JSON.stringify(result.data.customerCreate.customer),
+      );
       showMessage({
         message: 'Account created successfully!',
         type: 'success',
@@ -50,7 +57,12 @@ export const handleCreateAccount = async (createCustomerAccount, variables, navi
 //   password: variables.input.password,
 // };
 
-export const handleCreateAccessToken = async (createCustomerAccessToken, input, dispatch, navigation) => {
+export const handleCreateAccessToken = async (
+  createCustomerAccessToken,
+  input,
+  dispatch,
+  navigation,
+) => {
   const tokenResult = await createCustomerAccessToken({
     variables: {
       input,
@@ -58,6 +70,15 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
   });
 
   let token = tokenResult.data.customerAccessTokenCreate.customerAccessToken;
+
+  if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
+    showMessage({
+      message:
+        tokenResult.data.customerAccessTokenCreate.customerUserErrors[0]
+          .message,
+      type: 'danger',
+    });
+  }
   if (token) {
     await AsyncStorage.setItem('auth', JSON.stringify(token));
     dispatch({
@@ -65,18 +86,14 @@ export const handleCreateAccessToken = async (createCustomerAccessToken, input, 
       payload: token,
     });
     navigation.replace('BottomTabScreen');
-
-    if (tokenResult.data.customerAccessTokenCreate.customerUserErrors.length) {
-      showMessage({
-        message: tokenResult.data.customerAccessTokenCreate.customerUserErrors[0].message,
-        type: 'danger',
-      });
-      return;
-    }
   }
 };
 
-export const handleProfileUpdate = async (customerUpdate, variables, refetch) => {
+export const handleProfileUpdate = async (
+  customerUpdate,
+  variables,
+  refetch,
+) => {
   try {
     const result = await customerUpdate({
       variables,
@@ -108,7 +125,10 @@ export const handleProfileUpdate = async (customerUpdate, variables, refetch) =>
   }
 };
 
-export const handleForgetPassword = async (sendPasswordResetEmail, variables) => {
+export const handleForgetPassword = async (
+  sendPasswordResetEmail,
+  variables,
+) => {
   try {
     const result = await sendPasswordResetEmail({
       variables,
@@ -139,7 +159,13 @@ export const handleForgetPassword = async (sendPasswordResetEmail, variables) =>
 // variables: {
 //   customerAccessToken: customerAccessToken,
 // },
-export const Applogout = async (deleteAccessToken, variables, navigation, setVisible, dispatch) => {
+export const Applogout = async (
+  deleteAccessToken,
+  variables,
+  navigation,
+  setVisible,
+  dispatch,
+) => {
   try {
     const result = await deleteAccessToken({
       variables,

@@ -2,6 +2,29 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {GlobalStyle, Font, Color, Window} from '../../../globalStyle/Theme';
 const styles = StyleSheet.create({
+  ImageContainer: {
+    shadowColor: 'rgba(0,0,0,0.4)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 22,
+    backgroundColor: '#FAF7F1',
+    borderRadius: 16,
+    width: 88,
+    height: 88,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+    marginLeft: 10,
+  },
+  ContainerContent: {
+    paddingLeft: 15,
+    width: Window.width / 1.47,
+    marginTop: 24,
+  },
   TextStyle: {
     fontSize: 13,
     color: Color.primary,

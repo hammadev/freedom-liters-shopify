@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, TouchableOpacity, ScrollView, StatusBar, StyleSheet} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppBar from '../../../components/AppBar';
 import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
@@ -10,15 +17,30 @@ import {useBackButton} from '../../../hooks';
 import Button from '../../../components/Button';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import TextField2 from '../../../components/TextFeild2';
-import {CUSTOMER_ADDRESS_CREATE, CUSTOMER_ADDRESS_UPDATE} from '../../../graphql/mutations/Auth';
+import {
+  CUSTOMER_ADDRESS_CREATE,
+  CUSTOMER_ADDRESS_UPDATE,
+} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
-import {FETCH_CUSTOMER_ADDRESS, FETCH_CUSTOMER_INFO} from '../../../graphql/queries/Customer';
+import {
+  FETCH_CUSTOMER_ADDRESS,
+  FETCH_CUSTOMER_INFO,
+} from '../../../graphql/queries/Customer';
 import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
 
-const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showModal, defaultAddressId}) => {
+const DeliverTo = ({
+  item,
+  setRadioState,
+  radioState,
+  navigation,
+  editIcon,
+  showModal,
+  defaultAddressId,
+}) => {
   const RadioClick = async itemID => {
     setRadioState(itemID);
     await AsyncStorage.setItem('address', itemID);
@@ -50,7 +72,8 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
           alignItems: 'center',
           margin: 20,
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center', width: '65%'}}>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', width: '65%'}}>
           <View
             style={{
               backgroundColor: 'rgba(239, 127, 1, 0.08)',
@@ -70,12 +93,19 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
                 justifyContent: 'center',
                 borderRadius: 100,
               }}>
-              <Icon iconFamily={'Ionicons'} name="ios-location-sharp" size={16} color={Color.light} />
+              <Icon
+                iconFamily={'Ionicons'}
+                name="ios-location-sharp"
+                size={16}
+                color={Color.light}
+              />
             </View>
           </View>
           <View style={{}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{...styles.Heading}}>{item.firstName + ' ' + item.lastName}</Text>
+              <Text style={{...styles.Heading}}>
+                {item.firstName + ' ' + item.lastName}
+              </Text>
 
               {radioState == item.id && (
                 <View
@@ -99,7 +129,9 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
                 </View>
               )}
             </View>
-            <Text style={{...GlobalStyle.textStlye, marginVertical: 5}}>{item.phone}</Text>
+            <Text style={{...GlobalStyle.textStlye, marginVertical: 5}}>
+              {item.phone}
+            </Text>
 
             <Text style={{...styles.TextStyle}} numberOfLines={2}>
               {item.address1 + ', ' + item.address2 + ', '}
@@ -109,7 +141,12 @@ const DeliverTo = ({item, setRadioState, radioState, navigation, editIcon, showM
         </View>
         {editIcon ? (
           <TouchableOpacity onPress={() => showModal(item)}>
-            <Icon iconFamily={'MaterialCommunityIcons'} name="pencil-minus" size={20} color={Color.tertiary} />
+            <Icon
+              iconFamily={'MaterialCommunityIcons'}
+              name="pencil-minus"
+              size={20}
+              color={Color.tertiary}
+            />
           </TouchableOpacity>
         ) : (
           <RadioButton
@@ -145,11 +182,23 @@ const AddressListing = ({navigation}) => {
   const [city, setCity] = useState('');
   const [activeAddressId, setActiveAddressId] = useState(null);
 
-  const [createCustomerAddress, {loading: createAddressLoading, error: createAddressError, data: createAddressData}] =
-    useMutation(CUSTOMER_ADDRESS_CREATE);
+  const [
+    createCustomerAddress,
+    {
+      loading: createAddressLoading,
+      error: createAddressError,
+      data: createAddressData,
+    },
+  ] = useMutation(CUSTOMER_ADDRESS_CREATE);
 
-  const [updateCustomerAddress, {loading: updateAddressLoading, error: updateAddressError, data: updateAddressData}] =
-    useMutation(CUSTOMER_ADDRESS_UPDATE);
+  const [
+    updateCustomerAddress,
+    {
+      loading: updateAddressLoading,
+      error: updateAddressError,
+      data: updateAddressData,
+    },
+  ] = useMutation(CUSTOMER_ADDRESS_UPDATE);
 
   const {loading, error, data, refetch} = useQuery(FETCH_CUSTOMER_ADDRESS, {
     variables: {
@@ -285,11 +334,26 @@ const AddressListing = ({navigation}) => {
       },
     };
 
-    if (!isUpdate) handleCreateAddress(createCustomerAddress, variables, resetState, refetch, setVisible, isUpdate);
+    if (!isUpdate)
+      handleCreateAddress(
+        createCustomerAddress,
+        variables,
+        resetState,
+        refetch,
+        setVisible,
+        isUpdate,
+      );
     else {
       variables.addressId = activeAddressId;
       // console.log(variables);
-      handleCreateAddress(updateCustomerAddress, variables, resetState, refetch, setVisibleAddress, isUpdate);
+      handleCreateAddress(
+        updateCustomerAddress,
+        variables,
+        resetState,
+        refetch,
+        setVisibleAddress,
+        isUpdate,
+      );
     }
   };
 
@@ -328,19 +392,28 @@ const AddressListing = ({navigation}) => {
           }}>
           Address Listing
         </Text>
-        <TouchableOpacity onPress={() => setEditIcon(!editIcon)} style={{width: 50, alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={() => setEditIcon(!editIcon)}
+          style={{width: 50, alignItems: 'center'}}>
           <Text
             style={{
               fontSize: 16,
               fontFamily: Font.Gilroy_SemiBold,
               color: Color.tertiary,
             }}>
-            {editIcon ? 'Done' : 'Edit'}
+            {data && data.customer.defaultAddress !== null
+              ? editIcon
+                ? 'Done'
+                : 'Edit'
+              : ''}
           </Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
+      <ScrollView
+        style={{flex: 1}}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
         {!loading &&
           data &&
           data.customer.addresses.edges.map((item, i) => (
@@ -355,9 +428,26 @@ const AddressListing = ({navigation}) => {
               defaultAddressId={data.customer.defaultAddress.id}
             />
           ))}
+
+        {data && data.customer.defaultAddress == null ? (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <NoAddressSvg />
+            <Text style={{fontWeight: '900', color: Color.black}}>
+              You have no address yet
+            </Text>
+            <Text style={{color: Color.secondary}}>
+              Please add an address for shipping and billing
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
 
-      <View style={[styles.BottomButtonContainer, {paddingHorizontal: Window.fixPadding * 2}]}>
+      <View
+        style={[
+          styles.BottomButtonContainer,
+          {paddingHorizontal: Window.fixPadding * 2},
+        ]}>
         <Button
           text="Add New Address"
           theme="tertiary"
@@ -487,18 +577,45 @@ const AddressForm = ({
           alignItems: 'center',
         }}>
         <View style={{width: '48%'}}>
-          <TextField2 label="First Name" onChanged={setFirstName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={firstName} />
+          <TextField2
+            label="First Name"
+            onChanged={setFirstName}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={firstName}
+            disabled
+          />
         </View>
         <View style={{width: '48%'}}>
-          <TextField2 label="Last Name" onChanged={setLastName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={lastName} />
+          <TextField2
+            label="Last Name"
+            onChanged={setLastName}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={lastName}
+            disabled
+          />
         </View>
       </View>
 
-      <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} />
+      <TextField2
+        label="Phone"
+        onChanged={setPhone}
+        customStyle={{marginBottom: Window.fixPadding * 1.5}}
+        value={phone}
+      />
 
-      <TextField2 label="Address1" onChanged={setAddress1} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={address1} />
+      <TextField2
+        label="Address1"
+        onChanged={setAddress1}
+        customStyle={{marginBottom: Window.fixPadding * 1.5}}
+        value={address1}
+      />
 
-      <TextField2 label="Address2" onChanged={setAddress2} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={address2} />
+      <TextField2
+        label="Address2"
+        onChanged={setAddress2}
+        customStyle={{marginBottom: Window.fixPadding * 1.5}}
+        value={address2}
+      />
       <View
         style={{
           width: '100%',
@@ -507,11 +624,21 @@ const AddressForm = ({
           alignItems: 'center',
         }}>
         <View style={{width: '48%'}}>
-          <TextField2 label="country" onChanged={setcountry} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={country} />
+          <TextField2
+            label="Country"
+            onChanged={setcountry}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={country}
+          />
         </View>
 
         <View style={{width: '48%'}}>
-          <TextField2 label="Zip" onChanged={setZip} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={zip} />
+          <TextField2
+            label="Zip"
+            onChanged={setZip}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={zip}
+          />
         </View>
       </View>
       <View
@@ -522,10 +649,20 @@ const AddressForm = ({
           alignItems: 'center',
         }}>
         <View style={{width: '48%'}}>
-          <TextField2 label="Province" onChanged={setProvince} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={province} />
+          <TextField2
+            label="Province"
+            onChanged={setProvince}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={province}
+          />
         </View>
         <View style={{width: '48%'}}>
-          <TextField2 label="City" onChanged={setCity} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={city} />
+          <TextField2
+            label="City"
+            onChanged={setCity}
+            customStyle={{marginBottom: Window.fixPadding * 1.5}}
+            value={city}
+          />
         </View>
       </View>
       <View style={{paddingTop: 10}}>
