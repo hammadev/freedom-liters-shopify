@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar, Text, View} from 'react-native';
+import {Platform, StatusBar, Text, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage from 'react-native-flash-message';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -10,7 +10,6 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import {rootReducer} from './src/redux';
 import {ApolloProvider} from '@apollo/client';
 import client from './src/graphql/ApolloClient';
-import StatusAppBar from './src/components/StatusAppBar';
 import {Color, Font} from './src/globalStyle/Theme';
 
 const App = () => {
@@ -19,7 +18,11 @@ const App = () => {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <SafeAreaProvider>
-          <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
+          <StatusBar
+            backgroundColor={Color.tertiary}
+            translucent
+            barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+          />
           <GestureHandlerRootView style={{flex: 1}}>
             <FlashMessage
               position="top"

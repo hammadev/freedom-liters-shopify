@@ -6,6 +6,7 @@ import AppBar from '../../../components/AppBar';
 import {useSelector} from 'react-redux';
 import NotLogin from '../../../components/NotLogin';
 import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
+import Header from '../../../components/Header';
 
 const MyOrder = () => {
   const {auth} = useSelector(state => ({...state}));
@@ -14,18 +15,7 @@ const MyOrder = () => {
   }
   return (
     <SafeAreaView style={{...GlobalStyle.Container, paddingHorizontal: 0}}>
-      <View style={{paddingHorizontal: 20}}>
-        <AppBar
-          left={true}
-          theme="light"
-          center={
-            <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-              <Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>My Order</Text>
-            </View>
-          }
-          title="My Orders"
-        />
-      </View>
+      <Header label="My Order" hideBackButton />
 
       <View
         style={{

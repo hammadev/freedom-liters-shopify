@@ -1,9 +1,25 @@
 import React, {useState} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image, FlatList, ScrollView, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ScrollView,
+  StatusBar,
+} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AddressSvg, ChevronSvg, GiftSvg, LogoutSvg, PaymentMethodSvg, ProfileSvg} from '../../../assets/svgs/ProfileSvgs';
+import {
+  AddressSvg,
+  ChevronSvg,
+  GiftSvg,
+  LogoutSvg,
+  PaymentMethodSvg,
+  ProfileSvg,
+} from '../../../assets/svgs/ProfileSvgs';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import Logout from '../../../components/Logout';
@@ -16,7 +32,13 @@ const ProfilePages = ({item, popupState}) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => (item.navlink == 'logoutFunc' ? popupState(true) : item.navlink ? navigation.navigate(item.navlink) : console.log('no link'))}
+        onPress={() =>
+          item.navlink == 'logoutFunc'
+            ? popupState(true)
+            : item.navlink
+            ? navigation.navigate(item.navlink)
+            : console.log('no link')
+        }
         style={{
           justifyContent: 'space-between',
           paddingBottom: 20,
@@ -60,16 +82,18 @@ const ProfilePages = ({item, popupState}) => {
 };
 
 const Profile = ({navigation}) => {
-  
+  const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
   const {auth} = useSelector(state => ({...state}));
   if (!auth) {
     return <NotLogin />;
   }
-  const [logoutAlertPopup, setLogoutAlertPopup] = useState(false);
+
   return (
     <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'}/>
-      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground
           resizeMode="cover"
           imageStyle={{
@@ -83,11 +107,14 @@ const Profile = ({navigation}) => {
             backgroundColor: Color.tertiary,
             borderBottomRightRadius: 16,
             borderBottomLeftRadius: 16,
-            justifyContent: 'center', 
+            justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{justifyContent: 'center', alignItems: 'center',}}>
-            <Image style={{width: 94, height: 94}} source={require('../../../assets/images/pics/profile.png')} />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Image
+              style={{width: 94, height: 94}}
+              source={require('../../../assets/images/pics/profile.png')}
+            />
             <Text
               style={{
                 ...GlobalStyle.heading,
@@ -104,7 +131,12 @@ const Profile = ({navigation}) => {
           style={{paddingTop: 20}}
           contentContainerStyle={{paddingHorizontal: 20}}
           data={ProfileData}
-          renderItem={({item}) => <ProfilePages popupState={item.navlink == 'logoutFunc' && setLogoutAlertPopup} item={item} />}
+          renderItem={({item}) => (
+            <ProfilePages
+              popupState={item.navlink == 'logoutFunc' && setLogoutAlertPopup}
+              item={item}
+            />
+          )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{width: 15}} />}

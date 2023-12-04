@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import Button from '../../../components/Button';
 import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
 import styles from '../AuthStyle';
@@ -10,10 +16,8 @@ import {CREATE_CUSTOMER_ACCOUNT} from '../../../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
 import {handleCreateAccount} from '../../../apis/auth';
 import Toast from 'react-native-toast-message';
-import StatusAppBar from '../../../components/StatusAppBar';
 import {hasLowerCase, hasNumber, hasUpperCase} from '../../../utils/utils';
 import {showMessage} from 'react-native-flash-message';
-import {StatusBar} from 'react-native';
 import PhoneInputComponent from '../../../components/PhoneInputComponent';
 
 const SignUp = ({navigation}) => {
@@ -27,7 +31,9 @@ const SignUp = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createCustomerAccount, {loading, error, data}] = useMutation(CREATE_CUSTOMER_ACCOUNT);
+  const [createCustomerAccount, {loading, error, data}] = useMutation(
+    CREATE_CUSTOMER_ACCOUNT,
+  );
   const handleSubmit = () => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const passwordformat = /^\w+(?:[ `'?!]\w+)*[`.?!]?$/;
@@ -249,7 +255,9 @@ const SignUp = ({navigation}) => {
             />
           </View>
           <View style={styles.BottonContainer}>
-            <Text style={{...styles.TextStyle, color: Color.white}}>Already have an account ?</Text>
+            <Text style={{...styles.TextStyle, color: Color.white}}>
+              Already have an account ?
+            </Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
               <Text
                 style={{

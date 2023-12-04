@@ -1,6 +1,9 @@
 import {Image, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import Animated, {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {Searchbar} from 'react-native-paper';
 import {useState} from 'react';
 import {Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
@@ -23,11 +26,19 @@ import {Text} from 'react-native';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {RadioButton} from 'react-native-paper';
 import Button from '../../../components/Button';
+import Header from '../../../components/Header';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {CONTAINER_PADDING} from '../../../constants';
 
 const SortOption = ({ApplyBtn, checked, setChecked}) => {
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
         <Text
           style={{
             ...GlobalStyle.textStlye,
@@ -37,9 +48,19 @@ const SortOption = ({ApplyBtn, checked, setChecked}) => {
           }}>
           Newest
         </Text>
-        <RadioButton value="newest" status={checked === 'newest' ? 'checked' : 'unchecked'} onPress={() => setChecked('newest')} />
+        <RadioButton
+          value="newest"
+          status={checked === 'newest' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('newest')}
+        />
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 15,
+        }}>
         <Text
           style={{
             ...GlobalStyle.textStlye,
@@ -49,9 +70,18 @@ const SortOption = ({ApplyBtn, checked, setChecked}) => {
           }}>
           Price: Low To High
         </Text>
-        <RadioButton value="lowtohigh" status={checked === 'lowtohigh' ? 'checked' : 'unchecked'} onPress={() => setChecked('lowtohigh')} />
+        <RadioButton
+          value="lowtohigh"
+          status={checked === 'lowtohigh' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('lowtohigh')}
+        />
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
         <Text
           style={{
             ...GlobalStyle.textStlye,
@@ -61,11 +91,21 @@ const SortOption = ({ApplyBtn, checked, setChecked}) => {
           }}>
           Price: High To Low
         </Text>
-        <RadioButton value="hightolow" status={checked === 'hightolow' ? 'checked' : 'unchecked'} onPress={() => setChecked('hightolow')} />
+        <RadioButton
+          value="hightolow"
+          status={checked === 'hightolow' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('hightolow')}
+        />
       </View>
 
       <View style={{marginTop: 15}}>
-        <Button text="Apply" isIcon={false} theme="tertiary" loading={false} onPressFunc={ApplyBtn} />
+        <Button
+          text="Apply"
+          isIcon={false}
+          theme="tertiary"
+          loading={false}
+          onPressFunc={ApplyBtn}
+        />
       </View>
     </View>
   );
@@ -86,20 +126,39 @@ const ProductListing = route => {
       handle: route.route.params?.handle,
     },
   });
-  const {data: featuredProductData, loader: featuredProductLoader, error: featuredProductError} = useQuery(GET_ALL_FEATURED_PRODUCT);
-  const {data: latestProductData, loader: latestProductLoader, error: latestProductError} = useQuery(GET_ALL_LATEST_PRODUCT);
-  const {data: onSaleProductData, loader: onSaleProductLoader, error: onSaleProductError} = useQuery(GET_ALL_ONSALE_PRODUCT);
-  const {data: AllProductsData, loader: AllProductsLoader, error: AllProductsError} = useQuery(GET_ALL_PRODUCT);
+  const {
+    data: featuredProductData,
+    loader: featuredProductLoader,
+    error: featuredProductError,
+  } = useQuery(GET_ALL_FEATURED_PRODUCT);
+  const {
+    data: latestProductData,
+    loader: latestProductLoader,
+    error: latestProductError,
+  } = useQuery(GET_ALL_LATEST_PRODUCT);
+  const {
+    data: onSaleProductData,
+    loader: onSaleProductLoader,
+    error: onSaleProductError,
+  } = useQuery(GET_ALL_ONSALE_PRODUCT);
+  const {
+    data: AllProductsData,
+    loader: AllProductsLoader,
+    error: AllProductsError,
+  } = useQuery(GET_ALL_PRODUCT);
 
-  const [getProductsOfProductTypeInCollection, {data: sortData, loader: sortLoader, error: sortError}] = useLazyQuery(
-    FILTER_CATEGORY_PRODUCTS,
-    {
-      onCompleted: sortData => {
-        console.log('sortData.collection.products.edges',sortData.collection.products.edges);
-        setProductData(sortData.collection.products.edges);
-      },
-    }
-  );
+  const [
+    getProductsOfProductTypeInCollection,
+    {data: sortData, loader: sortLoader, error: sortError},
+  ] = useLazyQuery(FILTER_CATEGORY_PRODUCTS, {
+    onCompleted: sortData => {
+      console.log(
+        'sortData.collection.products.edges',
+        sortData.collection.products.edges,
+      );
+      setProductData(sortData.collection.products.edges);
+    },
+  });
 
   const {wishlist} = useSelector(state => ({
     ...state,
@@ -113,7 +172,11 @@ const ProductListing = route => {
         setloaderSpinner(false);
       }
     } else if (route.route.params?.value == 1) {
-      if (featuredProductData && !featuredProductLoader && !featuredProductError) {
+      if (
+        featuredProductData &&
+        !featuredProductLoader &&
+        !featuredProductError
+      ) {
         setProductData(featuredProductData.products.edges);
         setProductfilterData(featuredProductData.products.edges);
         setloaderSpinner(false);
@@ -137,6 +200,7 @@ const ProductListing = route => {
         setloaderSpinner(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     data,
     loader,
@@ -165,7 +229,9 @@ const ProductListing = route => {
   const searchFilterFunction = text => {
     if (text) {
       const newData = ProductData.filter(item => {
-        const itemData = item.node.title ? item.node.title.toUpperCase() : ''.toUpperCase();
+        const itemData = item.node.title
+          ? item.node.title.toUpperCase()
+          : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -180,32 +246,30 @@ const ProductListing = route => {
 
   const ApplyBtn = () => {
     setloaderSpinner(true);
-    let variables;
-    // console.log({handle: route.route.params?.handle, reverse: true, sortkey: 'CREATED_AT'});
-    // if (checked === 'newest') {
-    //   getProductsOfProductTypeInCollection({
-    //     variables: {handle: route.route.params?.handle, reverse: true, sortkey: 'CREATED_AT'},
-    //   });
-    //   console.log('Newest ', variables);
-    // }
     if (checked === 'lowtohigh') {
       getProductsOfProductTypeInCollection({
-        variables: {handle: route.route.params?.handle, reverse: false, sortkey: 'PRICE'},
+        variables: {
+          handle: route.route.params?.handle,
+          reverse: false,
+          sortkey: 'PRICE',
+        },
       });
-      console.log('low To high', variables);
     }
     if (checked === 'hightolow') {
       getProductsOfProductTypeInCollection({
-        variables: {handle: route.route.params?.handle, reverse: true, sortkey: 'PRICE'},
+        variables: {
+          handle: route.route.params?.handle,
+          reverse: true,
+          sortkey: 'PRICE',
+        },
       });
-      console.log('High To Low', variables);
     }
 
-    console.log('checked',checked)
-    console.log('sortData',sortData)
-
     if (sortData && !sortLoader && !sortError) {
-      console.log('sortData.collection.products.edges',sortData.collection.products.edges)
+      console.log(
+        'sortData.collection.products.edges',
+        sortData.collection.products.edges,
+      );
       setProductData(sortData.collection.products.edges);
       setProductfilterData(sortData.collection.products.edges);
     }
@@ -214,58 +278,67 @@ const ProductListing = route => {
   };
 
   return (
-    <Animated.View style={[reanimatedHeightStyle, {overflow: 'hidden', padding: 20, flex: 1}]}>
-      <AppBar
-        theme="light"
-        center={
-          <Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>
-            {route.route.params ? route.route.params.title : 'Products'}
-          </Text>
-        }
+    <SafeAreaView style={[{flex: 1}]}>
+      <Header
+        label={route.route.params ? route.route.params.title : 'Products'}
       />
-
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={text => {
-            searchFilterFunction(text);
-          }}
-          value={searchValue}
-          style={[
-            {
-              flex: 1,
-              marginTop: 5,
-              backgroundColor: 'transparent',
-              borderWidth: 1,
-              borderRadius: 100,
-              borderColor: 'black',
-            },
-          ]}
-          mode="view"
-          rippleColor={Color.primary}
-          showDivider={false}
-          inputStyle={{minHeight: 48}}
-        />
-        {!route.route.params.value > 0 ? (
-          <TouchableOpacity
-            style={{
-              paddingHorizontal: 15,
-              borderRadius: 15,
-              marginLeft: 8,
-              backgroundColor: Color.tertiary,
-              justifyContent: 'center',
-              alignItems: 'center',
+      <View style={{paddingHorizontal: CONTAINER_PADDING, flex: 1}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 15,
+          }}>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={text => {
+              searchFilterFunction(text);
             }}
-            onPress={() => setShowFilterIcon(!ShowFilterIcon)}>
-            <View>
-              <Image style={{width: 20, height: 20}} source={require('../../../assets/images/pics/filter.png')} />
-            </View>
-          </TouchableOpacity>
-        ) : null}
-      </View>
-      {ShowFilterIcon && (
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 15}}>
-          {/* <TouchableOpacity
+            value={searchValue}
+            style={[
+              {
+                flex: 1,
+                marginTop: 5,
+                backgroundColor: 'transparent',
+                borderWidth: 1,
+                borderRadius: 100,
+                borderColor: 'black',
+              },
+            ]}
+            mode="view"
+            rippleColor={Color.primary}
+            showDivider={false}
+            inputStyle={{minHeight: 48}}
+          />
+          {!route.route.params.value > 0 ? (
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 15,
+                borderRadius: 15,
+                marginLeft: 8,
+                backgroundColor: Color.tertiary,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => setShowFilterIcon(!ShowFilterIcon)}>
+              <View>
+                <Image
+                  style={{width: 20, height: 20}}
+                  source={require('../../../assets/images/pics/filter.png')}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : null}
+        </View>
+
+        {ShowFilterIcon && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              marginTop: 15,
+            }}>
+            {/* <TouchableOpacity
             style={{
               flexDirection: 'row',
               borderWidth: 1,
@@ -280,48 +353,65 @@ const ProductListing = route => {
             />
             <Text style={{color: Color.black}}>Filters</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              borderWidth: 1,
-              borderColor: Color.gryLight,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              borderRadius: 20,
-            }}
-            onPress={() => setSortPopup(true)}>
-            <Image
-              style={{width: 20, height: 20, marginRight: 5, tintColor: Color.black}}
-              source={require('../../../assets/images/pics/arrow-down.png')}
-            />
-            <Text style={{color: Color.black}}>Sort</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <View style={{flex: 1, marginTop: 15}}>
-        {!loaderSpinner ? (
-          <FlatList
-            contentContainerStyle={{marginVertical: Window.fixPadding}}
-            data={ProductData}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            renderItem={(item, index) => (
-              <ProductBox wishlist={wishlist} customStyle={{width: Window.width / 2.3}} item={item.item} index={index} />
-            )}
-          />
-        ) : (
-          <ActivityLoader />
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                borderWidth: 1,
+                borderColor: Color.gryLight,
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                borderRadius: 20,
+              }}
+              onPress={() => setSortPopup(true)}>
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginRight: 5,
+                  tintColor: Color.black,
+                }}
+                source={require('../../../assets/images/pics/arrow-down.png')}
+              />
+              <Text style={{color: Color.black}}>Sort</Text>
+            </TouchableOpacity>
+          </View>
         )}
+
+        <View style={{flex: 1, marginTop: 15}}>
+          {!loaderSpinner ? (
+            <FlatList
+              contentContainerStyle={{marginVertical: Window.fixPadding}}
+              data={ProductData}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              renderItem={(item, index) => (
+                <ProductBox
+                  wishlist={wishlist}
+                  customStyle={{width: Window.width / 2.3}}
+                  item={item.item}
+                  index={index}
+                />
+              )}
+            />
+          ) : (
+            <ActivityLoader />
+          )}
+        </View>
       </View>
       <BottomPopupHOC
         title="Sort "
         color={Color.primary}
-        PopupBody={<SortOption ApplyBtn={ApplyBtn} checked={checked} setChecked={setChecked} />}
+        PopupBody={
+          <SortOption
+            ApplyBtn={ApplyBtn}
+            checked={checked}
+            setChecked={setChecked}
+          />
+        }
         visible={SortPopup}
         setVisible={setSortPopup}
       />
-    </Animated.View>
+    </SafeAreaView>
   );
 };
 
