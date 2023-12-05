@@ -336,7 +336,7 @@ const Cart = () => {
         </>
       ) : (
         <View style={styles.emptyContainer}>
-          <FastImage
+          <Image
             style={styles.cartEmptyImg}
             source={require('../../../assets/images/images/ShoppingCart.png')}
           />
@@ -368,8 +368,7 @@ const Cart = () => {
                 </View>
               ) : (
                 <Text style={[styles.TextStyle, {color: 'green'}]}>
-                  {' '}
-                  Applied Coupon{' '}
+                  Applied Coupon
                 </Text>
               )}
             </View>

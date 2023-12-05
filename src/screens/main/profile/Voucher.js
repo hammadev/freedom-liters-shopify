@@ -30,18 +30,16 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   text: {
     fontSize: 18,
     fontFamily: FONTS.heading,
     textAlign: 'center',
-    marginTop: Window.fixPadding * 2,
   },
   subTitle: {
     fontSize: 14,
     fontFamily: FONTS.medium,
     textAlign: 'center',
-    marginVertical: Window.fixPadding,
   },
 });

@@ -30,137 +30,8 @@ import {handleCreateAddress} from '../../../apis/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
 import Header from '../../../components/Header';
-import {COLORS} from '../../../constants';
-
-const DeliverTo = ({
-  item,
-  setRadioState,
-  radioState,
-  navigation,
-  editIcon,
-  showModal,
-  defaultAddressId,
-}) => {
-  const RadioClick = async itemID => {
-    setRadioState(itemID);
-    await AsyncStorage.setItem('address', itemID);
-    console.log(itemID);
-  };
-
-  return (
-    <View
-      onPress={() => RadioClick(item.id)}
-      style={{
-        backgroundColor: Color.light,
-
-        marginTop: 20,
-        borderRadius: 24,
-        shadowColor: 'rgba(0,0,0,0.4)',
-        shadowOffset: {
-          width: 0,
-          height: 5,
-        },
-        shadowOpacity: 0.36,
-        shadowRadius: 6.68,
-        elevation: 11,
-        overflow: 'hidden',
-      }}>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          alignItems: 'center',
-          margin: 20,
-        }}>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', width: '65%'}}>
-          <View
-            style={{
-              backgroundColor: 'rgba(239, 127, 1, 0.08)',
-              borderRadius: 50,
-              marginRight: 10,
-              width: 60,
-              height: 60,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <View
-              style={{
-                backgroundColor: Color.tertiary,
-                width: 36,
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 100,
-              }}>
-              <Icon
-                iconFamily={'Ionicons'}
-                name="ios-location-sharp"
-                size={16}
-                color={Color.light}
-              />
-            </View>
-          </View>
-          <View style={{}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{...styles.Heading}}>
-                {item.firstName + ' ' + item.lastName}
-              </Text>
-
-              {radioState == item.id && (
-                <View
-                  style={{
-                    backgroundColor: Color.grey,
-                    marginLeft: 15,
-                    alignItems: 'center',
-                    borderRadius: 10,
-                    width: 70,
-                  }}>
-                  <Text
-                    style={{
-                      color: Color.primary,
-                      fontSize: 10,
-                      paddingVertical: 5,
-                      fontFamily: Font.Urbanist_SemiBold,
-                      lineHeight: 12,
-                    }}>
-                    Default
-                  </Text>
-                </View>
-              )}
-            </View>
-            <Text style={{...GlobalStyle.textStlye, marginVertical: 5}}>
-              {item.phone}
-            </Text>
-
-            <Text style={{...styles.TextStyle}} numberOfLines={2}>
-              {item.address1 + ', ' + item.address2 + ', '}
-              {item.zip + ', ' + item.city + ', ' + item.province}
-            </Text>
-          </View>
-        </View>
-        {editIcon ? (
-          <TouchableOpacity onPress={() => showModal(item)}>
-            <Icon
-              iconFamily={'MaterialCommunityIcons'}
-              name="pencil-minus"
-              size={20}
-              color={Color.tertiary}
-            />
-          </TouchableOpacity>
-        ) : (
-          <RadioButton
-            value="first"
-            uncheckedColor={Color.primary}
-            color={Color.primary}
-            status={radioState == item.id ? 'checked' : 'unchecked'}
-            onPress={() => RadioClick(item.id)}
-          />
-        )}
-      </View>
-    </View>
-  );
-};
+import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import AddressList from '../../../components/AddressList';
 
 const AddressListing = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -218,7 +89,6 @@ const AddressListing = ({navigation}) => {
 
   useEffect(() => {
     if (infoData && infoData.customer) {
-      console.log(infoData.customer.phone);
       setFirstName(infoData.customer.firstName);
       setLastName(infoData.customer.lastName);
       setPhone(infoData.customer.phone);
@@ -231,14 +101,10 @@ const AddressListing = ({navigation}) => {
 
   const Get_Defult_Address = async () => {
     const DefultAddress = await AsyncStorage.getItem('address');
-    console.log(DefultAddress);
     setRadioCheck(DefultAddress);
   };
 
   const resetState = () => {
-    // setFirstName('');
-    // setLastName('');
-    // setPhone('');
     setAddress1('');
     setAddress2('');
     setcountry('');
@@ -269,8 +135,6 @@ const AddressListing = ({navigation}) => {
   };
 
   const handleSubmit = isUpdate => {
-    // console.log(isUpdate);
-
     if (firstName === '') {
       showMessage({
         message: "First Name can't be blank",
@@ -345,7 +209,6 @@ const AddressListing = ({navigation}) => {
       );
     else {
       variables.addressId = activeAddressId;
-      // console.log(variables);
       handleCreateAddress(
         updateCustomerAddress,
         variables,
@@ -397,37 +260,28 @@ const AddressListing = ({navigation}) => {
         {!loading &&
           data &&
           data.customer.addresses.edges.map((item, i) => (
-            <DeliverTo
-              item={item.node}
+            <AddressList
               key={i}
+              item={item.node}
               radioState={radioCheck}
               setRadioState={setRadioCheck}
-              navigation={navigation}
               editIcon={editIcon}
               showModal={showModal}
-              defaultAddressId={data.customer.defaultAddress.id}
             />
           ))}
 
         {data && data.customer.defaultAddress == null ? (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.noAddressContainer}>
             <NoAddressSvg />
-            <Text style={{fontWeight: '900', color: Color.black}}>
-              You have no address yet
-            </Text>
-            <Text style={{color: Color.secondary}}>
+            <Text style={styles.text}>You have no address yet</Text>
+            <Text style={styles.subTitle}>
               Please add an address for shipping and billing
             </Text>
           </View>
         ) : null}
       </ScrollView>
 
-      <View
-        style={[
-          styles.BottomButtonContainer,
-          {paddingHorizontal: Window.fixPadding * 2},
-        ]}>
+      <View style={styles.bottomButtonContainer}>
         <Button
           text="Add New Address"
           type="primary"
@@ -512,6 +366,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  noAddressContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomButtonContainer: {
+    backgroundColor: COLORS.white,
+    paddingVertical: 15,
+    shadowColor: 'rgba(0,0,0,0.25)',
+    shadowOffset: {
+      width: 0,
+      height: -10,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 5.84,
+    elevation: 12,
+    paddingHorizontal: CONTAINER_PADDING,
+  },
+  text: {
+    fontSize: 18,
+    fontFamily: FONTS.heading,
+    textAlign: 'center',
+  },
+  subTitle: {
+    fontSize: 14,
+    fontFamily: FONTS.medium,
+    textAlign: 'center',
   },
 
   ////////////////

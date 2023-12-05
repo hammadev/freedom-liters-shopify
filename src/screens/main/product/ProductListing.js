@@ -153,7 +153,6 @@ const ProductListing = route => {
       setSearcValue(text);
     } else {
       setProductData(ProductfilterData);
-
       setSearcValue(text);
     }
   };
