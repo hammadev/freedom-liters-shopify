@@ -6,23 +6,43 @@ import {SkypeIndicator} from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {useQuery} from '@apollo/client';
-import {GET_FEATURED_PRODUCT, GET_LATEST_PRODUCT, GET_ONSALE_PRODUCT} from '../graphql/queries/Product';
+import {
+  GET_FEATURED_PRODUCT,
+  GET_LATEST_PRODUCT,
+  GET_ONSALE_PRODUCT,
+} from '../graphql/queries/Product';
 import {GET_ALL_CATEGORIES, GET_CATEGORIES} from '../graphql/queries/Category';
 
 const Splash = ({navigation}) => {
   const dispatch = useDispatch();
 
   // (GET_FEATURED_PRODUCT)
-  const {loading: featuredProductLoading, error: featuredProductError, data: featuredProductData} = useQuery(GET_FEATURED_PRODUCT);
+  const {
+    loading: featuredProductLoading,
+    error: featuredProductError,
+    data: featuredProductData,
+  } = useQuery(GET_FEATURED_PRODUCT);
 
   // (GET_LATEST_PRODUCT)
-  const {loading: latestProductLoading, error: latestProductError, data: latestProductData} = useQuery(GET_LATEST_PRODUCT);
+  const {
+    loading: latestProductLoading,
+    error: latestProductError,
+    data: latestProductData,
+  } = useQuery(GET_LATEST_PRODUCT);
 
   // (GET_ONSALE_PRODUCT)
-  const {loading: onsaleProductLoading, error: onsaleProductError, data: onsaleProductData} = useQuery(GET_ONSALE_PRODUCT);
+  const {
+    loading: onsaleProductLoading,
+    error: onsaleProductError,
+    data: onsaleProductData,
+  } = useQuery(GET_ONSALE_PRODUCT);
 
   // (GET_ALL_CATEGORIES)
-  const {loading: allcategoriesLoading, error: allcategoriesError, data: allcategoriesData} = useQuery(GET_ALL_CATEGORIES);
+  const {
+    loading: allcategoriesLoading,
+    error: allcategoriesError,
+    data: allcategoriesData,
+  } = useQuery(GET_ALL_CATEGORIES);
 
   useEffect(() => {
     if (!allcategoriesLoading && !allcategoriesError && allcategoriesData) {
@@ -33,7 +53,11 @@ const Splash = ({navigation}) => {
       });
     }
 
-    if (!featuredProductLoading && !featuredProductError && featuredProductData) {
+    if (
+      !featuredProductLoading &&
+      !featuredProductError &&
+      featuredProductData
+    ) {
       // Dispatch Featrued product data in Redux
       dispatch({
         type: 'FEATURED_PRODUCTS',
@@ -57,7 +81,11 @@ const Splash = ({navigation}) => {
     }
 
     // Check if both sets of data have been successfully fetched and stored in Redux
-    if (!latestProductLoading && !onsaleProductLoading && !featuredProductLoading) {
+    if (
+      !latestProductLoading &&
+      !onsaleProductLoading &&
+      !featuredProductLoading
+    ) {
       checkUser();
     }
   }, [
@@ -104,7 +132,9 @@ const Splash = ({navigation}) => {
   return (
     <>
       <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
-      <ImageBackground style={{flex: 1}} source={require('../assets/images/pics/splash_bg.png')}>
+      <ImageBackground
+        style={{flex: 1}}
+        source={require('../assets/images/pics/splash_bg.png')}>
         <View
           style={{
             flex: 0.9,
@@ -119,7 +149,11 @@ const Splash = ({navigation}) => {
               left: 0,
               right: 0,
             }}>
-            {featuredProductLoading && latestProductLoading && onsaleProductLoading && <SkypeIndicator size={50} color={Color.white} />}
+            {featuredProductLoading &&
+              latestProductLoading &&
+              onsaleProductLoading && (
+                <SkypeIndicator size={50} color={Color.white} />
+              )}
           </View>
         </View>
       </ImageBackground>

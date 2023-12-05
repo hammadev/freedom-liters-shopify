@@ -2,7 +2,11 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View, FlatList, Image, Text} from 'react-native';
 import {Font, Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
 import deviceInfoModule from 'react-native-device-info';
-import {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StatusBar} from 'react-native';
@@ -179,24 +183,24 @@ const Slide = ({item}) => {
     </View>
   );
 };
-const Indicators = ({currentSlideIndex, goToNextSlide, navigation, goLastSlide}) => {
+const Indicators = ({
+  currentSlideIndex,
+  goToNextSlide,
+  navigation,
+  goLastSlide,
+}) => {
   return (
     <View
       style={{
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         backgroundColor: '#021851',
-        paddingBottom: 20,
+        paddingBottom: 25,
       }}>
       <View style={{paddingBottom: 20}}>
         <Button
           text={currentSlideIndex === 2 ? 'Continue' : 'Next'}
-          icon="mail"
-          isIcon={false}
-          theme="white"
-          navLink="SignIn"
-          borderWidth={1}
-          borderColor={Color.tertiary}
+          type="secondary"
           onPressFunc={
             currentSlideIndex === 2
               ? async () => {
@@ -210,11 +214,7 @@ const Indicators = ({currentSlideIndex, goToNextSlide, navigation, goLastSlide})
 
       <Button
         text={currentSlideIndex == 2 ? 'Skip' : 'Skip'}
-        icon="mail"
-        isIcon={false}
-        theme="tertiary"
-        navLink="SignIn"
-        type="primary"
+        type="alternate"
         onPressFunc={
           currentSlideIndex === 2
             ? async () => {
@@ -232,19 +232,22 @@ const slides = [
   {
     id: 1,
     title: 'Discover a better way to shop online',
-    subtitle: 'Explore our wide selection of products and brands, and save time with smart search tools.',
+    subtitle:
+      'Explore our wide selection of products and brands, and save time with smart search tools.',
     image: require('../../../assets/images/products/onboarding1.png'),
   },
   {
     id: 2,
     title: 'Your One-Stop Shop for Everything',
-    subtitle: 'Browse our curated collections and get personalized recommendations based on your preferences.',
+    subtitle:
+      'Browse our curated collections and get personalized recommendations based on your preferences.',
     image: require('../../../assets/images/products/onboarding2.png'),
   },
   {
     id: 3,
     title: 'fast -  secure -  and easy!',
-    subtitle: 'Enjoy interactive product demos, 360-degree views, and user-generated reviews.',
+    subtitle:
+      'Enjoy interactive product demos, 360-degree views, and user-generated reviews.',
     image: require('../../../assets/images/products/onboarding3.png'),
   },
 ];

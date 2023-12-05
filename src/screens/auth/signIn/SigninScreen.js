@@ -1,9 +1,16 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Keyboard, ImageBackground, SafeAreaView, useColorScheme} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  ImageBackground,
+  StyleSheet,
+} from 'react-native';
 import Button from '../../../components/Button';
 import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
-import styles from '../AuthStyle';
-import {useDispatch, useSelector} from 'react-redux';
+// import styles from '../AuthStyle';
+import {useDispatch} from 'react-redux';
 import TextField2 from '../../../components/TextFeild2';
 import {handleCreateAccessToken} from '../../../apis/auth';
 import {CREATE_CUSTOMER_ACCESS_TOKEN} from '../../../graphql/mutations/Auth';
@@ -11,16 +18,19 @@ import {useMutation} from '@apollo/client';
 import Toast from 'react-native-toast-message';
 import {LogoSvg} from '../../../assets/svgs/Logo';
 import {ScrollView} from 'react-native';
-import {StatusBar} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-
-  const [createCustomerAccessToken, {loading, error, data}] = useMutation(CREATE_CUSTOMER_ACCESS_TOKEN);
+  const insets = useSafeAreaInsets();
+  const [createCustomerAccessToken, {loading, error, data}] = useMutation(
+    CREATE_CUSTOMER_ACCESS_TOKEN,
+  );
 
   const handleSubmit = () => {
     Keyboard.dismiss();
@@ -53,89 +63,102 @@ const SignIn = ({navigation}) => {
       email,
       password,
     };
-    handleCreateAccessToken(createCustomerAccessToken, input, dispatch, navigation);
+    handleCreateAccessToken(
+      createCustomerAccessToken,
+      input,
+      dispatch,
+      navigation,
+    );
   };
-  const scheme = useColorScheme();
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
+    <View style={styles.container}>
       <ImageBackground
         style={{
-          width: '100%',
-          height: '100%',
-          paddingVertical: Window.fixPadding,
-          paddingHorizontal: Window.fixPadding * 1.2,
-          backgroundColor: 'none',
+          flex: 1,
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <ScrollView keyboardShouldPersistTaps="handled">
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={{
+            flex: 1,
+            marginTop: insets.top + 15,
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: CONTAINER_PADDING,
+          }}>
           <Text
             onPress={() => navigation.navigate('BottomTabScreen')}
-            style={{
-              alignSelf: 'flex-end',
-              color: scheme == 'dark' ? '#fff' : '#fff',
-              fontSize: 15,
-              paddingVertical: Window.fixPadding * 1.5,
-              marginTop: 20,
-            }}>
+            style={styles.skip}>
             Skip
           </Text>
-          <View style={{alignItems: 'center', marginTop: 20}}>
+          <View style={styles.logoContainer}>
             <LogoSvg />
           </View>
-          <Text
-            style={{
-              ...GlobalStyle.heading,
-              color: Color.white,
-              marginTop: Window.fixPadding * 3,
-              marginBottom: Window.fixPadding * 3,
-            }}>
-            Sign In
-          </Text>
+          <Text style={styles.screenHeading}>Sign In</Text>
 
-          <View>
-            <TextField2
-              icon={'email-outline'}
-              label="Email"
-              isDark={true}
-              onChanged={setEmail}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
+          <TextField2
+            icon={'email-outline'}
+            label="Email"
+            isDark={true}
+            onChanged={setEmail}
+          />
+          <View style={{marginVertical: 5}} />
+          <TextField2
+            icon={'lock-outline'}
+            label="Password"
+            isDark={true}
+            onChanged={setPassword}
+            passwordFeild={true}
+            setHidePass={setHidePass}
+            hidePass={hidePass}
+          />
+          <View style={{marginVertical: 25}}>
+            <Button
+              text="Login"
+              type="secondary"
+              loading={loading}
+              onPressFunc={handleSubmit}
             />
-            <TextField2
-              icon={'lock-outline'}
-              label="Password"
-              isDark={true}
-              onChanged={setPassword}
-              passwordFeild={true}
-              setHidePass={setHidePass}
-              hidePass={hidePass}
-              customStyle={{marginBottom: Window.fixPadding}}
-            />
-          </View>
-          <View style={{marginTop: 50, marginBottom: Window.fixPadding * 2}}>
-            <Button text="Login" icon="mail" isIcon={false} theme="white" navLink="SignUp" loading={loading} onPressFunc={handleSubmit} />
-          </View>
-          <View style={{justifyContent: 'flex-end', flex: 1}}>
-            <View style={{...styles.BottonContainer}}>
-              <Text style={{...styles.TextStyle, color: Color.white}}>Don't have an account yet?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                <Text
-                  style={{
-                    ...styles.SecondTextStyle,
-                    color: '#FBBC05',
-                    paddingLeft: 5,
-                  }}>
-                  Register
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
-
+        <Text style={[styles.bottomText, {marginBottom: insets.bottom + 15}]}>
+          Don't have an account yet?{' '}
+          <Text
+            onPress={() => navigation.navigate('SignUp')}
+            style={{
+              color: '#FBBC05',
+              fontFamily: FONTS.bold,
+            }}>
+            Register
+          </Text>
+        </Text>
         <Toast />
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default SignIn;
+
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: COLORS.primary},
+  logoContainer: {alignItems: 'center', marginTop: 25},
+  skip: {
+    alignSelf: 'flex-end',
+    color: COLORS.white,
+    fontSize: 15,
+  },
+  bottomText: {
+    color: COLORS.white,
+    fontSize: 12,
+    fontFamily: FONTS.medium,
+    alignSelf: 'center',
+  },
+  screenHeading: {
+    fontSize: 16,
+    fontFamily: FONTS.heading,
+    color: COLORS.white,
+    marginVertical: 25,
+  },
+});

@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import Icon from '../../../../core/Icon';
 import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
@@ -12,13 +19,15 @@ import {
 import {handleCreateCart} from '../../../../apis/cart';
 import {useMutation} from '@apollo/client';
 import {useState} from 'react';
+import {COLORS, FONTS, RADIUS, WIDTH} from '../../../../constants';
+import {TouchableRipple} from 'react-native-paper';
 
-const ProductBox = ({item, customStyle, wishlist, relatedProducts = false}) => {
+const ProductBox = ({item, relatedProducts = false}) => {
   const [showFavIcon, setShowFavIcon] = useState(false);
   const navigation = useNavigation();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-
+  let isVariation = item.node.variants.edges[0].node.selectedOptions.length;
   useEffect(() => {
     getWishlistData();
   }, []);
@@ -63,208 +72,160 @@ const ProductBox = ({item, customStyle, wishlist, relatedProducts = false}) => {
     }
     handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
   };
-
+  const wishlistHandler = async () => {
+    const existingWishlist = await AsyncStorage.getItem('WishList_Items');
+    if (existingWishlist !== null) {
+      const ParseData = JSON.parse(existingWishlist);
+      if (ParseData.addedItems.some(e => e.node.id === item.node.id)) {
+        const filterData = ParseData.addedItems.filter(
+          (x, i) => x.node.id !== item.node.id,
+        );
+        await AsyncStorage.setItem(
+          'WishList_Items',
+          JSON.stringify({addedItems: filterData}),
+        );
+        setShowFavIcon(false);
+      } else {
+        const AddItemsNew = {
+          addedItems: [...ParseData.addedItems, item],
+        };
+        await AsyncStorage.setItem(
+          'WishList_Items',
+          JSON.stringify(AddItemsNew),
+        );
+        setShowFavIcon(true);
+      }
+    } else {
+      const NewObject = {addedItems: [item]};
+      await AsyncStorage.setItem('WishList_Items', JSON.stringify(NewObject));
+      setShowFavIcon(true);
+    }
+  };
   return (
-    <TouchableOpacity
-      style={{
-        ...customStyle,
-        ...style.container,
-        marginRight: 5,
-      }}
-      onPress={() =>
-        navigation.navigate('ProductDetail', {
-          product: item,
-          relatedProducts,
-        })
-      }>
-      <TouchableOpacity
-        style={style.heartIconContainer}
-        onPress={async () => {
-          const existingWishlist = await AsyncStorage.getItem('WishList_Items');
-          if (existingWishlist !== null) {
-            const ParseData = JSON.parse(existingWishlist);
-            if (ParseData.addedItems.some(e => e.node.id === item.node.id)) {
-              const filterData = ParseData.addedItems.filter(
-                (x, i) => x.node.id !== item.node.id,
-              );
-              await AsyncStorage.setItem(
-                'WishList_Items',
-                JSON.stringify({addedItems: filterData}),
-              );
-              setShowFavIcon(false);
-            } else {
-              const AddItemsNew = {addedItems: [...ParseData.addedItems, item]};
-              await AsyncStorage.setItem(
-                'WishList_Items',
-                JSON.stringify(AddItemsNew),
-              );
-              setShowFavIcon(true);
+    <View style={styles.container}>
+      <TouchableRipple
+        style={styles.ripple}
+        onPress={() =>
+          navigation.navigate('ProductDetail', {
+            product: item,
+            relatedProducts,
+          })
+        }>
+        <>
+          <ImageBackground
+            imageStyle={{borderRadius: RADIUS, overflow: 'hidden'}}
+            source={
+              item.node
+                ? {uri: item.node.featuredImage?.url}
+                : require('../../../../assets/images/products/noimage.png')
             }
-          } else {
-            const NewObject = {addedItems: [item]};
-            await AsyncStorage.setItem(
-              'WishList_Items',
-              JSON.stringify(NewObject),
-            );
-            setShowFavIcon(true);
-          }
-        }}>
-        <Icon
-          iconFamily={'AntDesign'}
-          style={{fontSize: 14}}
-          color={showFavIcon ? '#F91212' : Color.secondary}
-          name={showFavIcon ? 'heart' : 'hearto'}
-        />
-      </TouchableOpacity>
-      {item.node.variants.edges[0].node.selectedOptions.length > 1 ? (
-        <TouchableOpacity
-          style={style.addToCartIconContainer}
-          onPress={() =>
-            navigation.navigate('ProductDetail', {
-              product: item,
-            })
-          }>
-          <Icon
-            iconFamily={'AntDesign'}
-            style={{fontSize: 18}}
-            color={Color.white}
-            name={'arrowright'}
-          />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={style.addToCartIconContainer}
-          onPress={() => Add_To_Card(item.node.variants.edges[0].node)}>
-          <Icon
-            iconFamily={'AntDesign'}
-            style={{fontSize: 18}}
-            color={Color.white}
-            name={'plus'}
-          />
-        </TouchableOpacity>
-      )}
-
-      {item.node ? (
-        <Image
-          style={style.proImg}
-          source={{uri: item.node.featuredImage?.url}}
-        />
-      ) : (
-        <Image
-          style={style.proImg}
-          source={require('../../../../assets/images/products/noimage.png')}
-        />
-      )}
-      <Text
-        numberOfLines={1}
-        style={{
-          marginTop: 7,
-          color: Color.primary,
-          fontFamily: Font.Gilroy_SemiBold,
-          fontSize: 15,
-        }}>
-        {item.node.title}
-      </Text>
-      <Text
-        style={{
-          marginTop: 4,
-          color: '#1B2336',
-          fontFamily: Font.Gilroy_Medium,
-          fontSize: 15,
-        }}>
-        $ {item.node.priceRange.minVariantPrice.amount}
-      </Text>
-      <View
-        style={{
-          marginTop: 6,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}>
-        <Text
-          style={{
-            color: '#363B44',
-            fontFamily: Font.Gilroy_Medium,
-            fontSize: 11,
-          }}></Text>
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          <Text
             style={{
-              color: 'rgba(8, 14, 30, 0.6)',
-              fontFamily: Font.Gilroy_Medium,
-              fontSize: 13,
+              height: WIDTH / 2.75,
+              borderRadius: RADIUS,
+              overflow: 'hidden',
             }}>
-            ({item.node.totalInventory} in stock)
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={wishlistHandler}>
+                <Icon
+                  iconFamily={'AntDesign'}
+                  style={{fontSize: 16}}
+                  color={showFavIcon ? '#F91212' : Color.secondary}
+                  name={showFavIcon ? 'heart' : 'hearto'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.iconContainer,
+                  {backgroundColor: 'rgba(2, 28, 94,0.7)'},
+                ]}
+                onPress={
+                  isVariation > 1
+                    ? () =>
+                        navigation.navigate('ProductDetail', {
+                          product: item,
+                        })
+                    : () => Add_To_Card(item.node.variants.edges[0].node)
+                }>
+                <Icon
+                  iconFamily={'AntDesign'}
+                  style={{fontSize: 16}}
+                  color={COLORS.white}
+                  name={isVariation > 1 ? 'arrowright' : 'plus'}
+                />
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+          <Text numberOfLines={1} style={styles.productTitle}>
+            {item.node.title}
           </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+          <View style={styles.row}>
+            <Text style={styles.subTitle}>
+              ${item.node.priceRange.minVariantPrice.amount}
+            </Text>
+            <Text style={styles.subTitle}>
+              ({item.node.totalInventory} in stock)
+            </Text>
+          </View>
+        </>
+      </TouchableRipple>
+    </View>
   );
 };
 
 export default ProductBox;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    marginVertical: Window.fixPadding / 1.5,
-    backgroundColor: Color.white,
-    shadowColor: 'rgba(0,0,0,0.4)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderRadius: 16,
-    position: 'relative',
-    padding: Window.fixPadding * 1.5,
+    // backgroundColor: 'red',
+    width: WIDTH / 2.5,
+    height: WIDTH / 2,
+    borderRadius: RADIUS,
+    overflow: 'hidden',
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  productTitle: {
+    marginTop: 10,
+    color: COLORS.tertiary,
+    fontFamily: FONTS.semiBold,
+    fontSize: 14,
+    marginLeft: 5,
+  },
+  subTitle: {
+    marginTop: 5,
+    color: COLORS.secondary,
+    fontFamily: FONTS.medium,
+    fontSize: 14,
+    marginHorizontal: 5,
+  },
+  ripple: {width: '100%', height: '100%'},
+  btnContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    padding: 5,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  iconContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    width: 30,
+    height: 30,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  ////////////////////////////////////////////////////////////////
   proImg: {
     width: '100%',
     height: 140,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  heartIconContainer: {
-    position: 'absolute',
-    right: 22,
-    top: 20,
-    backgroundColor: Color.white,
-    zIndex: 2,
-    width: 25,
-    height: 25,
-    borderRadius: 32 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 22,
-    shadowColor: 'rgba(0,0,0,0.4)',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  addToCartIconContainer: {
-    position: 'absolute',
-    right: 20,
-    top: '53%',
-    zIndex: 2,
-    backgroundColor: Color.tertiary,
-    width: 32,
-    height: 32,
-    borderRadius: 32 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 22,
-    shadowColor: 'rgba(0,0,0,0.4)',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
 });

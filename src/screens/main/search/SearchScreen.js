@@ -21,13 +21,9 @@ import {
 } from '../../../graphql/queries/Product';
 import {FlatList} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
-import {useSelector} from 'react-redux';
 import ActivityLoader from '../../../components/ActivityLoader';
 import {useEffect} from 'react';
-import {BackIcon} from '../../../components/AppBar';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
-import {GlobalStyle} from '../../../globalStyle/Theme';
-import {RadioButton} from 'react-native-paper';
 import Button from '../../../components/Button';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../../components/Header';
@@ -38,8 +34,6 @@ const SearchScreen = () => {
   const [searchValue, setSearcValue] = useState();
   const [ProductData, setProductData] = useState([]);
   const [loaderSpinner, setloaderSpinner] = useState(true);
-
-  const [ShowFilterIcon, setShowFilterIcon] = useState(false);
   const [SortPopup, setSortPopup] = useState(false);
   const [checked, setChecked] = useState('');
 
@@ -54,10 +48,6 @@ const SearchScreen = () => {
       setProductData(sortData.products.edges);
     },
   });
-
-  const {wishlist} = useSelector(state => ({
-    ...state,
-  }));
 
   useEffect(() => {
     if (data && !loader && !error) {
@@ -126,21 +116,19 @@ const SearchScreen = () => {
         {!loaderSpinner ? (
           <FlatList
             style={{
+              flex: 1,
               overflow: 'hidden',
               borderRadius: CONTAINER_PADDING,
               marginTop: 25,
             }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{marginVertical: Window.fixPadding}}
+            contentContainerStyle={{flexGrow: 1}}
+            columnWrapperStyle={{justifyContent: 'space-between'}}
             data={ProductData}
             numColumns={2}
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
             renderItem={(item, index) => (
-              <ProductBox
-                wishlist={wishlist}
-                customStyle={{width: Window.width / 2.3}}
-                item={item.item}
-                index={index}
-              />
+              <ProductBox item={item.item} index={index} />
             )}
           />
         ) : (
@@ -148,19 +136,13 @@ const SearchScreen = () => {
         )}
       </View>
       <BottomPopupHOC
-        title="Sort "
-        color={Color.primary}
+        title="Sort"
+        color={COLORS.primary}
         PopupBody={
           <>
             <FilterPopupSortOption checked={checked} setChecked={setChecked} />
             <View style={{marginTop: 15}}>
-              <Button
-                text="Apply"
-                isIcon={false}
-                theme="tertiary"
-                loading={false}
-                onPressFunc={ApplyBtn}
-              />
+              <Button text="Apply" type="primary" onPressFunc={ApplyBtn} />
             </View>
           </>
         }

@@ -5,11 +5,12 @@ import {
   StyleSheet,
   Platform,
   FlatList,
+  View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {CatBoxCat} from '../../../components/CategoryCart';
-import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import {COLORS, CONTAINER_PADDING, RADIUS, WIDTH} from '../../../constants';
 import Header from '../../../components/Header';
 
 const Category = ({navigation}) => {
@@ -18,18 +19,25 @@ const Category = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Header label="Category" hideBackButton />
 
-      <ScrollView
-        style={{flex: 1, marginTop: 25}}
+      <FlatList
+        style={{
+          flex: 1,
+          marginTop: 25,
+        }}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        data={categories.allcategories.edges}
+        numColumns={2}
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: CONTAINER_PADDING,
-        }}>
-        <FlatList
-          data={categories.allcategories.edges}
-          numColumns={2}
-          renderItem={item => <CatBoxCat navigation={navigation} item={item} />}
-        />
-      </ScrollView>
+        }}
+        columnWrapperStyle={{justifyContent: 'space-between'}}
+        renderItem={({item, index}) => (
+          <CatBoxCat navigation={navigation} item={item} index={index} />
+        )}
+        ItemSeparatorComponent={() => <View style={{height: 10}} />}
+      />
     </SafeAreaView>
   );
 };

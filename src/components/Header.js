@@ -4,6 +4,7 @@ import {COLORS, CONTAINER_PADDING, FONTS, RADIUS} from '../constants';
 import BackButton from './BackButton';
 import {Searchbar, TouchableRipple} from 'react-native-paper';
 import {SearchFilterSvg} from '../assets/svgs/SearchSvg';
+import EditButton from './EditButton';
 
 const Header = ({
   label,
@@ -13,6 +14,8 @@ const Header = ({
   searchValue,
   filterFunc,
   searchPlaceholder,
+  edit,
+  editOnpress,
 }) => {
   return (
     <View style={styles.container}>
@@ -58,6 +61,8 @@ const Header = ({
             <SearchFilterSvg />
           </TouchableRipple>
         </View>
+      ) : edit ? (
+        <EditButton onPress={editOnpress} />
       ) : (
         <View style={{height: 35, width: 35}} />
       )}

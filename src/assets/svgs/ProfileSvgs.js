@@ -278,14 +278,14 @@ export function LogoutSvg({width, height}) {
         strokeLinejoin="round"
       />
       <Path
-        d="M2 12H14.88"
+        d="M15.0001 12H3.62012"
         stroke="#080E1E"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
-        d="M12.6499 8.6499L15.9999 11.9999L12.6499 15.3499"
+        d="M5.85 8.6499L2.5 11.9999L5.85 15.3499"
         stroke="#080E1E"
         strokeWidth="1.5"
         strokeLinecap="round"

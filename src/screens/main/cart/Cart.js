@@ -330,7 +330,6 @@ const Cart = () => {
                 icon="mail"
                 isIcon={false}
                 theme="tertiary"
-                navLink="Payment"
               />
             )}
           </View>

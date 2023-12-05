@@ -1,23 +1,20 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Color, Font, Window} from '../globalStyle/Theme';
+import {Color} from '../globalStyle/Theme';
 import {DefaultTheme, TextInput} from 'react-native-paper';
 import PhoneInput from 'react-native-phone-input';
 import useKeyboardDetection from '../hooks/detectKeyboard';
-import {TextInput as InputFieldRN} from 'react-native';
 import {TextMask, TextInputMask} from 'react-native-masked-text';
+import {COLORS, FONTS, RADIUS} from '../constants';
 
-const PhoneInputComponent = ({text, setText, isDark = true}) => {
-  let bgColor = !isDark ? Color.white : Color.tertiary;
-  let color = isDark ? Color.white : Color.tertiary;
-
+const PhoneInputComponent = ({text, setText}) => {
   const [focused, setFocused] = useState(false);
 
   const isKeyboardOpen = useKeyboardDetection();
   const customTheme = {
     ...DefaultTheme,
 
-    roundness: 14, // Customize other properties as needed
+    roundness: RADIUS, // Customize other properties as needed
   };
   const onChangeHandler = value => {
     // how to handle for each state field
@@ -32,25 +29,19 @@ const PhoneInputComponent = ({text, setText, isDark = true}) => {
   }, [isKeyboardOpen]);
   return (
     <TextInput
-      // label={'Enter your phone number'}
       mode="outlined"
       theme={customTheme}
       selectionColor={'#CBD1DA'}
-      outlineColor={color}
-      activeOutlineColor={color}
-      style={{
-        backgroundColor: bgColor,
-        width: '100%',
-        marginBottom: Window.fixPadding * 1.5,
-      }}
-      outlineStyle={{}}
+      outlineColor={COLORS.white}
+      activeOutlineColor={COLORS.white}
+      style={styles.input}
       onFocus={() => {
         setFocused(true);
       }}
       maxLength={15}
       onBlur={() => setFocused(false)}
       render={props => (
-        <View style={{flexDirection: 'row', flex: 1}}>
+        <View style={{flexDirection: 'row', flex: 1, height: 50}}>
           <PhoneInput
             {...props}
             initialCountry={'us'}
@@ -68,17 +59,15 @@ const PhoneInputComponent = ({text, setText, isDark = true}) => {
             }}
             textStyle={{
               fontSize: 14,
-              fontFamily: Font.regular,
-              flex: 1,
-              color: color,
+              fontFamily: FONTS.regular,
+              color: COLORS.white,
             }}
           />
           <TextInputMask
             style={{
-              flex: 1,
               fontSize: 14,
-              fontFamily: Font.regular,
-              color: color,
+              fontFamily: FONTS.regular,
+              color: COLORS.white,
               marginLeft: -5,
             }}
             type={'custom'}
@@ -86,7 +75,7 @@ const PhoneInputComponent = ({text, setText, isDark = true}) => {
               mask: '999-999-9999',
             }}
             placeholder={'Enter your phone number'}
-            placeholderTextColor={Color.light}
+            placeholderTextColor={COLORS.white}
             onChangeText={text => {
               const newtext = text
                 .replace(/^0|[^\d\s]/g, '')
@@ -98,7 +87,6 @@ const PhoneInputComponent = ({text, setText, isDark = true}) => {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             keyboardType="phone-pad"
-            // editable={disabled ? false : true}
           />
         </View>
       )}
@@ -109,13 +97,9 @@ const PhoneInputComponent = ({text, setText, isDark = true}) => {
 export default PhoneInputComponent;
 
 const styles = StyleSheet.create({
-  textInputContainer: {
+  input: {
+    backgroundColor: 'transparent',
     height: 50,
-    width: '100%',
-    backgroundColor: Color.secondary,
-    border8: 8,
-    overflow: 'hidden',
-    paddingHorizontal: 10,
   },
   textInput: {width: '100%', height: '100%'},
 });

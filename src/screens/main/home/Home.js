@@ -18,7 +18,7 @@ import {BackHandler} from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
 import {StatusBar} from 'react-native';
 import Banner from './Banner';
-import {COLORS, HEIGHT} from '../../../constants';
+import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT} from '../../../constants';
 import {useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useEffect} from 'react';
@@ -95,7 +95,7 @@ const Home = ({navigation}) => {
   }, [isFocused]);
 
   return (
-    <View style={{backgroundColor: Color.light, flex: 1}}>
+    <View style={styles.container}>
       <StatusBar
         backgroundColor={statusBarBg}
         translucent={false}
@@ -107,6 +107,8 @@ const Home = ({navigation}) => {
         <SearchBar />
       ) : (
         <ScrollView
+          style={{flex: 1}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
           onScroll={Animated.event(
@@ -130,119 +132,90 @@ const Home = ({navigation}) => {
           )}>
           <Banner />
 
-          <View
-            style={{
-              padding: Window.fixPadding * 2,
-              marginVertical: Window.fixPadding,
-            }}>
-            {/* Featured Product List */}
-            <View style={styles.heading}>
-              <Text style={GlobalStyle.heading}>Featured</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ProductListing', {
-                    value: 1,
-                    title: 'Featured',
-                  })
-                }>
-                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
-              </TouchableOpacity>
-            </View>
+          {/* Featured Product List */}
+          <SeactionRow
+            heading="Featured"
+            onPressLeft={() => {
+              navigation.navigate('ProductListing', {
+                value: 1,
+                title: 'Featured',
+              });
+            }}
+          />
 
-            <View>
-              {product && (
-                <FlatList
-                  contentContainerStyle={{marginVertical: Window.fixPadding}}
-                  data={product.featured.edges}
-                  renderItem={({item, index}) => (
-                    <ProductBox
-                      wishlist={wishlist}
-                      customStyle={{width: Window.width / 2.3}}
-                      item={item}
-                      index={index}
-                    />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => (
-                    <View style={{width: Window.fixPadding * 1.5}}></View>
-                  )}
+          {product && (
+            <FlatList
+              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+              data={product.featured.edges}
+              renderItem={({item, index}) => (
+                <ProductBox
+                  wishlist={wishlist}
+                  customStyle={{width: Window.width / 2.3}}
+                  item={item}
+                  index={index}
                 />
               )}
-            </View>
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={{width: 10}} />}
+            />
+          )}
 
-            {/* Latest Product List */}
-            <View style={styles.heading}>
-              <Text style={GlobalStyle.heading}>Latest</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ProductListing', {
-                    value: 2,
-                    title: 'Latest',
-                  })
-                }>
-                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View>
-              {product && (
-                <FlatList
-                  contentContainerStyle={{marginVertical: Window.fixPadding}}
-                  data={product.latest.edges}
-                  renderItem={({item, index}) => (
-                    <ProductBox
-                      wishlist={wishlist}
-                      customStyle={{width: Window.width / 2.3}}
-                      item={item}
-                      index={index}
-                    />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => (
-                    <View style={{width: Window.fixPadding * 1.5}}></View>
-                  )}
+          {/* Latest Product List */}
+          <SeactionRow
+            heading="Latest"
+            onPressLeft={() => {
+              navigation.navigate('ProductListing', {
+                value: 2,
+                title: 'Latest',
+              });
+            }}
+          />
+          {product && (
+            <FlatList
+              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+              data={product.latest.edges}
+              renderItem={({item, index}) => (
+                <ProductBox
+                  wishlist={wishlist}
+                  customStyle={{width: Window.width / 2.3}}
+                  item={item}
+                  index={index}
                 />
               )}
-            </View>
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={{width: 10}} />}
+            />
+          )}
 
-            {/* On Sale Product List */}
-            <View style={styles.heading}>
-              <Text style={GlobalStyle.heading}>ONSALE</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ProductListing', {
-                    value: 3,
-                    title: 'ONSALE',
-                  })
-                }>
-                <Text style={GlobalStyle.showMoreStyle}>See All</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View>
-              {product && (
-                <FlatList
-                  contentContainerStyle={{marginVertical: Window.fixPadding}}
-                  data={product.onsale.edges}
-                  renderItem={({item, index}) => (
-                    <ProductBox
-                      wishlist={wishlist}
-                      customStyle={{width: Window.width / 2.3}}
-                      item={item}
-                      index={index}
-                    />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => (
-                    <View style={{width: Window.fixPadding * 1.5}}></View>
-                  )}
+          {/* On Sale Product List */}
+          <SeactionRow
+            heading="ONSALE"
+            onPressLeft={() => {
+              navigation.navigate('ProductListing', {
+                value: 3,
+                title: 'ONSALE',
+              });
+            }}
+          />
+          {product && (
+            <FlatList
+              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+              data={product.onsale.edges}
+              renderItem={({item, index}) => (
+                <ProductBox
+                  wishlist={wishlist}
+                  customStyle={{width: Window.width / 2.3}}
+                  item={item}
+                  index={index}
                 />
               )}
-            </View>
-          </View>
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={{width: 10}} />}
+            />
+          )}
         </ScrollView>
       )}
     </View>
@@ -252,9 +225,35 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
+  container: {backgroundColor: COLORS.white, flex: 1},
   heading: {
-    marginTop: Window.fixPadding * 1.5,
+    fontSize: 14,
+    fontFamily: FONTS.heading,
+    color: COLORS.tertiary,
+    textTransform: 'capitalize',
+  },
+  seeAll: {
+    fontSize: 12,
+    fontFamily: FONTS.regular,
+    color: COLORS.secondary,
+    textTransform: 'capitalize',
+  },
+  row: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: CONTAINER_PADDING,
+    marginVertical: 25,
   },
 });
+
+const SeactionRow = ({onPressLeft, heading}) => {
+  return (
+    <View style={styles.row}>
+      <Text style={styles.heading}>{heading}</Text>
+      <Text style={styles.seeAll} onPress={onPressLeft}>
+        See all
+      </Text>
+    </View>
+  );
+};

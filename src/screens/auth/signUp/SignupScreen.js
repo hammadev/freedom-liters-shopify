@@ -2,15 +2,12 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   ImageBackground,
+  StyleSheet,
 } from 'react-native';
 import Button from '../../../components/Button';
-import {GlobalStyle, Color, Window} from '../../../globalStyle/Theme';
-import styles from '../AuthStyle';
-import AppBar from '../../../components/AppBar';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TextField2 from '../../../components/TextFeild2';
 import {CREATE_CUSTOMER_ACCOUNT} from '../../../graphql/mutations/Auth';
 import {useMutation} from '@apollo/client';
@@ -19,6 +16,8 @@ import Toast from 'react-native-toast-message';
 import {hasLowerCase, hasNumber, hasUpperCase} from '../../../utils/utils';
 import {showMessage} from 'react-native-flash-message';
 import PhoneInputComponent from '../../../components/PhoneInputComponent';
+import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import BackButton from '../../../components/BackButton';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -30,6 +29,7 @@ const SignUp = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const insets = useSafeAreaInsets();
 
   const [createCustomerAccount, {loading, error, data}] = useMutation(
     CREATE_CUSTOMER_ACCOUNT,
@@ -118,14 +118,6 @@ const SignUp = ({navigation}) => {
       return;
     }
 
-    // if (phone < 12) {
-    //   showMessage({
-    //     message: 'phone cannot be greater than 12 characters',
-    //     type: 'danger',
-    //   });
-    //   return;
-    // }
-
     if (password !== confirmPassword) {
       showMessage({
         message: 'Password & confirm password not match',
@@ -146,134 +138,112 @@ const SignUp = ({navigation}) => {
     if (phone) {
       variables.input.phone = '+1' + phone;
     }
-    console.log('variables', variables);
     handleCreateAccount(createCustomerAccount, variables, navigation);
   };
-  const Goto_Login = () => {
-    navigation.replace('SignIn');
-  };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#021851'}}>
+    <View style={styles.container}>
       <ImageBackground
         style={{
-          width: '100%',
-          height: '100%',
-          paddingVertical: Window.fixPadding,
-          paddingHorizontal: Window.fixPadding * 1.2,
-          backgroundColor: 'none',
+          flex: 1,
         }}
         source={require('../../../assets/images/pics/auth.bg.png')}>
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <AppBar right={'Skip'} onPressFunc={Goto_Login} theme={'dark'} />
-          <Text
-            style={{
-              ...GlobalStyle.heading,
-              color: Color.white,
-              marginVertical: Window.fixPadding * 2,
-            }}>
-            Sign Up
-          </Text>
-
-          <View style={{marginTop: Window.fixPadding}}>
-            <TextField2
-              icon={'account-circle-outline'}
-              label="First Name *"
-              placeholder={'john'}
-              isDark={true}
-              maxLength={10}
-              onChanged={setFirstName}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
-            <TextField2
-              icon={'account-circle-outline'}
-              label="Last Name *"
-              placeholder={'doe'}
-              isDark={true}
-              maxLength={10}
-              onChanged={setLastName}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
-            <TextField2
-              icon={'email-outline'}
-              label="Email *"
-              placeholder={'jhondoe@gmail.com'}
-              isDark={true}
-              onChanged={setEmail}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
-
-            <PhoneInputComponent text={phone} setText={setPhone} />
-            {/* <TextField2
-              icon={'phone-outline'}
-              label="Phone"
-              value={phone}
-              onChangeText={text => {
-                const newtext = text.replace(/[^0-9+]/g, '');
-                setPhone(newtext);
-              }}
-              type={'phone-pad'}
-              placeholder={'+1XXXXXXXXXXXX'}
-              isDark={true}
-              maxLength={12}
-              onChanged={setPhone}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            /> */}
-
-            <TextField2
-              icon={'lock-outline'}
-              label="Password *"
-              placeholder={'xxxxxx'}
-              isDark={true}
-              onChanged={setPassword}
-              passwordFeild={true}
-              setHidePass={setHidePass}
-              hidePass={hidePass}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
-            <TextField2
-              icon={'lock-outline'}
-              label="Confirm Password *"
-              isDark={true}
-              placeholder={'xxxxxx'}
-              onChanged={setConfirmPassword}
-              passwordFeild={true}
-              setHidePass={setHideConfirmPass}
-              hidePass={hideConfirmPass}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
-            />
-          </View>
-
-          <View style={{marginVertical: Window.fixPadding * 2}}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={{
+            flex: 1,
+            marginTop: insets.top + 15,
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: CONTAINER_PADDING,
+          }}>
+          <BackButton type="secondary" />
+          <Text style={styles.screenHeading}>Sign Up</Text>
+          <TextField2
+            icon={'account-circle-outline'}
+            label="First Name *"
+            placeholder={'john'}
+            maxLength={10}
+            onChanged={setFirstName}
+          />
+          <View style={{marginVertical: 5}} />
+          <TextField2
+            icon={'account-circle-outline'}
+            label="Last Name *"
+            placeholder={'doe'}
+            maxLength={10}
+            onChanged={setLastName}
+          />
+          <View style={{marginVertical: 5}} />
+          <TextField2
+            icon={'email-outline'}
+            label="Email *"
+            placeholder={'jhondoe@gmail.com'}
+            onChanged={setEmail}
+          />
+          <View style={{marginVertical: 5}} />
+          <PhoneInputComponent text={phone} setText={setPhone} />
+          <View style={{marginVertical: 5}} />
+          <TextField2
+            icon={'lock-outline'}
+            label="Password *"
+            placeholder={'xxxxxx'}
+            onChanged={setPassword}
+            passwordFeild={true}
+            setHidePass={setHidePass}
+            hidePass={hidePass}
+          />
+          <View style={{marginVertical: 5}} />
+          <TextField2
+            icon={'lock-outline'}
+            label="Confirm Password *"
+            placeholder={'xxxxxx'}
+            onChanged={setConfirmPassword}
+            passwordFeild={true}
+            setHidePass={setHideConfirmPass}
+            hidePass={hideConfirmPass}
+          />
+          <View style={{marginVertical: 25}}>
             <Button
               loading={loading}
               text="Register"
               onPressFunc={handleSubmit}
-              icon="mail"
-              isIcon={false}
-              theme="white"
-              navLink="CodeVerification"
+              type="secondary"
             />
           </View>
-          <View style={styles.BottonContainer}>
-            <Text style={{...styles.TextStyle, color: Color.white}}>
-              Already have an account ?
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-              <Text
-                style={{
-                  ...styles.SecondTextStyle,
-                  color: '#FBBC05',
-                  paddingLeft: 5,
-                }}>
-                Login
-              </Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
+        <Text style={[styles.bottomText, {marginBottom: insets.bottom + 15}]}>
+          Already have an account ?{' '}
+          <Text
+            onPress={() => navigation.navigate('SignIn')}
+            style={{
+              color: '#FBBC05',
+              fontFamily: FONTS.bold,
+            }}>
+            Login
+          </Text>
+        </Text>
         <Toast />
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default SignUp;
+
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: COLORS.primary},
+  bottomText: {
+    color: COLORS.white,
+    fontSize: 12,
+    fontFamily: FONTS.medium,
+    alignSelf: 'center',
+  },
+  screenHeading: {
+    fontSize: 16,
+    fontFamily: FONTS.heading,
+    color: COLORS.white,
+    marginVertical: 25,
+  },
+});

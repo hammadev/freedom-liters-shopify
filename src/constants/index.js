@@ -27,7 +27,7 @@ const FONTS = {
   // thin: 'SFProDisplay-Thin', // 100
 };
 
-const RADIUS = 20;
+const RADIUS = 16;
 
 const CONTAINER_PADDING = 24;
 

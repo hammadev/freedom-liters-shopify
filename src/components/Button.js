@@ -1,116 +1,88 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Color, Font, Window} from '../globalStyle/Theme';
 import {SkypeIndicator} from 'react-native-indicators';
+import {COLORS, FONTS, RADIUS} from '../constants';
+import {TouchableRipple} from 'react-native-paper';
 
-const Button = props => {
+const Button = ({type, navLink, onPressFunc, loading, icon, text}) => {
   let navigation = useNavigation();
 
-  const activeThemeBg = () => {
-    switch (props.theme) {
-      case 'primary':
-        return Color.primary;
-      case 'secondary':
-        return Color.secondary;
-      case 'alternate':
-        return Color.lightOrange;
-      case 'white':
-        return Color.white;
-      case 'tertiary':
-        return Color.tertiary;
-      case 'light':
-        return Color.light;
-      default:
-        return Color.primary;
-    }
-  };
-
-  const activeThemeTextColor = () => {
-    switch (props.theme) {
-      case 'secondary':
-        return Color.light;
-      case 'primary':
-        return Color.light;
-      case 'tertiary':
-        return Color.light;
-      case 'white':
-        return Color.tertiary;
-      case 'light':
-        return Color.tertiary;
-      default:
-        return Color.primary;
-    }
-  };
-
   return (
-    <TouchableOpacity
-      style={{
-        paddingHorizontal: 10,
-        ...Style.BtnContainer,
-        backgroundColor: activeThemeBg(),
-        borderWidth: props.type === 'primary' ? 1 : 0,
-        borderColor: props.type === 'primary' ? Color.white : 'transparent',
-      }}
-      onPress={
-        props.onPressFunc
-          ? props.onPressFunc
-          : () => navigation.navigate(props.navLink, {value: 4})
-      }
-      disabled={props.loading ? true : false}>
-      {props.loading ? (
-        <SkypeIndicator
-          size={25}
-          color={props.theme == 'white' ? Color.tertiary : Color.white}
-        />
-      ) : (
+    <View
+      style={[
+        styles.btnContainer,
+        {
+          backgroundColor:
+            type === 'primary'
+              ? COLORS.primary
+              : type === 'secondary'
+              ? COLORS.white
+              : 'transparent',
+
+          borderColor: type === 'alternate' ? COLORS.white : 'transparent',
+        },
+      ]}>
+      <TouchableRipple
+        rippleColor={
+          type === 'primary'
+            ? 'rgba(255,255,255,0.2)'
+            : type === 'secondary'
+            ? 'rgba(0,0,0,0.2)'
+            : 'rgba(255,255,255,0.2)'
+        }
+        style={styles.ripple}
+        onPress={
+          onPressFunc
+            ? onPressFunc
+            : () => navigation.navigate(navLink, {value: 4})
+        }
+        disabled={loading ? true : false}>
         <>
-          {props.isIcon !== false ? (
-            <Ionicons
-              style={{
-                ...(props.iconSet === 'secondary'
-                  ? Style.iconSetStyle
-                  : Style.IconStyle),
-                color: activeThemeTextColor(),
-              }}
-              name={props.icon}
+          {loading ? (
+            <SkypeIndicator
+              size={25}
+              color={type === 'primary' ? COLORS.white : Color.primary}
             />
-          ) : null}
-          <Text style={{...Style.btnTextStyle, color: activeThemeTextColor()}}>
-            {props.text}
-          </Text>
+          ) : (
+            <Text
+              style={{
+                ...styles.btnTextStyle,
+                color:
+                  type === 'primary'
+                    ? COLORS.white
+                    : type === 'secondary'
+                    ? COLORS.primary
+                    : COLORS.white,
+              }}>
+              {text}
+            </Text>
+          )}
         </>
-      )}
-    </TouchableOpacity>
+      </TouchableRipple>
+    </View>
   );
 };
 
-const Style = StyleSheet.create({
-  BtnContainer: {
-    backgroundColor: Color.secondary,
+const styles = StyleSheet.create({
+  btnContainer: {
+    borderRadius: RADIUS,
+    overflow: 'hidden',
+    height: 50,
+    borderWidth: 1,
+  },
+  ripple: {
+    height: '100%',
+    width: '100%',
     alignItems: 'center',
-    paddingVertical: Window.fixPadding * 2,
-    borderRadius: 16,
-    flexDirection: 'row',
     justifyContent: 'center',
   },
   btnTextStyle: {
-    fontSize: Window.width < 375 ? 16 : 17,
+    fontSize: 16,
     textAlign: 'center',
-    fontFamily: Font.Gilroy_Bold,
-  },
-  IconStyle: {
-    color: Color.primary,
-    textAlign: 'center',
-    fontSize: 20,
-    position: 'absolute',
-    left: Window.fixPadding * 2,
-  },
-  iconSetStyle: {
-    fontSize: 25,
-    paddingRight: 10,
-    color: Color.tertiary,
+    fontFamily: FONTS.semiBold,
   },
 });
 export default Button;

@@ -7,17 +7,13 @@ import {
   Image,
   FlatList,
   ScrollView,
-  StatusBar,
 } from 'react-native';
-import AppBar from '../../../components/AppBar';
-import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme'; 
 import {
   AddressSvg,
   ChevronSvg,
   GiftSvg,
   LogoutSvg,
-  PaymentMethodSvg,
   ProfileSvg,
 } from '../../../assets/svgs/ProfileSvgs';
 import {useNavigation} from '@react-navigation/native';
@@ -25,7 +21,7 @@ import {useSelector} from 'react-redux';
 import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
-import {useEffect} from 'react';
+import {COLORS} from '../../../constants';
 
 const ProfilePages = ({item, popupState}) => {
   const navigation = useNavigation();
@@ -89,7 +85,7 @@ const Profile = ({navigation}) => {
   }
 
   return (
-    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
+    <View style={{backgroundColor: COLORS.white, flex: 1}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
@@ -144,12 +140,12 @@ const Profile = ({navigation}) => {
       </ScrollView>
 
       <BottomPopupHOC
-        title="Alert"
+        title="Logout"
         PopupBody={<Logout auth={auth} setVisible={setLogoutAlertPopup} />}
         visible={logoutAlertPopup}
         setVisible={setLogoutAlertPopup}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -180,12 +176,6 @@ const ProfileData = [
     chevron: <ChevronSvg />,
     navlink: 'Voucher',
   },
-  // {
-  //   icon: <Image style={{width: 25, height: 25, tintColor: Color.black}} source={require('../../../assets/images/pics/setting.png')} />,
-  //   name: 'Setting',
-  //   chevron: <ChevronSvg />,
-  //   navlink: '',
-  // },
   {
     icon: <LogoutSvg />,
     name: 'Log Out',

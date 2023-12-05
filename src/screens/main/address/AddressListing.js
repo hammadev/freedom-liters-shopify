@@ -4,11 +4,9 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
   StyleSheet,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import AppBar from '../../../components/AppBar';
 import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
 import Icon from '../../../core/Icon';
 import {RadioButton} from 'react-native-paper';
@@ -31,6 +29,8 @@ import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
+import Header from '../../../components/Header';
+import {COLORS} from '../../../constants';
 
 const DeliverTo = ({
   item,
@@ -227,7 +227,7 @@ const AddressListing = ({navigation}) => {
 
   useEffect(() => {
     Get_Defult_Address();
-  }, [Get_Defult_Address]);
+  }, []);
 
   const Get_Defult_Address = async () => {
     const DefultAddress = await AsyncStorage.getItem('address');
@@ -358,40 +358,20 @@ const AddressListing = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: Color.light, flex: 1}}>
-      <View style={{paddingHorizontal: Window.fixPadding * 2}}>
-        <AppBar header="solid" />
-      </View>
+    <SafeAreaView style={styles.mainContainer}>
+      <Header
+        label={'Address'}
+        edit
+        editOnpress={() => setEditIcon(!editIcon)}
+      />
 
-      {loading && (
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            width: Window.width,
-            height: Window.height,
-            zIndex: 1,
-          }}>
-          <SkypeIndicator />
-        </View>
-      )}
-
-      <View
+      {/* <View
         style={{
           paddingHorizontal: Window.fixPadding * 2,
           justifyContent: 'space-between',
           alignItems: 'center',
           flexDirection: 'row',
         }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: Font.Automove_Personal,
-            color: Color.primary,
-          }}>
-          Address Listing
-        </Text>
         <TouchableOpacity
           onPress={() => setEditIcon(!editIcon)}
           style={{width: 50, alignItems: 'center'}}>
@@ -408,7 +388,7 @@ const AddressListing = ({navigation}) => {
               : ''}
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <ScrollView
         style={{flex: 1}}
@@ -450,7 +430,7 @@ const AddressListing = ({navigation}) => {
         ]}>
         <Button
           text="Add New Address"
-          theme="tertiary"
+          type="primary"
           onPressFunc={() => {
             resetState();
             setVisible();
@@ -523,6 +503,18 @@ const AddressListing = ({navigation}) => {
 export default AddressListing;
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  ////////////////
   Heading: {
     fontSize: 18,
     color: Color.tertiary,
@@ -616,13 +608,7 @@ const AddressForm = ({
         customStyle={{marginBottom: Window.fixPadding * 1.5}}
         value={address2}
       />
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <View style={styles.row}>
         <View style={{width: '48%'}}>
           <TextField2
             label="Country"
@@ -641,13 +627,7 @@ const AddressForm = ({
           />
         </View>
       </View>
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <View style={styles.row}>
         <View style={{width: '48%'}}>
           <TextField2
             label="Province"

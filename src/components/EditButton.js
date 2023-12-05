@@ -3,24 +3,25 @@ import React from 'react';
 import {TouchableRipple} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {ChevronSvg} from '../assets/svgs/AuthSvg';
+import { EditSvg } from '../assets/svgs/AddressSvg';
 
-const BackButton = ({leftOnpress, type = 'primary'}) => {
+const EditButton = ({onPress}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <TouchableRipple
         style={styles.ripple}
         rippleColor={
-          type === 'primary' ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.2)'
+         'rgba(0,0,0,0.4)'
         }
-        onPress={() => (leftOnpress ? leftOnpress() : navigation.goBack())}>
-        <ChevronSvg color={type === 'primary' ? '#000' : '#fff'} />
+        onPress={onPress}>
+        <EditSvg />
       </TouchableRipple>
     </View>
   );
 };
 
-export default BackButton;
+export default EditButton;
 
 const styles = StyleSheet.create({
   container: {

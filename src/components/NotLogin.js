@@ -1,51 +1,39 @@
-import {Platform, SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React from 'react';
 import {hasNotch} from 'react-native-device-info';
-import {Color, Font, GlobalStyle, Window} from '../globalStyle/Theme';
 import AppBar from './AppBar';
 import {NotLoginSvg} from '../assets/svgs/ProfileSvgs';
 import Button from './Button';
+import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT, WIDTH} from '../constants';
 
 const NotLogin = ({ShowBackButton = false}) => {
   return (
     <SafeAreaView
-      style={{backgroundColor: '#F9F9F9', flex: 1}}
+      style={styles.container}
       edges={{
         top: 'maximum',
         right: 'maximum',
         left: 'maximum',
         bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
       }}>
-      <View style={{paddingHorizontal: Window.fixPadding * 2, flex: 1}}>
-        {ShowBackButton && <AppBar />}
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flex: 1,
-          }}>
-          <NotLoginSvg width={Window.width / 1.5} height={Window.height / 3} />
-          <Text
-            style={{
-              color: Color.tertiary,
-              fontFamily: Font.Urbanist_Bold,
-              fontSize: 30,
-              marginTop: 22,
-            }}>
-            Your are not login
-          </Text>
-          <Text
-            style={{
-              color: Color.tertiary,
-              fontFamily: Font.Urbanist_Regular,
-              fontSize: 16,
-              textAlign: 'center',
-              marginVertical: 12,
-            }}>
-            Please login to continue
-          </Text>
-          <Button text={'Go to login'} theme="tertiary" navLink="SignIn" />
+      {ShowBackButton && <AppBar />}
+      <View
+        style={{
+          paddingHorizontal: CONTAINER_PADDING,
+        }}>
+        <View style={{alignSelf: 'center'}}>
+          <NotLoginSvg width={WIDTH / 1.5} height={HEIGHT / 3} />
         </View>
+        <Text style={styles.heading}>Your are not login</Text>
+        <Text style={styles.subHeading}>Please login to continue</Text>
+        <Button text={'Go to login'} type="primary" navLink="SignIn" />
       </View>
     </SafeAreaView>
   );
@@ -53,4 +41,24 @@ const NotLogin = ({ShowBackButton = false}) => {
 
 export default NotLogin;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.white,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  heading: {
+    color: COLORS.primary,
+    fontFamily: FONTS.bold,
+    fontSize: 24,
+    marginTop: 22,
+    alignSelf: 'center',
+  },
+  subHeading: {
+    color: COLORS.primary,
+    fontFamily: FONTS.regular,
+    fontSize: 16,
+    textAlign: 'center',
+    marginVertical: 12,
+  },
+});

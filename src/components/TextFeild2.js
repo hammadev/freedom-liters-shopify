@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Color} from '../globalStyle/Theme';
+import {COLORS, FONTS, RADIUS} from '../constants';
 
 const TextField2 = ({
-  isDark = false,
   label,
   maxLength,
   placeholder,
@@ -13,44 +13,71 @@ const TextField2 = ({
   passwordFeild = false,
   setHidePass,
   hidePass,
-  customStyle,
   onChangeText,
   onChanged = val => console.log('No Onchange Event', val),
   value,
   disabled = false,
 }) => {
-  let bgColor = !isDark ? Color.white : Color.tertiary;
-  let color = isDark ? Color.white : Color.tertiary;
   return (
     <TextInput
-      label={<Text style={{color: color, backgroundColor: bgColor}}>{label}</Text>}
-      left={icon && <TextInput.Icon icon={icon} iconColor={color} />}
+      label={
+        <Text
+          style={{
+            color: COLORS.white,
+            backgroundColor: COLORS.primary,
+            fontSize: 14,
+          }}>
+          {label}
+        </Text>
+      }
+      left={
+        icon && (
+          <TextInput.Icon
+            icon={icon}
+            iconColor={COLORS.white}
+            style={{marginTop: 15}}
+            size={20}
+          />
+        )
+      }
       right={
         passwordFeild && (
-          <TextInput.Icon onPress={() => setHidePass(!hidePass)} icon={hidePass ? 'eye-off-outline' : 'eye-outline'} iconColor={color} />
+          <TextInput.Icon
+            onPress={() => setHidePass(!hidePass)}
+            icon={hidePass ? 'eye-off-outline' : 'eye-outline'}
+            iconColor={COLORS.white}
+            style={{marginTop: 15}}
+            size={20}
+          />
         )
       }
       placeholder={placeholder ? placeholder : ''}
-      placeholderTextColor={Color.gryLight}
+      placeholderTextColor={COLORS.white}
       secureTextEntry={passwordFeild && hidePass ? true : false}
       mode="outlined"
       theme={{
-        roundness: 14,  
+        roundness: RADIUS,
       }}
       keyboardType={type ? type : 'default'}
       maxLength={maxLength ? maxLength : 50}
-      selectionColor={color}
-      outlineColor={color}
-      activeOutlineColor={color}
-      style={{...customStyle, backgroundColor: bgColor}}
-      textColor={color}
+      selectionColor={COLORS.white}
+      outlineColor={COLORS.white}
+      activeOutlineColor={COLORS.white}
+      style={styles.input}
+      textColor={COLORS.white}
       onChangeText={onChangeText ? onChangeText : text => onChanged(text)}
       value={value}
       disabled={disabled}
+      contentStyle={{fontFamily: FONTS.regular, fontSize: 14}}
     />
   );
 };
 
 export default TextField2;
 
-const Style = StyleSheet.create({});
+const styles = StyleSheet.create({
+  input: {
+    backgroundColor: 'transparent',
+    height: 50,
+  },
+});

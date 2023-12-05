@@ -1,47 +1,47 @@
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import AppBar from '../../../components/AppBar'
-import { Window,GlobalStyle } from '../../../globalStyle/Theme'
-import { VoucherSvg } from '../../../assets/svgs/ProfileSvgs'
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {Window} from '../../../globalStyle/Theme';
+import {VoucherSvg} from '../../../assets/svgs/ProfileSvgs';
+import Header from '../../../components/Header';
+import {COLORS, FONTS} from '../../../constants';
 
 const Voucher = () => {
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <AppBar
-                theme="light"
-                center={<Text style={{ ...GlobalStyle.heading, fontSize: 22, color: 'black' }}> Voucher</Text>}
-                customStyle={{ paddingHorizontal: Window.fixPadding * 2 }}
-            />
-            <FlatList
-        contentContainerStyle={{
-          justifyContent: 'space-between',
-          paddingHorizontal: Window.fixPadding * 2,
-          paddingVertical: Window.fixPadding,
-          flexDirection: 'row',
-        }}
-        style={{flex: 1}}
-        data={[]}
-        renderItem={({item}) => <Text></Text>}
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{width: 15}} />}
-        ListEmptyComponent={() => (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '20%'}}>
-            <VoucherSvg/>
-            <View>
-              <Text style={{...GlobalStyle.heading, textAlign: 'center', marginTop: Window.fixPadding * 2}}>Empty</Text>
-              <Text style={{...GlobalStyle.textStlye, textAlign: 'center', marginVertical: Window.fixPadding}}>
-                No vouchers found
-              </Text>
-              {/* <Button text="Explore products" isIcon={false} theme="tertiary" navLink="ProductListing" /> */}
-            </View>
-          </View>
-        )}
-      />
-            
-        </SafeAreaView>
-    )
-}
+  return (
+    <SafeAreaView style={styles.container}>
+      <Header label={'Voucher'} />
+      <View style={styles.emptyContainer}>
+        <VoucherSvg />
+        <View>
+          <Text style={styles.text}>Empty</Text>
+          <Text style={styles.subTitle}>No vouchers found</Text>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default Voucher
+export default Voucher;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center', 
+  },
+  text: {
+    fontSize: 18,
+    fontFamily: FONTS.heading,
+    textAlign: 'center',
+    marginTop: Window.fixPadding * 2,
+  },
+  subTitle: {
+    fontSize: 14,
+    fontFamily: FONTS.medium,
+    textAlign: 'center',
+    marginVertical: Window.fixPadding,
+  },
+});

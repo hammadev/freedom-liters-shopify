@@ -1,17 +1,17 @@
 import React from 'react';
-import {View, FlatList, Text} from 'react-native';
+import {View, FlatList, Text, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
-import AppBar from '../../../components/AppBar';
-import {GlobalStyle, Window} from '../../../globalStyle/Theme';
+import {Window} from '../../../globalStyle/Theme';
 import ProductBox from '../product/_partials/ProductBox';
-import {CartEmptyIcon, NoResult} from '../../../assets/svgs/NotificationSvg';
+import {NoResult} from '../../../assets/svgs/NotificationSvg';
 import Button from '../../../components/Button';
 import {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
+import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import Header from '../../../components/Header';
+
 const WishList = ({navigation}) => {
-  const {wishlist} = useSelector(state => ({...state}));
   const [WishlistData, setWishlistData] = useState([]);
 
   const GET_WISHLIST_DATA = async () => {
@@ -20,79 +20,81 @@ const WishList = ({navigation}) => {
   };
 
   useEffect(() => {
-    //AsyncStorage.removeItem('WishList_Items');
     GET_WISHLIST_DATA();
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <AppBar
-        theme="light"
-        center={
-          <Text style={{...GlobalStyle.heading, fontSize: 22, color: 'black'}}>
-            {' '}
-            Wishlist
-          </Text>
-        }
-        customStyle={{paddingHorizontal: Window.fixPadding * 2}}
-      />
+    <SafeAreaView style={styles.container}>
+      <Header label="WISHLIST" />
 
-      <FlatList
-        numColumns={2}
-        contentContainerStyle={{
-          justifyContent: 'space-between',
-          paddingHorizontal: Window.fixPadding * 2,
-          // padding: Window.fixPadding * 2,
-        }}
-        style={{flex: 1}}
-        data={WishlistData.addedItems}
-        renderItem={({item}) => (
-          <ProductBox
-            item={item}
-            customStyle={{width: Window.width / 2.375}}
-            wishlist={wishlist}
-          />
-        )}
-        columnWrapperStyle={{justifyContent: 'space-between'}}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{height: 15}} />}
-        ListEmptyComponent={() => (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '20%',
-            }}>
-            <NoResult />
-            <View>
-              <Text
-                style={{
-                  ...GlobalStyle.heading,
-                  textAlign: 'center',
-                  marginTop: Window.fixPadding * 2,
-                }}>
-                Empty
-              </Text>
-              <Text
-                style={{
-                  ...GlobalStyle.textStlye,
-                  textAlign: 'center',
-                  marginVertical: Window.fixPadding,
-                }}>
-                You do not have any product in wishlist
-              </Text>
-              <Button
-                text="Explore products"
-                isIcon={false}
-                theme="tertiary"
-                navLink="ProductListing"
-              />
+      <View style={styles.contentContainer}>
+        <FlatList
+          numColumns={2}
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+          style={styles.flatelistStyle}
+          data={WishlistData.addedItems}
+          renderItem={({item}) => <ProductBox item={item} />}
+          columnWrapperStyle={{justifyContent: 'space-between'}}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <NoResult />
+              <View>
+                <Text style={styles.text}>Empty</Text>
+                <Text style={styles.subtitle}>
+                  You do not have any product in wishlist
+                </Text>
+                <Button
+                  text="Explore products"
+                  isIcon={false}
+                  type="primary"
+                  navLink="ProductListing"
+                />
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 export default WishList;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  contentContainer: {
+    paddingHorizontal: CONTAINER_PADDING,
+    flex: 1,
+  },
+  flatelistStyle: {
+    flex: 1,
+    overflow: 'hidden',
+    borderRadius: CONTAINER_PADDING,
+    marginTop: 25,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20%',
+  },
+  text: {
+    fontSize: 18,
+    fontFamily: FONTS.bold,
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginTop: Window.fixPadding * 2,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontFamily: FONTS.medium,
+    color: COLORS.secondary,
+    textAlign: 'center',
+    marginVertical: Window.fixPadding,
+  },
+});
