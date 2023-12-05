@@ -30,7 +30,7 @@ import {handleCreateAddress} from '../../../apis/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
 import Header from '../../../components/Header';
-import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import {COLORS, CONTAINER_PADDING, FONTS, WIDTH} from '../../../constants';
 import AddressList from '../../../components/AddressList';
 
 const AddressListing = ({navigation}) => {
@@ -325,6 +325,7 @@ const AddressListing = ({navigation}) => {
 
       <BottomPopupHOC
         title="Add Address"
+        color={COLORS.primary}
         visible={visible}
         setVisible={setVisible}
         PopupBody={
@@ -366,6 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginVertical: 5,
   },
   noAddressContainer: {
     flex: 1,
@@ -387,13 +389,17 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    lineHeight: 20,
     fontFamily: FONTS.heading,
     textAlign: 'center',
+    marginVertical: 15,
+    width: WIDTH / 1.35,
   },
   subTitle: {
     fontSize: 14,
     fontFamily: FONTS.medium,
     textAlign: 'center',
+    width: WIDTH / 1.25,
   },
 
   ////////////////
@@ -443,95 +449,101 @@ const AddressForm = ({
 }) => {
   return (
     <View>
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <View style={styles.row}>
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="First Name"
             onChanged={setFirstName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={firstName}
             disabled
           />
         </View>
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="Last Name"
             onChanged={setLastName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={lastName}
             disabled
           />
         </View>
       </View>
 
-      <TextField2
-        label="Phone"
-        onChanged={setPhone}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
-        value={phone}
-      />
+      <View style={styles.row}>
+        <View style={{width: '100%'}}>
+          <TextField2
+            type="secondary"
+            label="Phone"
+            onChanged={setPhone}
+            value={phone}
+            disabled
+          />
+        </View>
+      </View>
 
-      <TextField2
-        label="Address1"
-        onChanged={setAddress1}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
-        value={address1}
-      />
-
-      <TextField2
-        label="Address2"
-        onChanged={setAddress2}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
-        value={address2}
-      />
+      <View style={styles.row}>
+        <View style={{width: '100%'}}>
+          <TextField2
+            type="secondary"
+            label="Address 1"
+            onChanged={setAddress1}
+            value={address1}
+          />
+        </View>
+      </View>
+      <View style={styles.row}>
+        <View style={{width: '100%'}}>
+          <TextField2
+            type="secondary"
+            label="Address2"
+            onChanged={setAddress2}
+            value={address2}
+          />
+        </View>
+      </View>
       <View style={styles.row}>
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="Country"
             onChanged={setcountry}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={country}
           />
         </View>
 
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="Zip"
             onChanged={setZip}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={zip}
           />
         </View>
       </View>
+
       <View style={styles.row}>
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="Province"
             onChanged={setProvince}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={province}
           />
         </View>
         <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="City"
             onChanged={setCity}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={city}
           />
         </View>
       </View>
-      <View style={{paddingTop: 10}}>
+      <View style={{marginTop: 25}}>
         <Button
           text={!isUpdate ? 'Add Address' : 'Update Address'}
-          isIcon={false}
-          theme="tertiary"
+          type="primary"
           loading={loading}
           onPressFunc={() => handleSubmit(isUpdate)}
         />

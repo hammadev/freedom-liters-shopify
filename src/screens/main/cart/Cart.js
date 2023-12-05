@@ -30,7 +30,13 @@ import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Header from '../../../components/Header';
-import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import {
+  COLORS,
+  CONTAINER_PADDING,
+  FONTS,
+  RADIUS,
+  WIDTH,
+} from '../../../constants';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {ChevronSvg} from '../../../assets/svgs/ProfileSvgs';
 
@@ -179,125 +185,93 @@ const Cart = () => {
         <ActivityLoader />
       ) : CartItems && CartItems.lines.edges.length > 0 ? (
         <>
-          {CartItems.lines.edges.length > 0 && (
-            <Text style={styles.topText}>
-              Spend $500{' '}
-              <Text
-                style={{
-                  color: COLORS.secondary,
-                  fontFamily: FONTS.regular,
-                }}>
-                enjoy free shipping for standard delivery option
-              </Text>
-            </Text>
-          )}
           <ScrollView
-            style={{marginTop: 25}}
+            style={{flex: 1}}
             contentContainerStyle={{
               flexGrow: 1,
+              paddingHorizontal: CONTAINER_PADDING,
+              paddingVertical: 25,
             }}>
+            {CartItems.lines.edges.length > 0 && (
+              <Text style={styles.topText}>
+                Spend $500{' '}
+                <Text
+                  style={{
+                    color: COLORS.secondary,
+                    fontFamily: FONTS.regular,
+                  }}>
+                  enjoy free shipping for standard delivery option
+                </Text>
+              </Text>
+            )}
             {CartItems ? (
               CartItems.lines.edges.map((item, index) => (
-                <View key={index} style={{flexDirection: 'row'}}>
-                  <View style={styles.ImageContainer}>
-                    {item.node.merchandise.image ? (
-                      <Image
-                        style={{width: 70, height: 70, borderRadius: 15}}
-                        source={{uri: item.node.merchandise.image.url}}
-                      />
-                    ) : (
-                      <Image
-                        source={require('../../../assets/images/products/flannelShirt.png')}
-                      />
-                    )}
-                  </View>
-                  <View style={styles.ContainerContent}>
-                    <View
-                      style={{
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: Font.Gilroy_SemiBold,
-                          color: Color.primary,
-                        }}>
-                        {item.node.merchandise.product.title}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: Font.Gilroy_SemiBold,
-                          color: '#363B44',
-                        }}>
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 15,
+                  }}>
+                  {item.node.merchandise.image ? (
+                    <Image
+                      style={{width: 80, height: 80, borderRadius: RADIUS}}
+                      source={{uri: item.node.merchandise.image.url}}
+                    />
+                  ) : (
+                    <Image
+                      style={{width: 80, height: 80, borderRadius: RADIUS}}
+                      source={require('../../../assets/images/products/flannelShirt.png')}
+                    />
+                  )}
+                  <View style={{flex: 1, marginLeft: 10}}>
+                    <View style={styles.cartRowTop}>
+                      <View>
+                        <Text style={styles.cartHeading} numberOfLines={2}>
+                          {item.node.merchandise.product.title}
+                        </Text>
+                        <Text style={styles.tags}>
+                          {item.node.merchandise.product.tags[0]}
+                        </Text>
+                      </View>
+                      <Text style={styles.cartPrice}>
                         {item.node.quantity} x{' '}
                         {item.node.cost.amountPerQuantity.amount} ={' '}
                         {item.node.quantity *
                           item.node.cost.amountPerQuantity.amount}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: Font.Gilroy_SemiBold,
-                          color: Color.primary,
-                        }}>
-                        {item.node.merchandise.product.tags[0]}
-                      </Text>
-                    </View>
-
-                    <View style={{paddingLeft: 15, width: Window.width / 1.47}}>
+                    <View style={styles.cartRowBottom}>
                       <View
-                        style={{
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          flexDirection: 'row',
-                          marginTop: 18.25,
-                          marginRight: 10,
-                        }}>
-                        <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TouchableOpacity
+                          style={styles.cartBtn}
+                          onPress={() => decrementValue(item)}>
+                          <Icon
+                            iconFamily={'AntDesign'}
+                            name={'minus'}
+                            style={styles.minusStyle}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.numStyle}>
+                          {item.node.quantity}
+                        </Text>
+                        <TouchableOpacity
                           style={{
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                          }}>
-                          <TouchableOpacity
-                            style={styles.cartStyle}
-                            onPress={() => decrementValue(item)}>
-                            <Icon
-                              iconFamily={'AntDesign'}
-                              name={'minus'}
-                              style={styles.MinusStyle}
-                            />
-                          </TouchableOpacity>
-                          <Text style={styles.NumStyle}>
-                            {item.node.quantity}
-                          </Text>
-                          <TouchableOpacity
-                            style={{
-                              ...styles.cartStyle,
-                              borderColor: Color.tertiary,
-                            }}
-                            onPress={() => incrementValue(item)}>
-                            <Icon
-                              iconFamily={'Ionicons'}
-                              name={'md-add'}
-                              color={Color.light}
-                              style={styles.AddStyle}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity onPress={() => Remove_Items(item)}>
-                          <DeleteSvg />
+                            ...styles.cartBtn,
+                            borderColor: Color.tertiary,
+                          }}
+                          onPress={() => incrementValue(item)}>
+                          <Icon
+                            iconFamily={'Ionicons'}
+                            name={'md-add'}
+                            style={styles.addStyle}
+                          />
                         </TouchableOpacity>
                       </View>
+                      <TouchableOpacity onPress={() => Remove_Items(item)}>
+                        <DeleteSvg />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
@@ -325,12 +299,7 @@ const Cart = () => {
               <ActivityLoader />
             )}
             {CartItems.lines.edges.length > 0 && (
-              <Button
-                text="Proceed to Checkout"
-                icon="mail"
-                isIcon={false}
-                theme="tertiary"
-              />
+              <Button text="Proceed to Checkout" type="primary" />
             )}
           </View>
         </>
@@ -415,8 +384,7 @@ const styles = StyleSheet.create({
   topText: {
     fontSize: 12,
     fontFamily: FONTS.semiBold,
-    marginHorizontal: CONTAINER_PADDING,
-    marginTop: 25,
+    marginBottom: 15,
   },
   paymentRow: {
     flexDirection: 'row',
@@ -448,25 +416,60 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     color: COLORS.white,
   },
-  /////////////
-  ImageContainer: {
-    shadowColor: 'rgba(0,0,0,0.4)',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 22,
-    backgroundColor: '#FAF7F1',
-    borderRadius: 16,
-    width: 88,
-    height: 88,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 24,
-    marginLeft: 10,
+  cartHeading: {
+    fontSize: 14,
+    fontFamily: FONTS.semiBold,
+    color: Color.primary,
+    width: WIDTH / 3.5,
   },
+  cartPrice: {
+    fontSize: 14,
+    fontFamily: FONTS.semiBold,
+    color: Color.primary,
+  },
+  tags: {
+    fontSize: 12,
+    fontFamily: FONTS.regular,
+    color: Color.primary,
+    marginTop: 2.5,
+    textTransform: 'capitalize',
+  },
+  cartRowTop: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  cartRowBottom: {
+    // flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  cartBtn: {
+    height: 25,
+    width: 25,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: COLORS.secondary,
+    borderWidth: 1,
+  },
+  minusStyle: {
+    color: COLORS.secondary,
+    fontSize: 16,
+  },
+  numStyle: {
+    color: COLORS.tertiary,
+    fontSize: 14,
+    fontFamily: FONTS.medium,
+    marginHorizontal: 10,
+  },
+  addStyle: {
+    color: COLORS.primary,
+    fontSize: 16,
+  },
+  /////////////
   ContainerContent: {
     paddingLeft: 15,
     width: Window.width / 1.47,
@@ -526,20 +529,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  NumStyle: {
-    color: Color.tertiary,
-    fontSize: 16,
-    fontFamily: Font.Gilroy_SemiBold,
-    marginHorizontal: 10,
-  },
-  AddStyle: {
-    color: Color.secondary,
-    fontSize: 16,
-  },
-  MinusStyle: {
-    color: Color.secondary,
-    fontSize: 16,
-  },
+
   cartStyle: {
     width: 30,
     height: 30,

@@ -107,7 +107,6 @@ const SignIn = ({navigation}) => {
           <TextField2
             icon={'lock-outline'}
             label="Password"
-            isDark={true}
             onChanged={setPassword}
             passwordFeild={true}
             setHidePass={setHidePass}

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StatusBar, Image} from 'react-native';
+import {View, Text, StatusBar, Image, StyleSheet} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -14,6 +14,7 @@ import {CUSTOMER_UPDATE} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
 import {ScrollView} from 'react-native';
 import PhoneInputComponent from '../../../components/PhoneInputComponent';
+import {COLORS, CONTAINER_PADDING} from '../../../constants';
 
 const PersonalInfoEdit = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -44,7 +45,10 @@ const PersonalInfoEdit = ({navigation}) => {
     console.log(error);
   }
 
-  const [customerUpdate, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(CUSTOMER_UPDATE);
+  const [
+    customerUpdate,
+    {loading: updateLoading, error: updateError, data: updateData},
+  ] = useMutation(CUSTOMER_UPDATE);
 
   const handleSubmit = async () => {
     if (firstName === '') {
@@ -86,16 +90,15 @@ const PersonalInfoEdit = ({navigation}) => {
       },
     };
 
-    if(phone){
-      variables.customer.phone= '+1'+phone;
+    if (phone) {
+      variables.customer.phone = '+1' + phone;
     }
 
     handleProfileUpdate(customerUpdate, variables, refetch);
   };
 
   return (
-    <SafeAreaView style={GlobalStyle.Container}>
-
+    <SafeAreaView style={styles.container}>
       <AppBar theme="light" title="Personal Information" />
       <ScrollView>
         {loading && (
@@ -130,45 +133,82 @@ const PersonalInfoEdit = ({navigation}) => {
             fontFamily: Font.Gilroy_Regular,
             color: 'rgba(8, 14, 30, 0.4)',
           }}>
-          This may include details you have provided to us such as your name, your number & email...
+          This may include details you have provided to us such as your name,
+          your number & email...
         </Text>
 
-        <View style={{flexDirection: 'row', marginTop: 20}}>
-          <View style={{width: '48%', marginRight: 5}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{width: '48%'}}>
             <TextField2
+              type="secondary"
               label="First Name"
               onChanged={setFirstName}
-              customStyle={{marginBottom: Window.fixPadding * 1.5}}
               maxLength={12}
               value={firstName}
             />
           </View>
-          <View style={{width: '48%', marginLeft: 5}}>
-            <TextField2 label="Last Name" onChanged={setLastName} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={lastName} />
+          <View style={{width: '48%'}}>
+            <TextField2
+              type="secondary"
+              label="Last Name"
+              onChanged={setLastName}
+              value={lastName}
+            />
           </View>
         </View>
+        <View style={{marginVertical: 7.5}} />
 
         <TextField2
+          type="secondary"
           label="Display Name"
           onChanged={setDisplayName}
-          customStyle={{marginBottom: Window.fixPadding * 1.5}}
           value={displayName}
           disabled
         />
+        <View style={{marginVertical: 7.5}} />
 
-        <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
+        <TextField2
+          type="secondary"
+          label="Email"
+          onChanged={setEmail}
+          value={email}
+          disabled
+        />
+        <View style={{marginVertical: 7.5}} />
 
         <PhoneInputComponent
-        text={phone} 
-        setText={setPhone}
-        isDark={false}
+          type="secondary"
+          text={phone}
+          setText={setPhone}
+          isDark={false}
         />
 
         <View style={{marginTop: 20}}>
-          <Button loading={updateLoading} text="Update Profile" onPressFunc={handleSubmit} icon="mail" isIcon={false} theme="tertiary" />
+          <Button
+            loading={updateLoading}
+            text="Update Profile"
+            onPressFunc={handleSubmit}
+            icon="mail"
+            isIcon={false}
+            theme="tertiary"
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 export default PersonalInfoEdit;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: CONTAINER_PADDING,
+  },
+});

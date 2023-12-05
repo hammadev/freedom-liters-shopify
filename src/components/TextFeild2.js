@@ -9,7 +9,6 @@ const TextField2 = ({
   maxLength,
   placeholder,
   icon,
-  type,
   passwordFeild = false,
   setHidePass,
   hidePass,
@@ -17,14 +16,15 @@ const TextField2 = ({
   onChanged = val => console.log('No Onchange Event', val),
   value,
   disabled = false,
+  type = 'primary',
 }) => {
   return (
     <TextInput
       label={
         <Text
           style={{
-            color: COLORS.white,
-            backgroundColor: COLORS.primary,
+            color: type === 'primary' ? COLORS.white : COLORS.tertiary,
+            backgroundColor: type === 'primary' ? COLORS.primary : COLORS.white,
             fontSize: 14,
           }}>
           {label}
@@ -58,13 +58,13 @@ const TextField2 = ({
       theme={{
         roundness: RADIUS,
       }}
-      keyboardType={type ? type : 'default'}
+      // keyboardType={type ? type : 'default'}
       maxLength={maxLength ? maxLength : 50}
-      selectionColor={COLORS.white}
-      outlineColor={COLORS.white}
-      activeOutlineColor={COLORS.white}
+      selectionColor={type === 'primary' ? COLORS.white : COLORS.primary}
+      outlineColor={type === 'primary' ? COLORS.white : COLORS.primary}
+      activeOutlineColor={type === 'primary' ? COLORS.white : COLORS.primary}
       style={styles.input}
-      textColor={COLORS.white}
+      textColor={type === 'primary' ? COLORS.white : COLORS.tertiary}
       onChangeText={onChangeText ? onChangeText : text => onChanged(text)}
       value={value}
       disabled={disabled}

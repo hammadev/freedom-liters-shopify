@@ -22,6 +22,9 @@ import {useEffect} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ImageBackground} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
+import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import BackButton from '../../../components/BackButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const ProductDetail = ({route, navigation}) => {
   const {product} = route.params;
@@ -36,7 +39,7 @@ const ProductDetail = ({route, navigation}) => {
   const [NewArr, setNewArr] = useState([]);
   const [allSizes, setAllSizes] = useState([]);
   const [allColors, setAllColors] = useState([]);
-
+  const insets = useSafeAreaInsets();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
 
@@ -211,14 +214,7 @@ const ProductDetail = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView
-      style={{backgroundColor: Color.white, flex: 1}}
-      edges={{
-        top: 'maximum',
-        right: 'maximum',
-        left: 'maximum',
-        bottom: hasNotch && Platform.OS === 'ios' ? '' : 'maximum',
-      }}>
+    <View style={{backgroundColor: COLORS.white, flex: 1}}>
       <ScrollView
         ref={ref}
         showsVerticalScrollIndicator={false}
@@ -228,12 +224,14 @@ const ProductDetail = ({route, navigation}) => {
           resizeMode="cover"
           source={{uri: ProductImages}}
           style={styles.ProductImage}>
-          <View style={styles.overlay} />
-          <AppBar
+          <View style={[styles.overlay, {paddingTop: insets.top + 10}]}>
+            <BackButton type="secondary" />
+          </View>
+          {/* <AppBar
             theme="dark"
             header="solid"
             customStyle={{paddingHorizontal: 100}}
-          />
+          /> */}
         </ImageBackground>
 
         <View style={{backgroundColor: Color.white, paddingTop: 20}}>
@@ -351,11 +349,12 @@ const ProductDetail = ({route, navigation}) => {
           <Heading
             containerStyle={{
               paddingHorizontal: Window.fixPadding * 2,
+              marginVertical: Window.fixPadding * 2,
             }}
             name="Description"
           />
 
-          <View style={{marginTop: 0, paddingHorizontal: 20}}>
+          <View style={{paddingHorizontal: 20}}>
             <RenderHtml
               tagsStyles={{
                 p: {
@@ -378,7 +377,7 @@ const ProductDetail = ({route, navigation}) => {
             name="Latest"
             containerStyle={{
               paddingHorizontal: Window.fixPadding * 2,
-              marginTop: Window.fixPadding * 2,
+              marginVertical: Window.fixPadding * 2,
             }}
           />
           <PopularProducts />
@@ -393,22 +392,15 @@ const ProductDetail = ({route, navigation}) => {
           />
         </View>
       </ScrollView>
-      <View
-        style={{
-          paddingHorizontal: 20,
-          backgroundColor: Color.light,
-          paddingVertical: 10,
-          elevation: 10,
-          marginTop: Window.fixPadding * 1.6,
-        }}>
+      <View style={styles.bottomButtonContainer}>
         <Button
           onPressFunc={Add_To_Card}
-          theme="tertiary"
+          type="primary"
           loading={loadingSpinner}
           text="Add to Cart"
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -416,16 +408,12 @@ export default ProductDetail;
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
+    paddingHorizontal: CONTAINER_PADDING,
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
   ProductImage: {
     width: '100%',
-    paddingVertical: Window.fixPadding * 2,
     height: Window.height / 3,
   },
   ProductSize: {
@@ -444,5 +432,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bottomButtonContainer: {
+    backgroundColor: COLORS.white,
+    paddingVertical: 15,
+    shadowColor: 'rgba(0,0,0,0.25)',
+    shadowOffset: {
+      width: 0,
+      height: -10,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 5.84,
+    elevation: 12,
+    paddingHorizontal: CONTAINER_PADDING,
   },
 });

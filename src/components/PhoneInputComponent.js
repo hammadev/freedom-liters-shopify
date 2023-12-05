@@ -7,7 +7,7 @@ import useKeyboardDetection from '../hooks/detectKeyboard';
 import {TextMask, TextInputMask} from 'react-native-masked-text';
 import {COLORS, FONTS, RADIUS} from '../constants';
 
-const PhoneInputComponent = ({text, setText}) => {
+const PhoneInputComponent = ({text, setText, type = 'primary'}) => {
   const [focused, setFocused] = useState(false);
 
   const isKeyboardOpen = useKeyboardDetection();
@@ -31,9 +31,9 @@ const PhoneInputComponent = ({text, setText}) => {
     <TextInput
       mode="outlined"
       theme={customTheme}
-      selectionColor={'#CBD1DA'}
-      outlineColor={COLORS.white}
-      activeOutlineColor={COLORS.white}
+      selectionColor={type === 'primary' ? COLORS.white : COLORS.primary}
+      outlineColor={type === 'primary' ? COLORS.white : COLORS.primary}
+      activeOutlineColor={type === 'primary' ? COLORS.white : COLORS.primary}
       style={styles.input}
       onFocus={() => {
         setFocused(true);
@@ -60,14 +60,14 @@ const PhoneInputComponent = ({text, setText}) => {
             textStyle={{
               fontSize: 14,
               fontFamily: FONTS.regular,
-              color: COLORS.white,
+              color: type === 'primary' ? COLORS.white : COLORS.tertiary,
             }}
           />
           <TextInputMask
             style={{
               fontSize: 14,
               fontFamily: FONTS.regular,
-              color: COLORS.white,
+              color: type === 'primary' ? COLORS.white : COLORS.tertiary,
               marginLeft: -5,
             }}
             type={'custom'}

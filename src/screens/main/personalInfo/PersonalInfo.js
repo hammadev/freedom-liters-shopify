@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StatusBar, Image} from 'react-native';
+import {View, Text, StatusBar, Image, StyleSheet} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -14,6 +14,7 @@ import {CUSTOMER_UPDATE} from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
 import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 import {TouchableOpacity} from 'react-native';
+import {COLORS, CONTAINER_PADDING} from '../../../constants';
 
 const PersonalInfo = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -44,7 +45,10 @@ const PersonalInfo = ({navigation}) => {
     console.log(error);
   }
 
-  const [customerUpdate, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(CUSTOMER_UPDATE);
+  const [
+    customerUpdate,
+    {loading: updateLoading, error: updateError, data: updateData},
+  ] = useMutation(CUSTOMER_UPDATE);
 
   const handleSubmit = async () => {
     if (firstName === null) {
@@ -90,8 +94,7 @@ const PersonalInfo = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={GlobalStyle.Container}>
-
+    <SafeAreaView style={styles.container}>
       <AppBar theme="light" title="Personal Information" />
       {loading && (
         <View
@@ -116,7 +119,8 @@ const PersonalInfo = ({navigation}) => {
           }}>
           Personal Information
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('PersonalInfoEdit')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('PersonalInfoEdit')}>
           <Image source={require('../../../assets/images/pics/edit.png')} />
         </TouchableOpacity>
       </View>
@@ -128,43 +132,72 @@ const PersonalInfo = ({navigation}) => {
           fontFamily: Font.Gilroy_Regular,
           color: 'rgba(8, 14, 30, 0.4)',
         }}>
-        This may include details you have provided to us such as your name, your number & email...
+        This may include details you have provided to us such as your name, your
+        number & email...
       </Text>
 
-      <View style={{flexDirection: 'row', marginTop: 20}}>
-        <View style={{width: '48%', marginRight: 5}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 20,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="First Name"
             onChanged={setFirstName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             maxLength={12}
             value={firstName}
             disabled
           />
         </View>
-        <View style={{width: '48%', marginLeft: 5}}>
+        <View style={{width: '48%'}}>
           <TextField2
+            type="secondary"
             label="Last Name"
             onChanged={setLastName}
-            customStyle={{marginBottom: Window.fixPadding * 1.5}}
             value={lastName}
             disabled
           />
         </View>
       </View>
-
+      <View style={{marginVertical: 7.5}} />
       <TextField2
+        type="secondary"
         label="Display Name"
         onChanged={setDisplayName}
-        customStyle={{marginBottom: Window.fixPadding * 1.5}}
         value={displayName}
         disabled
       />
+      <View style={{marginVertical: 7.5}} />
 
-      <TextField2 label="Email" onChanged={setEmail} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={email} disabled />
+      <TextField2
+        type="secondary"
+        label="Email"
+        onChanged={setEmail}
+        value={email}
+        disabled
+      />
+      <View style={{marginVertical: 7.5}} />
 
-      <TextField2 label="Phone" onChanged={setPhone} customStyle={{marginBottom: Window.fixPadding * 1.5}} value={phone} disabled />
+      <TextField2
+        type="secondary"
+        label="Phone"
+        onChanged={setPhone}
+        value={phone}
+        disabled
+      />
     </SafeAreaView>
   );
 };
 export default PersonalInfo;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: CONTAINER_PADDING,
+  },
+});
