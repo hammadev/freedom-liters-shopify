@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -39,6 +40,7 @@ import {
 } from '../../../constants';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {ChevronSvg} from '../../../assets/svgs/ProfileSvgs';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const PaymentDetails = ({totalAmout, cartId, setCouponPopup}) => {
   return (
@@ -179,6 +181,12 @@ const Cart = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header label="Your Cart" />
 
       {!RemoveLoader ? (
@@ -357,7 +365,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     backgroundColor: COLORS.white,
     paddingVertical: 15,
-    shadowColor: 'rgba(0,0,0,0.25)',
+    shadowColor: Platform.OS === 'ios' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,1)',
     shadowOffset: {
       width: 0,
       height: -10,

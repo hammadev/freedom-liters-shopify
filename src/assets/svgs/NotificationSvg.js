@@ -1,8 +1,23 @@
 import React from 'react';
-import Svg, {G, Path, Defs, LinearGradient, Stop, Circle, ClipPath, Rect} from 'react-native-svg';
+import Svg, {
+  G,
+  Path,
+  Defs,
+  LinearGradient,
+  Stop,
+  Circle,
+  ClipPath,
+  Rect,
+} from 'react-native-svg';
+import {WIDTH} from '../../constants';
 export function OrderCancelledIcon({width, height}) {
   return (
-    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -10,7 +25,13 @@ export function OrderCancelledIcon({width, height}) {
         fill="url(#paint0_linear_1895_11137)"
       />
       <Defs>
-        <LinearGradient id="paint0_linear_1895_11137" x1="23.6663" y1="23.6657" x2="-4.09823" y2="15.6156" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_1895_11137"
+          x1="23.6663"
+          y1="23.6657"
+          x2="-4.09823"
+          y2="15.6156"
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#FF4D67" />
           <Stop offset="1" stopColor="#FF8A9B" />
         </LinearGradient>
@@ -20,7 +41,12 @@ export function OrderCancelledIcon({width, height}) {
 }
 export function OrderSuccessIcon({width, height}) {
   return (
-    <Svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="22"
+      height="24"
+      viewBox="0 0 22 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -28,7 +54,13 @@ export function OrderSuccessIcon({width, height}) {
         fill="url(#paint0_linear_1895_11141)"
       />
       <Defs>
-        <LinearGradient id="paint0_linear_1895_11141" x1="21.5" y1="23.6667" x2="-3.86179" y2="17.0486" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_1895_11141"
+          x1="21.5"
+          y1="23.6667"
+          x2="-3.86179"
+          y2="17.0486"
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#1BAC4B" />
           <Stop offset="1" stopColor="#46D375" />
         </LinearGradient>
@@ -38,7 +70,12 @@ export function OrderSuccessIcon({width, height}) {
 }
 export function ServicesIcon({width, height}) {
   return (
-    <Svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="24"
+      height="22"
+      viewBox="0 0 24 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -46,7 +83,13 @@ export function ServicesIcon({width, height}) {
         fill="url(#paint0_linear_1895_8917)"
       />
       <Defs>
-        <LinearGradient id="paint0_linear_1895_8917" x1="23.6663" y1="21.5" x2="-3.60222" y2="12.7153" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_1895_8917"
+          x1="23.6663"
+          y1="21.5"
+          x2="-3.60222"
+          y2="12.7153"
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#FB9400" />
           <Stop offset="1" stopColor="#FFAB38" />
         </LinearGradient>
@@ -56,7 +99,12 @@ export function ServicesIcon({width, height}) {
 }
 export function CreditCardIcon({width, height}) {
   return (
-    <Svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="24"
+      height="22"
+      viewBox="0 0 24 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -64,7 +112,13 @@ export function CreditCardIcon({width, height}) {
         fill="url(#paint0_linear_1895_8593)"
       />
       <Defs>
-        <LinearGradient id="paint0_linear_1895_8593" x1="23.6663" y1="21.5" x2="-3.60222" y2="12.7153" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_1895_8593"
+          x1="23.6663"
+          y1="21.5"
+          x2="-3.60222"
+          y2="12.7153"
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#246BFD" />
           <Stop offset="1" stopColor="#5089FF" />
         </LinearGradient>
@@ -75,7 +129,12 @@ export function CreditCardIcon({width, height}) {
 
 export function AccountSetIcon({width, height}) {
   return (
-    <Svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="20"
+      height="24"
+      viewBox="0 0 20 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -83,7 +142,13 @@ export function AccountSetIcon({width, height}) {
         fill="url(#paint0_linear_1895_5070)"
       />
       <Defs>
-        <LinearGradient id="paint0_linear_1895_5070" x1="19.3337" y1="23.6667" x2="-3.51588" y2="18.3667" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_1895_5070"
+          x1="19.3337"
+          y1="23.6667"
+          x2="-3.51588"
+          y2="18.3667"
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#1BAC4B" />
           <Stop offset="1" stopColor="#46D375" />
         </LinearGradient>
@@ -94,7 +159,12 @@ export function AccountSetIcon({width, height}) {
 
 export function NoResult({width, height}) {
   return (
-    <Svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width={WIDTH / 2}
+      height={WIDTH / 2}
+      viewBox="0 0 300 300"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M0.0702482 1.51831C11.5679 23.0993 32.9648 36.3117 55.9582 42.9179C84.8008 51.205 115.652 50.3944 145.256 47.7837C172.202 45.4074 200.69 43.2696 226.073 54.6343C232.147 57.3523 237.869 60.857 242.997 65.1029C247.514 68.8421 251.292 73.3324 253.021 79.0227C256.117 89.1952 251.91 99.8685 244.798 107.289C240.736 111.527 235.718 114.786 230.271 116.951C223.238 119.747 215.92 121.94 208.542 123.611C193.658 126.981 178.059 128.07 162.982 125.316C157.401 124.297 149.174 122.538 146.775 116.594C145.417 113.23 146.965 109.648 149.363 107.196C152.006 104.492 155.706 103.045 159.286 102.064C166.877 99.9837 174.941 99.1413 182.785 98.8095C190.823 98.4698 198.889 98.8731 206.852 100.014C214.373 101.09 221.862 102.775 229.034 105.306C235.686 107.655 242.325 110.878 247.331 115.96C252.029 120.73 254.473 127.104 253.206 133.78C251.982 140.237 247.649 145.627 242.275 149.223C232.169 155.987 218.232 157.127 206.927 152.907C204.064 151.838 201.165 150.342 199.879 147.392C198.77 144.848 199.426 142.099 201.378 140.169C204.239 137.344 208.532 136.77 212.333 136.281C215.864 135.828 219.411 135.477 222.968 135.282C236.792 134.531 252.363 136.162 263.706 144.872C267.619 147.876 271.637 152.074 272.687 157.063C274.052 163.554 268.094 167.79 262.479 169.215C258.892 170.125 254.121 170.677 250.995 168.267C248.627 166.441 250.138 164.554 252.22 163.391C257.171 160.626 263.684 161.067 268.945 162.638C274.808 164.391 280.001 168.019 283.622 172.952C287.109 177.703 288.268 183.095 289.817 188.646C291.238 193.738 293.481 198.495 298.416 200.982C299.086 201.32 300.597 200.412 299.748 199.985C293.799 196.987 292.195 190.778 290.664 184.814C289.105 178.742 286.753 173.206 282.212 168.732C277.828 164.413 272.148 161.574 266.076 160.588C260.791 159.73 254.528 159.932 250.055 163.256C248.566 164.365 247.224 166.137 248.389 167.971C250.033 170.556 253.721 171.208 256.519 171.198C262.684 171.174 270.535 168.875 273.623 163.008C276.049 158.403 273.736 153.207 270.78 149.466C266.913 144.572 261.62 141.151 255.928 138.731C241.724 132.689 225.487 133.068 210.486 135.286C205.122 136.079 197.05 138.739 197.589 145.58C198.086 151.912 205.498 154.29 210.675 155.494C222.719 158.295 236.826 155.973 246.369 147.779C251.272 143.569 254.878 137.674 255.272 131.119C255.693 124.112 252.25 118.024 247.107 113.494C241.577 108.626 234.603 105.577 227.654 103.343C219.854 100.836 211.751 99.187 203.613 98.2671C195.197 97.3154 186.682 97.1684 178.238 97.83C174.029 98.1598 169.838 98.7002 165.678 99.4354C161.835 100.115 157.972 100.922 154.366 102.453C148.842 104.802 142.232 110.729 145.186 117.4C147.655 122.977 154.875 125.036 160.304 126.174C176.283 129.52 193.022 128.389 208.854 124.801C216.514 123.065 224.141 120.786 231.42 117.822C236.979 115.557 242.084 112.141 246.24 107.806C253.743 99.9758 258.109 88.5495 254.528 77.8902C252.586 72.1085 248.62 67.6143 243.961 63.8135C238.591 59.4305 232.587 55.8681 226.233 53.1084C213.097 47.4022 198.68 45.1889 184.447 44.6922C168.939 44.1498 153.626 45.9518 138.196 47.1161C120.501 48.4513 102.702 48.799 85.0255 47.0128C58.7019 44.3465 30.8693 36.0256 12.4368 16.0023C8.20193 11.4028 4.59139 6.2728 1.65285 0.755368C1.291 0.0758712 -0.357212 0.715631 0.0702482 1.51831Z"
         fill="#3467A9"
@@ -216,7 +286,12 @@ export function NoResult({width, height}) {
 }
 export function CartEmptyIcon({width, height}) {
   return (
-    <Svg width="280" height="273" viewBox="0 0 280 273" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="280"
+      height="273"
+      viewBox="0 0 280 273"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <G clip-path="url(#clip0_696_8768)">
         <Path
           d="M177.755 61.3969H102.308C100.588 61.399 98.9399 62.0821 97.7242 63.2965C96.5085 64.5108 95.8245 66.1572 95.8224 67.8745V235.365L94.9578 235.628L76.4492 241.29C75.572 241.557 74.6246 241.466 73.8148 241.036C73.0051 240.606 72.3992 239.872 72.1302 238.997L17.0757 59.3715C16.8078 58.4954 16.8991 57.5488 17.3296 56.7398C17.7601 55.9309 18.4945 55.3258 19.3715 55.0574L47.8931 46.3342L130.578 21.0541L159.1 12.3309C159.534 12.1974 159.99 12.1508 160.442 12.1936C160.894 12.2365 161.334 12.368 161.735 12.5806C162.136 12.7932 162.491 13.0827 162.78 13.4326C163.069 13.7824 163.286 14.1858 163.419 14.6196L177.492 60.5332L177.755 61.3969Z"
@@ -260,19 +335,43 @@ export function CartEmptyIcon({width, height}) {
         />
       </G>
       <Defs>
-        <LinearGradient id="paint0_linear_696_8768" x1="132.993" y1="55.1985" x2="42.7168" y2="7.63028" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint0_linear_696_8768"
+          x1="132.993"
+          y1="55.1985"
+          x2="42.7168"
+          y2="7.63028"
+          gradientUnits="userSpaceOnUse">
           <Stop stop-color="#021C5E" />
           <Stop offset="1" stop-color="#3467A9" />
         </LinearGradient>
-        <LinearGradient id="paint1_linear_696_8768" x1="90.8581" y1="19.4134" x2="70.2839" y2="13.4412" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint1_linear_696_8768"
+          x1="90.8581"
+          y1="19.4134"
+          x2="70.2839"
+          y2="13.4412"
+          gradientUnits="userSpaceOnUse">
           <Stop stop-color="#021C5E" />
           <Stop offset="1" stop-color="#3467A9" />
         </LinearGradient>
-        <LinearGradient id="paint2_linear_696_8768" x1="231.145" y1="79.5341" x2="171.679" y2="23.2944" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint2_linear_696_8768"
+          x1="231.145"
+          y1="79.5341"
+          x2="171.679"
+          y2="23.2944"
+          gradientUnits="userSpaceOnUse">
           <Stop stop-color="#021C5E" />
           <Stop offset="1" stop-color="#3467A9" />
         </LinearGradient>
-        <LinearGradient id="paint3_linear_696_8768" x1="196.126" y1="54.0555" x2="175.551" y2="48.0833" gradientUnits="userSpaceOnUse">
+        <LinearGradient
+          id="paint3_linear_696_8768"
+          x1="196.126"
+          y1="54.0555"
+          x2="175.551"
+          y2="48.0833"
+          gradientUnits="userSpaceOnUse">
           <Stop stop-color="#021C5E" />
           <Stop offset="1" stop-color="#3467A9" />
         </LinearGradient>
@@ -286,7 +385,12 @@ export function CartEmptyIcon({width, height}) {
 
 export function CouponIcon({width, height}) {
   return (
-    <Svg width="246" height="246" viewBox="0 0 246 246" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="246"
+      height="246"
+      viewBox="0 0 246 246"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M123 246C190.931 246 246 190.931 246 123C246 55.069 190.931 0 123 0C55.069 0 0 55.069 0 123C0 190.931 55.069 246 123 246Z"
         fill="#F9F4F1"
@@ -393,7 +497,12 @@ export function CouponIcon({width, height}) {
 
 export function NoCartItem({width, height}) {
   return (
-    <Svg width="300" height="270" viewBox="0 0 300 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Svg
+      width="300"
+      height="270"
+      viewBox="0 0 300 270"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M77.3669 265.422C71.0129 264.048 -5.3251 251.667 0.293898 160.365C5.9159 69.0659 12.9689 41.6069 42.6479 31.5599C72.3269 21.5159 144.471 -26.0191 201.084 19.1789C257.697 64.3769 318.786 104.913 294.543 177.081C270.3 249.249 266.331 273.321 203.082 269.637C139.833 265.953 107.58 271.956 77.3669 265.419V265.422Z"
         fill="#CBE2FF"
@@ -406,7 +515,10 @@ export function NoCartItem({width, height}) {
         d="M162.402 94.4429C162.402 84.0179 162.846 73.3679 161.115 63.0419C159.867 55.5899 156.99 47.8409 149.991 44.0339C146.217 41.9819 141.894 41.2469 137.64 41.1599C133.245 41.0699 128.733 41.5439 124.653 43.2719C117.549 46.2779 113.931 52.9379 112.362 60.1799C109.938 71.3609 110.79 83.1989 110.796 94.5539C110.796 95.3069 112.263 95.0879 112.263 94.4399C112.26 84.6209 111.792 74.6759 113.019 64.9079C113.916 57.7589 115.998 49.9109 122.346 45.6869C125.826 43.3709 130.047 42.4949 134.163 42.2669C138.588 42.0239 143.211 42.3779 147.33 44.1239C154.437 47.1359 157.773 54.1319 159.27 61.3109C161.532 72.1559 160.938 83.5439 160.935 94.5539C160.935 95.3069 162.402 95.0879 162.402 94.4399V94.4429Z"
         fill="#021C5E"
       />
-      <Path d="M88.8208 198.303V79.4517H102.372V92.4237L97.3948 206.217L94.9798 200.493L88.8208 198.303Z" fill="#DBDBDB" />
+      <Path
+        d="M88.8208 198.303V79.4517H102.372V92.4237L97.3948 206.217L94.9798 200.493L88.8208 198.303Z"
+        fill="#DBDBDB"
+      />
       <Path
         d="M91.2208 192.828V85.1671C91.2208 82.0111 93.7798 79.4551 96.9328 79.4551H102.369V92.0881L97.6738 202.92L96.2878 197.343L93.4108 196.134C92.0818 195.576 91.2178 194.274 91.2178 192.831L91.2208 192.828Z"
         fill="#EEEEEE"
@@ -443,7 +555,10 @@ export function NoCartItem({width, height}) {
         d="M197.853 92.0667C190.335 89.0517 182.814 86.0397 175.296 83.0247C175.137 83.2677 174.978 83.5107 174.822 83.7537C179.229 82.4457 183.636 81.1347 188.043 79.8267C188.508 79.6887 189.024 79.0857 188.223 79.0317C182.325 78.6477 176.409 78.4437 170.502 78.2607C154.95 77.7807 139.383 77.6937 123.825 77.9337C112.182 78.1107 100.545 78.4827 88.9138 79.0407C88.5328 79.0587 87.6538 79.6137 88.3768 79.8537C92.8948 81.3477 97.4098 82.8417 101.928 84.3357C101.85 84.1947 101.772 84.0537 101.694 83.9127C100.035 86.7417 98.3758 89.5707 96.7168 92.4027C96.5998 92.6037 96.7258 92.7957 96.9508 92.8257C116.355 95.3697 135.945 96.4647 155.511 96.1017C167.403 95.8797 179.313 95.1747 191.121 93.6987C193.146 93.4467 195.171 93.1857 197.184 92.8377C197.88 92.7177 198.375 91.8417 197.376 92.0127C191.505 93.0267 185.529 93.5847 179.598 94.0797C164.148 95.3697 148.608 95.6277 133.119 95.0187C121.32 94.5537 109.545 93.5577 97.8358 92.0247C97.9138 92.1657 97.9918 92.3067 98.0698 92.4477C99.7288 89.6187 101.388 86.7897 103.047 83.9577C103.182 83.7267 103.017 83.6037 102.813 83.5347C98.2948 82.0407 93.7798 80.5467 89.2618 79.0527C89.0818 79.3227 88.9048 79.5957 88.7248 79.8657C108.153 78.9327 127.611 78.5397 147.063 78.6777C158.688 78.7617 170.313 79.0167 181.926 79.5657C183.84 79.6557 185.757 79.7487 187.668 79.8747C187.728 79.6107 187.788 79.3467 187.848 79.0797C183.441 80.3877 179.034 81.6987 174.627 83.0067C174.441 83.0637 173.622 83.5227 174.153 83.7357C181.671 86.7507 189.192 89.7627 196.71 92.7777C197.154 92.9547 198.471 92.3097 197.859 92.0667H197.853Z"
         fill="#021C5E"
       />
-      <Path d="M187.944 79.4517L174.723 83.3817L187.944 88.6947V79.4517Z" fill="#EEEEEE" />
+      <Path
+        d="M187.944 79.4517L174.723 83.3817L187.944 88.6947V79.4517Z"
+        fill="#EEEEEE"
+      />
       <Path
         d="M187.827 79.0076C183.42 80.3156 179.013 81.6266 174.606 82.9346C174.183 83.0606 173.679 83.5826 174.297 83.8316C178.704 85.6046 183.111 87.3746 187.518 89.1476C187.833 89.2736 188.676 89.0696 188.676 88.6256V79.3826C188.676 78.6806 187.215 78.9356 187.215 79.5206V88.7636C187.602 88.5896 187.986 88.4156 188.373 88.2416C183.966 86.4686 179.559 84.6986 175.152 82.9256C175.05 83.2256 174.945 83.5256 174.843 83.8226C179.25 82.5146 183.657 81.2036 188.064 79.8956C188.937 79.6376 188.709 78.7406 187.824 79.0046L187.827 79.0076Z"
         fill="#021C5E"

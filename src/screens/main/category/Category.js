@@ -1,22 +1,22 @@
 import React from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Platform,
-  FlatList,
-  View,
-} from 'react-native';
+import {StyleSheet, FlatList, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {CatBoxCat} from '../../../components/CategoryCart';
 import {COLORS, CONTAINER_PADDING, RADIUS, WIDTH} from '../../../constants';
 import Header from '../../../components/Header';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const Category = ({navigation}) => {
   const {categories} = useSelector(state => ({...state}));
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header label="Category" hideBackButton />
 
       <FlatList

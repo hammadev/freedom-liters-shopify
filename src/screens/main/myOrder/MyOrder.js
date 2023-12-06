@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
-import {Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
+import {View, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import AppBar from '../../../components/AppBar';
 import {useSelector} from 'react-redux';
 import NotLogin from '../../../components/NotLogin';
 import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
 import Header from '../../../components/Header';
 import {COLORS} from '../../../constants';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const MyOrder = () => {
   const {auth} = useSelector(state => ({...state}));
@@ -16,6 +15,12 @@ const MyOrder = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header label="My Order" hideBackButton />
 
       <View

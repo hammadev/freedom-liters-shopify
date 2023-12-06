@@ -22,7 +22,7 @@ import {useState} from 'react';
 import {COLORS, FONTS, RADIUS, WIDTH} from '../../../../constants';
 import {TouchableRipple} from 'react-native-paper';
 
-const ProductBox = ({item, relatedProducts = false}) => {
+const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
   const [showFavIcon, setShowFavIcon] = useState(false);
   const navigation = useNavigation();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
@@ -85,6 +85,9 @@ const ProductBox = ({item, relatedProducts = false}) => {
           JSON.stringify({addedItems: filterData}),
         );
         setShowFavIcon(false);
+        if (GET_WISHLIST_DATA) {
+          GET_WISHLIST_DATA();
+        }
       } else {
         const AddItemsNew = {
           addedItems: [...ParseData.addedItems, item],
@@ -94,6 +97,9 @@ const ProductBox = ({item, relatedProducts = false}) => {
           JSON.stringify(AddItemsNew),
         );
         setShowFavIcon(true);
+        if (GET_WISHLIST_DATA) {
+          GET_WISHLIST_DATA();
+        }
       }
     } else {
       const NewObject = {addedItems: [item]};

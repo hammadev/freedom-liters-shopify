@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
@@ -32,6 +33,7 @@ import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
 import Header from '../../../components/Header';
 import {COLORS, CONTAINER_PADDING, FONTS, WIDTH} from '../../../constants';
 import AddressList from '../../../components/AddressList';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const AddressListing = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -219,46 +221,33 @@ const AddressListing = ({navigation}) => {
       );
     }
   };
-
+  console.log(data.customer.addresses.edges);
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header
         label={'Address'}
-        edit
+        edit={
+          data && data.customer !== null
+            ? data.customer.defaultAddress !== null
+              ? true
+              : false
+            : false
+        }
         editOnpress={() => setEditIcon(!editIcon)}
       />
-
-      {/* <View
-        style={{
-          paddingHorizontal: Window.fixPadding * 2,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}>
-        <TouchableOpacity
-          onPress={() => setEditIcon(!editIcon)}
-          style={{width: 50, alignItems: 'center'}}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: Font.Gilroy_SemiBold,
-              color: Color.tertiary,
-            }}>
-            {data && data.customer.defaultAddress !== null
-              ? editIcon
-                ? 'Done'
-                : 'Edit'
-              : ''}
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
         {!loading &&
-          data &&
+          data.customer !== null &&
+          data.customer.defaultAddress !== null &&
           data.customer.addresses.edges.map((item, i) => (
             <AddressList
               key={i}
@@ -270,15 +259,16 @@ const AddressListing = ({navigation}) => {
             />
           ))}
 
-        {data && data.customer.defaultAddress == null ? (
-          <View style={styles.noAddressContainer}>
-            <NoAddressSvg />
-            <Text style={styles.text}>You have no address yet</Text>
-            <Text style={styles.subTitle}>
-              Please add an address for shipping and billing
-            </Text>
-          </View>
-        ) : null}
+        {(data && data.customer === null) ||
+          (data && data.customer.defaultAddress === null && (
+            <View style={styles.noAddressContainer}>
+              <NoAddressSvg />
+              <Text style={styles.text}>You have no address yet</Text>
+              <Text style={styles.subTitle}>
+                Please add an address for shipping and billing
+              </Text>
+            </View>
+          ))}
       </ScrollView>
 
       <View style={styles.bottomButtonContainer}>
@@ -377,7 +367,7 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     backgroundColor: COLORS.white,
     paddingVertical: 15,
-    shadowColor: 'rgba(0,0,0,0.25)',
+    shadowColor: Platform.OS === 'ios' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,1)',
     shadowOffset: {
       width: 0,
       height: -10,
@@ -388,6 +378,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: CONTAINER_PADDING,
   },
   text: {
+    color: COLORS.tertiary,
     fontSize: 18,
     lineHeight: 20,
     fontFamily: FONTS.heading,
@@ -400,6 +391,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     textAlign: 'center',
     width: WIDTH / 1.25,
+    color: COLORS.secondary,
   },
 
   ////////////////

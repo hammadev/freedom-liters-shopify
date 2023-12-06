@@ -70,6 +70,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
         shadowRadius: 3.84,
 
         elevation: 5,
+        backgroundColor: COLORS.white,
       }}>
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];

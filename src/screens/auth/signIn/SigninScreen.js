@@ -21,6 +21,7 @@ import {ScrollView} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const SignIn = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -72,6 +73,13 @@ const SignIn = ({navigation}) => {
   };
   return (
     <View style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ImageBackground
         style={{
           flex: 1,

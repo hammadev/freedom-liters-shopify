@@ -4,11 +4,8 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
-  FlatList,
   StyleSheet,
   Platform,
-  ScrollView,
-  Animated,
 } from 'react-native';
 import {Color, GlobalStyle, Window} from '../../../globalStyle/Theme';
 
@@ -22,6 +19,20 @@ import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT} from '../../../constants';
 import {useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useEffect} from 'react';
+import Animated, {
+  runOnJS,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
+import {
+  FlatList,
+  PanGestureHandler,
+  ScrollView,
+} from 'react-native-gesture-handler';
 
 export const CatBox = ({item, navigation}) => {
   return (
@@ -72,13 +83,13 @@ export const CatBox = ({item, navigation}) => {
 };
 
 const Home = ({navigation}) => {
+  const [open, setOpen] = useState(false);
   const [SearchVale, setSearcValue] = useState(false);
-  const [statusBarContent, setStatusBarContent] = useState('light-content');
-  const [statusBarBg, setStatusBarBg] = useState('transparent');
+  const insets = useSafeAreaInsets();
+
   const {product, wishlist} = useSelector(state => ({
     ...state,
   }));
-  const isFocused = useIsFocused();
   const subscription = BackHandler.addEventListener(
     'hardwareBackPress',
     onBackPress,
@@ -87,137 +98,159 @@ const Home = ({navigation}) => {
   const onBackPress = () => {
     setSearcValue(false);
   };
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  //ANIMATED GESTURES ====> START
+  const handleScroll = e => {
+    if (e.nativeEvent.contentOffset.y > 1) {
+      setOpen(true);
+      progress.value = withTiming(
+        Platform.OS === 'ios'
+          ? HEIGHT - insets.top - (insets.bottom + 60)
+          : HEIGHT - 60 + insets.bottom,
+      );
+    } else if (e.nativeEvent.contentOffset.y < 1) {
+      setOpen(false);
+      progress.value = withTiming(
+        Platform.OS === 'ios'
+          ? HEIGHT / 1.5 - (insets.top - insets.bottom) - 15
+          : HEIGHT / 1.5 + 10,
+      );
+    }
+  };
+  const progress = useSharedValue(
+    Platform.OS === 'ios'
+      ? HEIGHT / 1.5 - (insets.top - insets.bottom) - 15
+      : HEIGHT / 1.5 + 10,
+  );
+  const reanimatedStyle = useAnimatedStyle(() => {
+    return {
+      height: progress.value,
+    };
+  }, []);
+  const translateY = useSharedValue(0);
+  const onGestureEvent = useAnimatedGestureHandler({
+    onStart: (_, ctx) => {
+      ctx.startY = translateY.value;
+    },
+    onActive: (event, ctx) => {
+      translateY.value = ctx.startY + event.translationY;
+    },
+    onEnd: event => {
+      if (event.translationY < 0) {
+        // Swipe up detected, perform desired action
+        runOnJS(setOpen)(true);
+        progress.value = withTiming(
+          Platform.OS === 'ios'
+            ? HEIGHT - insets.top - (insets.bottom + 60)
+            : HEIGHT - 60 + insets.bottom,
+        );
 
-  useEffect(() => {
-    setStatusBarContent('light-content');
-    setStatusBarBg('transparent');
-  }, [isFocused]);
+        // You can trigger a callback or perform any other logic here
+      } else {
+        runOnJS(setOpen)(false);
+        progress.value = withTiming(
+          Platform.OS === 'ios'
+            ? HEIGHT / 1.5 - (insets.top - insets.bottom) - 15
+            : HEIGHT / 1.5 + 10,
+        );
+      }
 
+      // Add any additional handling for other directions if needed
+    },
+  });
+  //ANIMATED GESTURES ====> END
   return (
     <View style={styles.container}>
-      <StatusBar
-        backgroundColor={statusBarBg}
-        translucent={false}
-        barStyle={statusBarContent}
-        showHideTransition="fade"
-        animated
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
       />
-      {SearchVale ? (
-        <SearchBar />
-      ) : (
-        <ScrollView
-          style={{flex: 1}}
-          contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
-          showsVerticalScrollIndicator={false}
-          scrollEventThrottle={16}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-            {
-              listener: event => {
-                if (event.nativeEvent.contentOffset.y > HEIGHT / 3) {
-                  setStatusBarContent(
-                    Platform.OS === 'android'
-                      ? 'light-content'
-                      : 'dark-content',
-                  );
-                  setStatusBarBg(COLORS.primary);
-                } else {
-                  setStatusBarContent('light-content');
-                  setStatusBarBg('transparent');
-                }
-              },
-            },
-            {useNativeDriver: false},
-          )}>
-          <Banner />
-
-          {/* Featured Product List */}
-          <SeactionRow
-            heading="Featured"
-            onPressLeft={() => {
-              navigation.navigate('ProductListing', {
-                value: 1,
-                title: 'Featured',
-              });
-            }}
-          />
-
-          {product && (
-            <FlatList
-              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-              data={product.featured.edges}
-              renderItem={({item, index}) => (
-                <ProductBox
-                  wishlist={wishlist}
-                  customStyle={{width: Window.width / 2.3}}
-                  item={item}
-                  index={index}
+      <ScrollView
+        style={{flex: 1}}
+        contentContainerStyle={{flexGrow: 1, justifyContent: 'flex-end'}}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        <Banner />
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <Animated.View style={[reanimatedStyle, styles.card]}>
+            <ScrollView
+              style={{flex: 1}}
+              contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              onMomentumScrollBegin={handleScroll}>
+              {/* Featured Product List */}
+              <SeactionRow
+                heading="Featured"
+                onPressLeft={() => {
+                  navigation.navigate('ProductListing', {
+                    value: 1,
+                    title: 'Featured',
+                  });
+                }}
+              />
+              {product && (
+                <FlatList
+                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  data={product.featured.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 />
               )}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={{width: 10}} />}
-            />
-          )}
-
-          {/* Latest Product List */}
-          <SeactionRow
-            heading="Latest"
-            onPressLeft={() => {
-              navigation.navigate('ProductListing', {
-                value: 2,
-                title: 'Latest',
-              });
-            }}
-          />
-          {product && (
-            <FlatList
-              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-              data={product.latest.edges}
-              renderItem={({item, index}) => (
-                <ProductBox
-                  wishlist={wishlist}
-                  customStyle={{width: Window.width / 2.3}}
-                  item={item}
-                  index={index}
+              {/* Latest Product List */}
+              <SeactionRow
+                heading="Latest"
+                onPressLeft={() => {
+                  navigation.navigate('ProductListing', {
+                    value: 2,
+                    title: 'Latest',
+                  });
+                }}
+              />
+              {product && (
+                <FlatList
+                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  data={product.latest.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 />
               )}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={{width: 10}} />}
-            />
-          )}
-
-          {/* On Sale Product List */}
-          <SeactionRow
-            heading="ONSALE"
-            onPressLeft={() => {
-              navigation.navigate('ProductListing', {
-                value: 3,
-                title: 'ONSALE',
-              });
-            }}
-          />
-          {product && (
-            <FlatList
-              contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-              data={product.onsale.edges}
-              renderItem={({item, index}) => (
-                <ProductBox
-                  wishlist={wishlist}
-                  customStyle={{width: Window.width / 2.3}}
-                  item={item}
-                  index={index}
+              {/* On Sale Product List */}
+              <SeactionRow
+                heading="ONSALE"
+                onPressLeft={() => {
+                  navigation.navigate('ProductListing', {
+                    value: 3,
+                    title: 'ONSALE',
+                  });
+                }}
+              />
+              {product && (
+                <FlatList
+                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  data={product.onsale.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 />
               )}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={{width: 10}} />}
-            />
-          )}
-        </ScrollView>
-      )}
+            </ScrollView>
+          </Animated.View>
+        </PanGestureHandler>
+      </ScrollView>
     </View>
   );
 };
@@ -226,6 +259,16 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {backgroundColor: COLORS.white, flex: 1},
+  card: {
+    backgroundColor: COLORS.white,
+    // height: HEIGHT / 1.17 - 60,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    overflow: 'hidden',
+    // marginTop: Window.fixPadding * 2,
+    elevation: 10,
+    justifyContent: 'flex-end',
+  },
   heading: {
     fontSize: 14,
     fontFamily: FONTS.heading,

@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {View, Text, ScrollView, Platform, SafeAreaView} from 'react-native';
-import AppBar from '../../../components/AppBar';
+import {View, Text, Platform, ImageBackground, StatusBar} from 'react-native';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import PopularProducts from './_partials/PopularProducts';
@@ -19,18 +18,30 @@ import {handleCreateCart} from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
 import {useEffect} from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {ImageBackground} from 'react-native';
+import {
+  PanGestureHandler,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
+import {} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
-import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT} from '../../../constants';
 import BackButton from '../../../components/BackButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ColorCheckSvg} from '../../../assets/svgs/CartSvg';
+import Animated, {
+  runOnJS,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const ProductDetail = ({route, navigation}) => {
   const {product} = route.params;
   const ref = useRef(null);
   const isFocused = useIsFocused();
-  const [visible, setVisible] = useState(false);
   const [ProductImages, setProductImages] = useState(null);
   const [loadingSpinner, setloadingSpinner] = useState(false);
   const [selectedColor, setselectedColor] = useState(null);
@@ -42,6 +53,7 @@ const ProductDetail = ({route, navigation}) => {
   const insets = useSafeAreaInsets();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
@@ -101,7 +113,7 @@ const ProductDetail = ({route, navigation}) => {
       }
 
       for (let b = 0; b < tempProductData.length; b++) {
-        if (tempProductData[b].toLowerCase() === selectedOption.toLowerCase()) {
+        if (tempProductData[b] === selectedOption) {
           uniqueVariant.push(tempProductReturnData[b]);
         }
       }
@@ -212,194 +224,236 @@ const ProductDetail = ({route, navigation}) => {
       setloadingSpinner(false);
     }
   };
+  //ANIMATED GESTURES ====> START
+  const handleScroll = e => {
+    if (e.nativeEvent.contentOffset.y > 1) {
+      setOpen(true);
+      progress.value = withTiming(
+        Platform.OS === 'ios' ? HEIGHT - insets.top : HEIGHT,
+      );
+    } else if (e.nativeEvent.contentOffset.y < 1) {
+      setOpen(false);
+      progress.value = withTiming(
+        Platform.OS === 'ios' ? HEIGHT / 1.5 + 25 : HEIGHT / 1.5 + 75,
+      );
+    }
+  };
+  const progress = useSharedValue(
+    Platform.OS === 'ios' ? HEIGHT / 1.5 + 25 : HEIGHT / 1.5 + 75,
+  );
+  const reanimatedStyle = useAnimatedStyle(() => {
+    return {
+      height: progress.value,
+    };
+  }, []);
+  const translateY = useSharedValue(0);
+  const onGestureEvent = useAnimatedGestureHandler({
+    onStart: (_, ctx) => {
+      ctx.startY = translateY.value;
+    },
+    onActive: (event, ctx) => {
+      translateY.value = ctx.startY + event.translationY;
+    },
+    onEnd: event => {
+      if (event.translationY < 0) {
+        // Swipe up detected, perform desired action
+        runOnJS(setOpen)(true);
+        progress.value = withTiming(
+          Platform.OS === 'ios' ? HEIGHT - insets.top : HEIGHT,
+        );
 
+        // You can trigger a callback or perform any other logic here
+      } else {
+        runOnJS(setOpen)(false);
+        progress.value = withTiming(
+          Platform.OS === 'ios' ? HEIGHT / 1.5 + 25 : HEIGHT / 1.5 + 75,
+        );
+      }
+
+      // Add any additional handling for other directions if needed
+    },
+  });
+  //ANIMATED GESTURES ====> END
   return (
-    <View style={{backgroundColor: COLORS.white, flex: 1}}>
+    <View style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ScrollView
-        ref={ref}
+        style={{flex: 1}}
+        contentContainerStyle={{flexGrow: 1, justifyContent: 'flex-end'}}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}
-        style={{backgroundColor: Color.white, flex: 1}}>
+        keyboardShouldPersistTaps="handled">
         <ImageBackground
           resizeMode="cover"
           source={{uri: ProductImages}}
-          style={styles.ProductImage}>
+          style={styles.productImage}>
           <View style={[styles.overlay, {paddingTop: insets.top + 10}]}>
             <BackButton type="secondary" />
           </View>
-          {/* <AppBar
-            theme="dark"
-            header="solid"
-            customStyle={{paddingHorizontal: 100}}
-          /> */}
         </ImageBackground>
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <Animated.View style={[reanimatedStyle, styles.card]}>
+            <ScrollView
+              style={{flex: 1}}
+              contentContainerStyle={{flexGrow: 1}}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              onMomentumScrollBegin={handleScroll}>
+              <View
+                style={{
+                  paddingHorizontal: CONTAINER_PADDING,
+                }}>
+                <View style={styles.row}>
+                  <Text style={styles.heading}>{product.node.title}</Text>
 
-        <View style={{backgroundColor: Color.white, paddingTop: 20}}>
-          <View
-            style={{
-              paddingHorizontal: 20,
-              marginTop: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-            }}>
-            <Heading name={product.node.title} />
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: Font.Gilroy_Bold,
-                color: Color.primary,
-              }}>
-              {NewPrice
-                ? NewPrice
-                : product.node.priceRange.minVariantPrice.amount}
-              {product.node.priceRange.minVariantPrice.currencyCode}
-            </Text>
-          </View>
-          {allSizes.length > 0 && (
-            <View
-              style={{
-                paddingHorizontal: 20,
-                marginTop: 8,
-              }}>
-              <Heading name="Size" />
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {allSizes.map((item, index) => (
-                  <TouchableOpacity
-                    onPress={() => HandleSize(item)}
-                    key={index}
-                    style={[
-                      styles.ProductSize,
-                      {
-                        backgroundColor:
-                          selectedSize === item
-                            ? 'red'
-                            : 'rgba(2, 28, 94, 0.9)',
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontFamily: Font.Gilroy_Regular,
-                        color: Color.white,
-                        textAlign: 'center',
-                      }}>
-                      {item}
+                  <Text style={styles.price}>
+                    {product.node.priceRange.minVariantPrice.currencyCode ===
+                      'USD' && '$'}
+                    {NewPrice
+                      ? NewPrice
+                      : product.node.priceRange.minVariantPrice.amount}
+                  </Text>
+                </View>
+                {allSizes.length > 0 && (
+                  <>
+                    <Text style={[styles.subHeading, {marginTop: 10}]}>
+                      Sizes
                     </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          )}
-          {allColors.length > 0 && (
+
+                    <ScrollView
+                      style={{
+                        marginVertical: 15,
+                        borderRadius: 10,
+                        overflow: 'hidden',
+                      }}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {allSizes.map((item, index) => (
+                        <TouchableOpacity
+                          onPress={() => HandleSize(item)}
+                          key={index}
+                          style={[
+                            styles.sizeBox,
+                            {
+                              backgroundColor:
+                                selectedSize === item
+                                  ? COLORS.primary
+                                  : '#FAF7F1',
+                              marginLeft: index === 0 ? 0 : 5,
+                              marginRight: index === allSizes.length ? 0 : 5,
+                            },
+                          ]}>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              fontFamily:
+                                selectedSize === item
+                                  ? FONTS.semiBold
+                                  : FONTS.light,
+                              color:
+                                selectedSize === item
+                                  ? COLORS.white
+                                  : COLORS.secondary,
+                            }}>
+                            {item}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </>
+                )}
+                {allColors.length > 0 && (
+                  <>
+                    <Text style={[styles.subHeading, {marginTop: 0}]}>
+                      Colors
+                    </Text>
+
+                    <ScrollView
+                      style={{
+                        marginVertical: 15,
+                        borderRadius: 35,
+                        overflow: 'hidden',
+                      }}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {allColors.map((item, index) => (
+                        <TouchableOpacity
+                          onPress={() => HandleColor(item)}
+                          key={index}
+                          style={[
+                            styles.colorBox,
+                            {
+                              backgroundColor: item.toLowerCase(),
+                              marginLeft: index === 0 ? 0 : 5,
+                              marginRight: index === allColors.length ? 0 : 5,
+                            },
+                          ]}>
+                          {selectedColor == item ? <ColorCheckSvg /> : null}
+
+                          <View
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              backgroundColor: 'rgba(255,255,255,0.15)',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </>
+                )}
+                <View style={styles.border} />
+
+                <Text style={[styles.heading, {marginTop: 10}]}>
+                  Description
+                </Text>
+
+                <RenderHtml
+                  systemFonts={[FONTS.regular]}
+                  tagsStyles={{
+                    p: {
+                      color: COLORS.secondary,
+                      fontFamily: FONTS.regular,
+                      fontSize: 12,
+                      lineHeight: 14,
+                      letterSpacing: -0.3,
+                    },
+                    iframe: {
+                      display: 'none',
+                    },
+                  }}
+                  contentWidth={Window.width}
+                  source={{html: product.node.descriptionHtml}}
+                />
+
+                <View style={styles.border} />
+                <Text style={[styles.heading, {marginTop: 10}]}>Latest</Text>
+              </View>
+              <PopularProducts />
+            </ScrollView>
             <View
-              style={{
-                paddingHorizontal: 20,
-                marginTop: 8,
-              }}>
-              <Heading name="Colors" />
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {allColors.map((item, ind) => (
-                  <TouchableOpacity
-                    onPress={() => HandleColor(item)}
-                    key={ind}
-                    style={[
-                      styles.ProductColor,
-                      {backgroundColor: item.toLowerCase()},
-                    ]}>
-                    {selectedColor == item ? (
-                      <View
-                        style={{
-                          width: 10,
-                          height: 10,
-                          backgroundColor: 'red',
-                          borderRadius: 10,
-                        }}></View>
-                    ) : null}
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+              style={[
+                styles.bottomButtonContainer,
+                {paddingBottom: insets.bottom + 15},
+              ]}>
+              <Button
+                onPressFunc={Add_To_Card}
+                type="primary"
+                loading={loadingSpinner}
+                text="Add to Cart"
+              />
             </View>
-          )}
-
-          {product.latest && (
-            <View
-              style={{
-                paddingHorizontal: Window.fixPadding * 2,
-                marginTop: Window.fixPadding,
-              }}>
-              <Text style={{...GlobalStyle.textStlye}}>
-                Category:{' '}
-                {product?.latest.map((item, i) => {
-                  if (i === 0) {
-                    return item.name;
-                  } else {
-                    return ' / ' + item.name;
-                  }
-                })}
-              </Text>
-            </View>
-          )}
-          <View style={GlobalStyle.borderStyle} />
-          <Heading
-            containerStyle={{
-              paddingHorizontal: Window.fixPadding * 2,
-              marginVertical: Window.fixPadding * 2,
-            }}
-            name="Description"
-          />
-
-          <View style={{paddingHorizontal: 20}}>
-            <RenderHtml
-              tagsStyles={{
-                p: {
-                  color: 'black',
-                  fontSize: 14,
-                  letterSpacing: -0.3,
-                },
-                iframe: {
-                  display: 'none',
-                },
-              }}
-              contentWidth={Window.width}
-              source={{html: product.node.descriptionHtml}}
-            />
-          </View>
-
-          <View style={GlobalStyle.borderStyle} />
-
-          <Heading
-            name="Latest"
-            containerStyle={{
-              paddingHorizontal: Window.fixPadding * 2,
-              marginVertical: Window.fixPadding * 2,
-            }}
-          />
-          <PopularProducts />
-
-          {/* Select Vatiations Popup */}
-          <BottomPopupHOC
-            title="Select Varaition"
-            visible={visible}
-            setVisible={setVisible}
-            product={product}
-            PopupBody={<VariationsDetails product={product} />}
-          />
-        </View>
+          </Animated.View>
+        </PanGestureHandler>
       </ScrollView>
-      <View style={styles.bottomButtonContainer}>
-        <Button
-          onPressFunc={Add_To_Card}
-          type="primary"
-          loading={loadingSpinner}
-          text="Add to Cart"
-        />
-      </View>
     </View>
   );
 };
@@ -407,14 +461,64 @@ const ProductDetail = ({route, navigation}) => {
 export default ProductDetail;
 
 const styles = StyleSheet.create({
+  container: {backgroundColor: COLORS.white, flex: 1},
+  card: {
+    backgroundColor: COLORS.white,
+    // height: HEIGHT / 1.17 - 60,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    overflow: 'hidden',
+    // marginTop: Window.fixPadding * 2,
+    elevation: 10,
+    justifyContent: 'flex-end',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 25,
+    marginBottom: 10,
+  },
+  heading: {fontSize: 14, color: COLORS.tertiary, fontFamily: FONTS.heading},
+  subHeading: {
+    fontSize: 14,
+    color: COLORS.tertiary,
+    fontFamily: FONTS.semiBold,
+  },
   overlay: {
     flex: 1,
     paddingHorizontal: CONTAINER_PADDING,
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
-  ProductImage: {
-    width: '100%',
+  border: {height: 1, backgroundColor: '#080E1E0D', marginVertical: 10},
+  productImage: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
     height: Window.height / 3,
+  },
+  price: {
+    fontSize: 16,
+    fontFamily: FONTS.semiBold,
+    color: COLORS.tertiary,
+  },
+  sizeBox: {
+    // width: 100,
+    paddingHorizontal: 15,
+    height: 35,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  colorBox: {
+    height: 35,
+    width: 35,
+    borderRadius: 35,
+    // opacity: 0.8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   ProductSize: {
     width: 100,
@@ -435,7 +539,7 @@ const styles = StyleSheet.create({
   },
   bottomButtonContainer: {
     backgroundColor: COLORS.white,
-    paddingVertical: 15,
+    paddingTop: 15,
     shadowColor: 'rgba(0,0,0,0.25)',
     shadowOffset: {
       width: 0,

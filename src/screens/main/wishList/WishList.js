@@ -10,21 +10,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
 import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
 import Header from '../../../components/Header';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
+import {useIsFocused} from '@react-navigation/native';
 
 const WishList = ({navigation}) => {
-  const [WishlistData, setWishlistData] = useState([]);
-
+  const [WishlistData, setWishlistData] = useState({addedItems: []});
+  const isFocused = useIsFocused();
   const GET_WISHLIST_DATA = async () => {
     const existingWishlist = await AsyncStorage.getItem('WishList_Items');
-    setWishlistData(JSON.parse(existingWishlist));
+    if (existingWishlist !== null) {
+      setWishlistData(JSON.parse(existingWishlist));
+    }
   };
 
   useEffect(() => {
     GET_WISHLIST_DATA();
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header label="WISHLIST" />
 
       <View style={styles.contentContainer}>
@@ -35,7 +45,9 @@ const WishList = ({navigation}) => {
           }}
           style={styles.flatelistStyle}
           data={WishlistData.addedItems}
-          renderItem={({item}) => <ProductBox item={item} />}
+          renderItem={({item}) => (
+            <ProductBox item={item} GET_WISHLIST_DATA={GET_WISHLIST_DATA} />
+          )}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
@@ -81,7 +93,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '20%',
   },
   text: {
     fontSize: 18,

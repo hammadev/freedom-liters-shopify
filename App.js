@@ -11,6 +11,7 @@ import {rootReducer} from './src/redux';
 import {ApolloProvider} from '@apollo/client';
 import client from './src/graphql/ApolloClient';
 import {Color, Font} from './src/globalStyle/Theme';
+import {COLORS, FONTS} from './src/constants';
 
 const App = () => {
   const store = createStore(rootReducer, composeWithDevTools);
@@ -18,20 +19,19 @@ const App = () => {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <SafeAreaProvider>
-          <StatusBar
-            backgroundColor={Color.tertiary}
-            translucent
-            barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
-          />
           <GestureHandlerRootView style={{flex: 1}}>
             <FlashMessage
               position="top"
               hideStatusBar={false}
               statusBarHeight={StatusBar.currentHeight}
               onHide={() => {
-                StatusBar.setBackgroundColor(Color.tertiary);
+                StatusBar.setBackgroundColor(COLORS.white);
               }}
-              titleStyle={{fontSize: 14, fontFamily: Font.Gilroy_Medium}}
+              titleStyle={{
+                fontSize: 14,
+                fontFamily: FONTS.regular,
+                color: COLORS.white,
+              }}
             />
             <RootStack />
           </GestureHandlerRootView>

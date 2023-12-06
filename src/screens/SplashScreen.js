@@ -12,6 +12,7 @@ import {
   GET_ONSALE_PRODUCT,
 } from '../graphql/queries/Product';
 import {GET_ALL_CATEGORIES, GET_CATEGORIES} from '../graphql/queries/Category';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 const Splash = ({navigation}) => {
   const dispatch = useDispatch();
@@ -131,7 +132,13 @@ const Splash = ({navigation}) => {
 
   return (
     <>
-      <StatusBar backgroundColor={Color.tertiary} barStyle={'light-content'} />
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ImageBackground
         style={{flex: 1}}
         source={require('../assets/images/pics/splash_bg.png')}>

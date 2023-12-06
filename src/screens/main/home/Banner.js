@@ -27,9 +27,9 @@ const Banner = ({}) => {
   return (
     <ImageBackground
       resizeMode="cover"
-      style={[styles.container, {paddingTop: insets.top + 10}]}
+      style={styles.container}
       source={require('../../../assets/images/products/homeBg.png')}>
-      <View style={styles.row}>
+      <View style={[styles.row, {marginTop: insets.top}]}>
         <View style={styles.topBtn}>
           <TouchableRipple
             style={styles.ripple}
@@ -52,7 +52,7 @@ const Banner = ({}) => {
           </TouchableRipple>
         </View>
       </View>
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, {paddingBottom: insets.top}]}>
         <Text style={styles.title}>Dress With Style</Text>
         <Image
           style={styles.lineImg}
@@ -81,11 +81,19 @@ export default Banner;
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
     backgroundColor: COLORS.primary,
     height: HEIGHT / 3,
-    padding: CONTAINER_PADDING,
+    paddingHorizontal: CONTAINER_PADDING,
   },
-  row: {flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'},
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   contentContainer: {
     flex: 1,
     justifyContent: 'center',

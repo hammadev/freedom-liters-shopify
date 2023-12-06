@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StatusBar, Image, StyleSheet} from 'react-native';
+import {View, Text, StatusBar, Image, StyleSheet, Platform} from 'react-native';
 import AppBar from '../../../components/AppBar';
 import Button from '../../../components/Button';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
@@ -15,6 +15,8 @@ import {useMutation, useQuery} from '@apollo/client';
 import {ScrollView} from 'react-native';
 import PhoneInputComponent from '../../../components/PhoneInputComponent';
 import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import Header from '../../../components/Header';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const PersonalInfoEdit = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -99,7 +101,13 @@ const PersonalInfoEdit = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppBar theme="light" title="Personal Information" />
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
+      <Header label={'Personal Information'} />
       <ScrollView>
         {loading && (
           <View
@@ -115,91 +123,80 @@ const PersonalInfoEdit = ({navigation}) => {
           </View>
         )}
 
-        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+        <View style={{paddingHorizontal: CONTAINER_PADDING}}>
           <Text
             style={{
-              fontSize: 20,
-              fontFamily: Font.Gilroy_Bold,
-              color: Color.black,
+              marginTop: 8,
+              lineHeight: 20,
+              fontSize: 13,
+              fontFamily: Font.Gilroy_Regular,
+              color: 'rgba(8, 14, 30, 0.4)',
             }}>
-            Personal Information Edit
+            This may include details you have provided to us such as your name,
+            your number & email...
           </Text>
-        </View>
-        <Text
-          style={{
-            marginTop: 8,
-            lineHeight: 20,
-            fontSize: 13,
-            fontFamily: Font.Gilroy_Regular,
-            color: 'rgba(8, 14, 30, 0.4)',
-          }}>
-          This may include details you have provided to us such as your name,
-          your number & email...
-        </Text>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 20,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{width: '48%'}}>
-            <TextField2
-              type="secondary"
-              label="First Name"
-              onChanged={setFirstName}
-              maxLength={12}
-              value={firstName}
-            />
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{width: '48%'}}>
+              <TextField2
+                type="secondary"
+                label="First Name"
+                onChanged={setFirstName}
+                maxLength={12}
+                value={firstName}
+              />
+            </View>
+            <View style={{width: '48%'}}>
+              <TextField2
+                type="secondary"
+                label="Last Name"
+                onChanged={setLastName}
+                value={lastName}
+              />
+            </View>
           </View>
-          <View style={{width: '48%'}}>
-            <TextField2
-              type="secondary"
-              label="Last Name"
-              onChanged={setLastName}
-              value={lastName}
-            />
-          </View>
-        </View>
-        <View style={{marginVertical: 7.5}} />
+          <View style={{marginVertical: 7.5}} />
 
-        <TextField2
-          type="secondary"
-          label="Display Name"
-          onChanged={setDisplayName}
-          value={displayName}
-          disabled
-        />
-        <View style={{marginVertical: 7.5}} />
+          <TextField2
+            type="secondary"
+            label="Display Name"
+            onChanged={setDisplayName}
+            value={displayName}
+            disabled
+          />
+          <View style={{marginVertical: 7.5}} />
 
-        <TextField2
-          type="secondary"
-          label="Email"
-          onChanged={setEmail}
-          value={email}
-          disabled
-        />
-        <View style={{marginVertical: 7.5}} />
+          <TextField2
+            type="secondary"
+            label="Email"
+            onChanged={setEmail}
+            value={email}
+            disabled
+          />
+          <View style={{marginVertical: 7.5}} />
 
-        <PhoneInputComponent
-          type="secondary"
-          text={phone}
-          setText={setPhone}
-          isDark={false}
-        />
-
-        <View style={{marginTop: 20}}>
-          <Button
-            loading={updateLoading}
-            text="Update Profile"
-            onPressFunc={handleSubmit}
-            icon="mail"
-            isIcon={false}
-            theme="tertiary"
+          <PhoneInputComponent
+            type="secondary"
+            text={phone}
+            setText={setPhone}
+            isDark={false}
           />
         </View>
       </ScrollView>
+      <View style={styles.bottomButtonContainer}>
+        <Button
+          loading={updateLoading}
+          text="Update Profile"
+          onPressFunc={handleSubmit}
+          type="primary"
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -209,6 +206,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+  },
+  bottomButtonContainer: {
+    backgroundColor: COLORS.white,
+    paddingVertical: 15,
+    shadowColor: Platform.OS === 'ios' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,1)',
+    shadowOffset: {
+      width: 0,
+      height: -10,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 5.84,
+    elevation: 12,
     paddingHorizontal: CONTAINER_PADDING,
   },
 });

@@ -25,6 +25,7 @@ import Header from '../../../components/Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, CONTAINER_PADDING, WIDTH} from '../../../constants';
 import FilterPopupSortOption from '../../../components/FilterPopupSortOption';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const ProductListing = route => {
   const [ProductData, setProductData] = useState([]);
@@ -192,6 +193,12 @@ const ProductListing = route => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header
         search
         searchFilterFunction={searchFilterFunction}
@@ -238,13 +245,7 @@ const ProductListing = route => {
           <>
             <FilterPopupSortOption checked={checked} setChecked={setChecked} />
             <View style={{marginTop: 15}}>
-              <Button
-                text="Apply"
-                isIcon={false}
-                theme="tertiary"
-                loading={false}
-                onPressFunc={ApplyBtn}
-              />
+              <Button text="Apply" type="primary" onPressFunc={ApplyBtn} />
             </View>
           </>
         }

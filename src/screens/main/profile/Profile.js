@@ -8,7 +8,7 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme'; 
+import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
 import {
   AddressSvg,
   ChevronSvg,
@@ -22,6 +22,7 @@ import Logout from '../../../components/Logout';
 import NotLogin from '../../../components/NotLogin';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {COLORS} from '../../../constants';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const ProfilePages = ({item, popupState}) => {
   const navigation = useNavigation();
@@ -86,6 +87,13 @@ const Profile = ({navigation}) => {
 
   return (
     <View style={{backgroundColor: COLORS.white, flex: 1}}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
@@ -141,6 +149,7 @@ const Profile = ({navigation}) => {
 
       <BottomPopupHOC
         title="Logout"
+        color={COLORS.primary}
         PopupBody={<Logout auth={auth} setVisible={setLogoutAlertPopup} />}
         visible={logoutAlertPopup}
         setVisible={setLogoutAlertPopup}

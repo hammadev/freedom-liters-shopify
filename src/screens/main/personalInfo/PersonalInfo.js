@@ -15,6 +15,8 @@ import {useMutation, useQuery} from '@apollo/client';
 import {ShareIcon} from '../../../assets/svgs/SocialIconsSvgs';
 import {TouchableOpacity} from 'react-native';
 import {COLORS, CONTAINER_PADDING} from '../../../constants';
+import Header from '../../../components/Header';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const PersonalInfo = ({navigation}) => {
   const {auth} = useSelector(state => ({...state}));
@@ -95,7 +97,17 @@ const PersonalInfo = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppBar theme="light" title="Personal Information" />
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
+      <Header
+        label={'Personal Information'}
+        edit
+        editOnpress={() => navigation.navigate('PersonalInfoEdit')}
+      />
       {loading && (
         <View
           style={{
@@ -110,85 +122,73 @@ const PersonalInfo = ({navigation}) => {
         </View>
       )}
 
-      <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+      <View style={{paddingHorizontal: CONTAINER_PADDING}}>
         <Text
           style={{
-            fontSize: 20,
-            fontFamily: Font.Gilroy_Bold,
-            color: Color.black,
+            marginTop: 8,
+            lineHeight: 20,
+            fontSize: 13,
+            fontFamily: Font.Gilroy_Regular,
+            color: 'rgba(8, 14, 30, 0.4)',
           }}>
-          Personal Information
+          This may include details you have provided to us such as your name,
+          your number & email...
         </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('PersonalInfoEdit')}>
-          <Image source={require('../../../assets/images/pics/edit.png')} />
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{
-          marginTop: 8,
-          lineHeight: 20,
-          fontSize: 13,
-          fontFamily: Font.Gilroy_Regular,
-          color: 'rgba(8, 14, 30, 0.4)',
-        }}>
-        This may include details you have provided to us such as your name, your
-        number & email...
-      </Text>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 20,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <View style={{width: '48%'}}>
-          <TextField2
-            type="secondary"
-            label="First Name"
-            onChanged={setFirstName}
-            maxLength={12}
-            value={firstName}
-            disabled
-          />
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{width: '48%'}}>
+            <TextField2
+              type="secondary"
+              label="First Name"
+              onChanged={setFirstName}
+              maxLength={12}
+              value={firstName}
+              disabled
+            />
+          </View>
+          <View style={{width: '48%'}}>
+            <TextField2
+              type="secondary"
+              label="Last Name"
+              onChanged={setLastName}
+              value={lastName}
+              disabled
+            />
+          </View>
         </View>
-        <View style={{width: '48%'}}>
-          <TextField2
-            type="secondary"
-            label="Last Name"
-            onChanged={setLastName}
-            value={lastName}
-            disabled
-          />
-        </View>
+        <View style={{marginVertical: 7.5}} />
+        <TextField2
+          type="secondary"
+          label="Display Name"
+          onChanged={setDisplayName}
+          value={displayName}
+          disabled
+        />
+        <View style={{marginVertical: 7.5}} />
+
+        <TextField2
+          type="secondary"
+          label="Email"
+          onChanged={setEmail}
+          value={email}
+          disabled
+        />
+        <View style={{marginVertical: 7.5}} />
+
+        <TextField2
+          type="secondary"
+          label="Phone"
+          onChanged={setPhone}
+          value={phone}
+          disabled
+        />
       </View>
-      <View style={{marginVertical: 7.5}} />
-      <TextField2
-        type="secondary"
-        label="Display Name"
-        onChanged={setDisplayName}
-        value={displayName}
-        disabled
-      />
-      <View style={{marginVertical: 7.5}} />
-
-      <TextField2
-        type="secondary"
-        label="Email"
-        onChanged={setEmail}
-        value={email}
-        disabled
-      />
-      <View style={{marginVertical: 7.5}} />
-
-      <TextField2
-        type="secondary"
-        label="Phone"
-        onChanged={setPhone}
-        value={phone}
-        disabled
-      />
     </SafeAreaView>
   );
 };
@@ -198,6 +198,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    paddingHorizontal: CONTAINER_PADDING,
   },
 });

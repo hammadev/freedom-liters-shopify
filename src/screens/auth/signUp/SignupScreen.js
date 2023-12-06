@@ -18,6 +18,7 @@ import {showMessage} from 'react-native-flash-message';
 import PhoneInputComponent from '../../../components/PhoneInputComponent';
 import {COLORS, CONTAINER_PADDING, FONTS} from '../../../constants';
 import BackButton from '../../../components/BackButton';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const SignUp = ({navigation}) => {
   const [hidePass, setHidePass] = useState(true);
@@ -143,6 +144,13 @@ const SignUp = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <ImageBackground
         style={{
           flex: 1,

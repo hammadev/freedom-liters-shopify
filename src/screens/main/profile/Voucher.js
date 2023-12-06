@@ -4,10 +4,17 @@ import {Window} from '../../../globalStyle/Theme';
 import {VoucherSvg} from '../../../assets/svgs/ProfileSvgs';
 import Header from '../../../components/Header';
 import {COLORS, FONTS} from '../../../constants';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const Voucher = () => {
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header label={'Voucher'} />
       <View style={styles.emptyContainer}>
         <VoucherSvg />

@@ -29,6 +29,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../../components/Header';
 import {COLORS, CONTAINER_PADDING} from '../../../constants';
 import FilterPopupSortOption from '../../../components/FilterPopupSortOption';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const SearchScreen = () => {
   const [searchValue, setSearcValue] = useState();
@@ -101,6 +102,12 @@ const SearchScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={COLORS.white}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
       <Header
         search
         searchFilterFunction={searchFilterFunction}

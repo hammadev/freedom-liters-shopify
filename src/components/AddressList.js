@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 25,
     borderRadius: RADIUS,
-    elevation: 5,
+    backgroundColor: '#FAF7F1',
     overflow: 'hidden',
     paddingHorizontal: 10,
     paddingVertical: 16,

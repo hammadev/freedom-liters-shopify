@@ -10,6 +10,7 @@ import {
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StatusBar} from 'react-native';
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 let hasNotch = deviceInfoModule.hasNotch();
 
@@ -101,6 +102,13 @@ const OnBoarding = ({navigation}) => {
 
   return (
     <>
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+        showHideTransition={'fade'}
+        translucent
+      />
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
