@@ -36,8 +36,14 @@ export const CREATE_CUSTOMER_ACCESS_TOKEN = gql`
 `;
 
 export const CUSTOMER_UPDATE = gql`
-  mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
-    customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
+  mutation customerUpdate(
+    $customerAccessToken: String!
+    $customer: CustomerUpdateInput!
+  ) {
+    customerUpdate(
+      customerAccessToken: $customerAccessToken
+      customer: $customer
+    ) {
       customer {
         id
       }
@@ -63,8 +69,14 @@ export const SEND_PASSWORD_RESET_EMAIL = gql`
 `;
 
 export const CUSTOMER_ADDRESS_CREATE = gql`
-  mutation CustomerAddressCreate($customerAccessToken: String!, $address: MailingAddressInput!) {
-    customerAddressCreate(customerAccessToken: $customerAccessToken, address: $address) {
+  mutation CustomerAddressCreate(
+    $customerAccessToken: String!
+    $address: MailingAddressInput!
+  ) {
+    customerAddressCreate(
+      customerAccessToken: $customerAccessToken
+      address: $address
+    ) {
       customerUserErrors {
         code
         field
@@ -78,8 +90,16 @@ export const CUSTOMER_ADDRESS_CREATE = gql`
 `;
 
 export const CUSTOMER_ADDRESS_UPDATE = gql`
-  mutation UpdateAddress($addressId: ID!, $customerAccessToken: String!, $address: MailingAddressInput!) {
-    customerAddressUpdate(id: $addressId, customerAccessToken: $customerAccessToken, address: $address) {
+  mutation UpdateAddress(
+    $addressId: ID!
+    $customerAccessToken: String!
+    $address: MailingAddressInput!
+  ) {
+    customerAddressUpdate(
+      id: $addressId
+      customerAccessToken: $customerAccessToken
+      address: $address
+    ) {
       customerAddress {
         id
       }
@@ -96,6 +116,28 @@ export const DELETE_ACCESS_TOKEN = gql`
   mutation DeleteAccessToken($customerAccessToken: String!) {
     customerAccessTokenDelete(customerAccessToken: $customerAccessToken) {
       deletedAccessToken
+    }
+  }
+`;
+
+export const CUSTOMER_DEFAULT_ADDRESS_UPDATE = gql`
+  mutation customerDefaultAddressUpdate(
+    $customerAccessToken: String!
+    $addressId: ID!
+  ) {
+    customerDefaultAddressUpdate(
+      customerAccessToken: $customerAccessToken
+      addressId: $addressId
+    ) {
+      customer {
+        defaultAddress {
+          id
+        }
+      }
+      customerUserErrors {
+        code
+        message
+      }
     }
   }
 `;

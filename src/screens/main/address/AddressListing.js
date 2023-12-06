@@ -1,17 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Platform,
-} from 'react-native';
+import {Text, View, ScrollView, StyleSheet, Platform} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {GlobalStyle, Font, Window, Color} from '../../../globalStyle/Theme';
-import Icon from '../../../core/Icon';
-import {RadioButton} from 'react-native-paper';
-import {SkypeIndicator} from 'react-native-indicators';
+import {Font, Color} from '../../../globalStyle/Theme';
 import {useBackButton} from '../../../hooks';
 import Button from '../../../components/Button';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
@@ -19,6 +9,7 @@ import TextField2 from '../../../components/TextFeild2';
 import {
   CUSTOMER_ADDRESS_CREATE,
   CUSTOMER_ADDRESS_UPDATE,
+  CUSTOMER_DEFAULT_ADDRESS_UPDATE,
 } from '../../../graphql/mutations/Auth';
 import {useMutation, useQuery} from '@apollo/client';
 import {
@@ -64,6 +55,10 @@ const AddressListing = ({navigation}) => {
     },
   ] = useMutation(CUSTOMER_ADDRESS_CREATE);
 
+  const [customerDefaultAddressUpdate] = useMutation(
+    CUSTOMER_DEFAULT_ADDRESS_UPDATE,
+  );
+
   const [
     updateCustomerAddress,
     {
@@ -73,7 +68,7 @@ const AddressListing = ({navigation}) => {
     },
   ] = useMutation(CUSTOMER_ADDRESS_UPDATE);
 
-  const {loading, error, data, refetch} = useQuery(FETCH_CUSTOMER_ADDRESS, {
+  const {loading, data, refetch} = useQuery(FETCH_CUSTOMER_ADDRESS, {
     variables: {
       customerAccessToken: auth.accessToken,
     },
@@ -102,8 +97,8 @@ const AddressListing = ({navigation}) => {
   }, []);
 
   const Get_Defult_Address = async () => {
-    const DefultAddress = await AsyncStorage.getItem('address');
-    setRadioCheck(DefultAddress);
+    const DefultAddress = await AsyncStorage.getItem('defaultAddress');
+    setRadioCheck(JSON.parse(DefultAddress));
   };
 
   const resetState = () => {
@@ -210,7 +205,7 @@ const AddressListing = ({navigation}) => {
         isUpdate,
       );
     else {
-      variables.addressId = activeAddressId;
+      variables.address = activeAddressId;
       handleCreateAddress(
         updateCustomerAddress,
         variables,
@@ -221,7 +216,6 @@ const AddressListing = ({navigation}) => {
       );
     }
   };
-  console.log(data.customer.addresses.edges);
   return (
     <SafeAreaView style={styles.mainContainer}>
       <FocusAwareStatusBar
@@ -252,10 +246,12 @@ const AddressListing = ({navigation}) => {
             <AddressList
               key={i}
               item={item.node}
-              radioState={radioCheck}
+              radioCheck={radioCheck}
               setRadioState={setRadioCheck}
               editIcon={editIcon}
               showModal={showModal}
+              auth={auth}
+              customerDefaultAddressUpdate={customerDefaultAddressUpdate}
             />
           ))}
 

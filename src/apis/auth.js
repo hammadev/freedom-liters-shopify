@@ -50,6 +50,28 @@ export const handleCreateAccount = async (
   }
 };
 
+export const handleDefultAddress = async (
+  customerDefaultAddressUpdate,
+  auth,
+  itemID,
+) => {
+  let variables;
+  try {
+    variables = {
+      customerAccessToken: auth.accessToken,
+      addressId: itemID,
+    };
+    const result = await customerDefaultAddressUpdate({
+      variables,
+    });
+    if (result.data) {
+      await AsyncStorage.setItem('defaultAddress', JSON.stringify(itemID));
+    }
+  } catch (error) {
+    console.error('Mutation error:', error);
+  }
+};
+
 // export const handleCreateAccount = debounce(handleCreateAccountReq, 5000); // 5000 milliseconds (5 seconds) delay
 
 // const input = {

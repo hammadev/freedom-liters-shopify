@@ -3,18 +3,21 @@ import React from 'react';
 import {COLORS, FONTS, RADIUS} from '../constants';
 import Icon from '../core/Icon';
 import {RadioButton} from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useMutation} from '@apollo/client';
+import {CUSTOMER_DEFAULT_ADDRESS_UPDATE} from '../graphql/mutations/Auth';
+import {handleDefultAddress} from '../apis/auth';
 
 const AddressList = ({
   item,
   setRadioState,
-  radioState,
+  radioCheck,
   editIcon,
   showModal,
+  auth,
+  customerDefaultAddressUpdate,
 }) => {
   const RadioClick = async itemID => {
-    setRadioState(itemID);
-    await AsyncStorage.setItem('address', itemID);
+    handleDefultAddress(customerDefaultAddressUpdate, auth, itemID);
   };
 
   return (
@@ -38,12 +41,12 @@ const AddressList = ({
             value="first"
             uncheckedColor={COLORS.primary}
             color={COLORS.primary}
-            status={radioState == item.id ? 'checked' : 'unchecked'}
+            status={radioCheck == item.id ? 'checked' : 'unchecked'}
             onPress={() => RadioClick(item.id)}
           />
         )}
       </View>
-      {radioState == item.id && <Text style={styles.defaultText}>Default</Text>}
+      {radioCheck == item.id && <Text style={styles.defaultText}>Default</Text>}
 
       <Text style={styles.text} numberOfLines={2}>
         Address : {item.address1 + ', ' + item.address2 + ', '}
