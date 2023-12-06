@@ -11,11 +11,10 @@ export async function updateAddressReq(
   navigateTo,
   updatedUser,
 ) {
-  console.log('updatedUser', updatedUser);
   setLoading(true);
   try {
     const {data} = await axios.put(`customers/${user_id}`, body);
-    // console.log(data);
+
     if (data) {
       // await AsyncStorage.setItem('address', JSON.stringify(data));
       dispatch({
@@ -46,7 +45,6 @@ export async function updateAddressReq(
 export const getAddress = async (dispatch, user_id) => {
   try {
     const {data} = await axios.get(`customers/${user_id}`);
-    // console.log('getAddress',data);
     if (data) {
       dispatch({
         type: 'UPDATE_ADDRESS',
@@ -66,6 +64,7 @@ export const handleCreateAddress = async (
   resetState,
   setVisible,
   isUpdate,
+  dispatch,
 ) => {
   try {
     const result = await createCustomerAddress({
@@ -85,6 +84,17 @@ export const handleCreateAddress = async (
         message: 'Address Added Successfully!',
         type: 'success',
       });
+      if (result.data.customerAddressCreate.customerAddress) {
+        const dataResult = {
+          node: {
+            ...result.data.customerAddressCreate.customerAddress,
+          },
+        };
+        dispatch({
+          type: 'ADD_ADDRESS',
+          payload: dataResult,
+        });
+      }
     } else {
       if (result.data.customerAddressUpdate.customerUserErrors.length) {
         showMessage({

@@ -16,7 +16,7 @@ import {
   FETCH_CUSTOMER_ADDRESS,
   FETCH_CUSTOMER_INFO,
 } from '../../../graphql/queries/Customer';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,7 +27,7 @@ import AddressList from '../../../components/AddressList';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const AddressListing = ({navigation}) => {
-  const {auth} = useSelector(state => ({...state}));
+  const {auth, address} = useSelector(state => ({...state}));
 
   const [radioCheck, setRadioCheck] = useState('');
   const [editIcon, setEditIcon] = useState(false);
@@ -45,6 +45,7 @@ const AddressListing = ({navigation}) => {
   const [province, setProvince] = useState('');
   const [city, setCity] = useState('');
   const [activeAddressId, setActiveAddressId] = useState(null);
+  const dispatch = useDispatch();
 
   const [
     createCustomerAddress,
@@ -203,6 +204,7 @@ const AddressListing = ({navigation}) => {
         refetch,
         setVisible,
         isUpdate,
+        dispatch,
       );
     else {
       variables.address = activeAddressId;

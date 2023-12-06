@@ -87,7 +87,7 @@ const Home = ({navigation}) => {
   const [SearchVale, setSearcValue] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const {product, wishlist} = useSelector(state => ({
+  const {product} = useSelector(state => ({
     ...state,
   }));
   const subscription = BackHandler.addEventListener(

@@ -3,8 +3,6 @@ import React from 'react';
 import {COLORS, FONTS, RADIUS} from '../constants';
 import Icon from '../core/Icon';
 import {RadioButton} from 'react-native-paper';
-import {useMutation} from '@apollo/client';
-import {CUSTOMER_DEFAULT_ADDRESS_UPDATE} from '../graphql/mutations/Auth';
 import {handleDefultAddress} from '../apis/auth';
 
 const AddressList = ({
@@ -18,6 +16,7 @@ const AddressList = ({
 }) => {
   const RadioClick = async itemID => {
     handleDefultAddress(customerDefaultAddressUpdate, auth, itemID);
+    setRadioState(itemID);
   };
 
   return (
@@ -46,7 +45,9 @@ const AddressList = ({
           />
         )}
       </View>
-      {radioCheck == item.id && <Text style={styles.defaultText}>Default</Text>}
+      {radioCheck === item.id && (
+        <Text style={styles.defaultText}>Default</Text>
+      )}
 
       <Text style={styles.text} numberOfLines={2}>
         Address : {item.address1 + ', ' + item.address2 + ', '}
@@ -57,7 +58,6 @@ const AddressList = ({
           item.province +
           ', ' +
           item.country}
-        asdasdsads
       </Text>
 
       <Text style={styles.text}>Phone : {item.phone} 00000</Text>
