@@ -95,11 +95,11 @@ const AddressListing = ({navigation}) => {
 
   useEffect(() => {
     Get_Defult_Address();
-  }, []);
+  }, [data]);
 
   const Get_Defult_Address = async () => {
-    const DefultAddress = await AsyncStorage.getItem('defaultAddress');
-    setRadioCheck(JSON.parse(DefultAddress));
+    // const DefultAddress = await AsyncStorage.getItem('defaultAddress');
+    setRadioCheck(data.customer.defaultAddress.id);
   };
 
   const resetState = () => {
