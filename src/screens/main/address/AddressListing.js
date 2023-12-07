@@ -19,7 +19,6 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {handleCreateAddress} from '../../../apis/profile';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NoAddressSvg} from '../../../assets/svgs/AddressSvg';
 import Header from '../../../components/Header';
 import {COLORS, CONTAINER_PADDING, FONTS, WIDTH} from '../../../constants';
@@ -94,13 +93,12 @@ const AddressListing = ({navigation}) => {
   }, [infoData]);
 
   useEffect(() => {
-    Get_Defult_Address();
+    {
+      data &&
+        data.customer.defaultAddress &&
+        setRadioCheck(data.customer.defaultAddress.id);
+    }
   }, [data]);
-
-  const Get_Defult_Address = async () => {
-    // const DefultAddress = await AsyncStorage.getItem('defaultAddress');
-    setRadioCheck(data.customer.defaultAddress.id);
-  };
 
   const resetState = () => {
     setAddress1('');

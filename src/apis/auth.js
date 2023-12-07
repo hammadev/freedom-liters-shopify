@@ -64,9 +64,6 @@ export const handleDefultAddress = async (
     const result = await customerDefaultAddressUpdate({
       variables,
     });
-    if (result.data) {
-      await AsyncStorage.setItem('defaultAddress', JSON.stringify(itemID));
-    }
   } catch (error) {
     console.error('Mutation error:', error);
   }
