@@ -198,19 +198,18 @@ const AddressListing = ({navigation}) => {
       handleCreateAddress(
         createCustomerAddress,
         variables,
-        resetState,
         refetch,
+        resetState,
         setVisible,
         isUpdate,
-        dispatch,
       );
     else {
-      variables.address = activeAddressId;
+      variables.addressId = activeAddressId;
       handleCreateAddress(
         updateCustomerAddress,
         variables,
-        resetState,
         refetch,
+        resetState,
         setVisibleAddress,
         isUpdate,
       );

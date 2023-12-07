@@ -29,7 +29,6 @@ import {
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
 import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 import Header from '../../../components/Header';
 import {
   COLORS,
@@ -332,6 +331,7 @@ const Cart = () => {
               {CouponCodeVisibility == true ? (
                 <View style={{position: 'relative', overflow: 'hidden'}}>
                   <TextField2
+                    type="secondary"
                     icon={'barcode'}
                     onChanged={setCouponCode}
                     label="Enter Coupon"

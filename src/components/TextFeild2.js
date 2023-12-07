@@ -34,7 +34,7 @@ const TextField2 = ({
         icon && (
           <TextInput.Icon
             icon={icon}
-            iconColor={COLORS.white}
+            iconColor={icon == 'barcode' ? COLORS.black : COLORS.white}
             style={{marginTop: 15}}
             size={20}
           />

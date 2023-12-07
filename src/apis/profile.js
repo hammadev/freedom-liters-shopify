@@ -64,8 +64,8 @@ export const handleCreateAddress = async (
   resetState,
   setVisible,
   isUpdate,
-  dispatch,
 ) => {
+  console.log('Update', createCustomerAddress);
   try {
     const result = await createCustomerAddress({
       variables,
@@ -80,22 +80,14 @@ export const handleCreateAddress = async (
         });
         return;
       }
-      showMessage({
-        message: 'Address Added Successfully!',
-        type: 'success',
-      });
+
       if (result.data.customerAddressCreate.customerAddress) {
-        const dataResult = {
-          node: {
-            ...result.data.customerAddressCreate.customerAddress,
-          },
-        };
-        dispatch({
-          type: 'ADD_ADDRESS',
-          payload: dataResult,
+        showMessage({
+          message: 'Address Updated Successfully!',
+          type: 'success',
         });
       }
-    } else {
+    } else if (isUpdate == '1') {
       if (result.data.customerAddressUpdate.customerUserErrors.length) {
         showMessage({
           message: 'Error in updating address',
