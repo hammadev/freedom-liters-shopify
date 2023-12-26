@@ -13,6 +13,9 @@ const AddressList = ({
   showModal,
   auth,
   customerDefaultAddressUpdate,
+  isCartPage = false,
+  hideRadio = false,
+  setSelectedAddress,
 }) => {
   const RadioClick = async itemID => {
     handleDefultAddress(customerDefaultAddressUpdate, auth, itemID);
@@ -36,16 +39,22 @@ const AddressList = ({
             />
           </TouchableOpacity>
         ) : (
-          <RadioButton
-            value="first"
-            uncheckedColor={COLORS.primary}
-            color={COLORS.primary}
-            status={radioCheck == item.id ? 'checked' : 'unchecked'}
-            onPress={() => RadioClick(item.id)}
-          />
+          <>
+            {!hideRadio && (
+              <RadioButton
+                value="first"
+                uncheckedColor={COLORS.primary}
+                color={COLORS.primary}
+                status={radioCheck == item.id ? 'checked' : 'unchecked'}
+                onPress={() =>
+                  !isCartPage ? RadioClick(item.id) : setSelectedAddress(item)
+                }
+              />
+            )}
+          </>
         )}
       </View>
-      {radioCheck === item.id && (
+      {radioCheck === item.id && !isCartPage && (
         <Text style={styles.defaultText}>Default</Text>
       )}
 
@@ -60,7 +69,7 @@ const AddressList = ({
           item.country}
       </Text>
 
-      <Text style={styles.text}>Phone : {item.phone} 00000</Text>
+      <Text style={styles.text}>Phone : {item.phone ? item.phone : 'NA'}</Text>
     </View>
   );
 };
@@ -69,34 +78,33 @@ export default AddressList;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    marginTop: 25,
+    marginVertical: 7,
     borderRadius: RADIUS,
     backgroundColor: '#FAF7F1',
     overflow: 'hidden',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     paddingVertical: 16,
   },
   heading: {
     fontSize: 16,
     color: COLORS.tertiary,
     fontFamily: FONTS.semiBold,
+    paddingVertical: 7,
   },
-
   text: {
     fontSize: 12,
     color: COLORS.secondary,
     fontFamily: FONTS.medium,
   },
-
   defaultText: {
     color: COLORS.primary,
     fontSize: 12,
     borderRadius: RADIUS,
     borderWidth: 0.25,
     fontFamily: FONTS.semiBold,
-    width: 70,
-    marginVertical: 10,
-    padding: 10,
+    width: 75,
+    marginBottom: 10,
+    paddingVertical: 7,
     textAlign: 'center',
   },
   row: {

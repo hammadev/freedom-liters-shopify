@@ -38,7 +38,7 @@ const ProfilePages = ({item, popupState}) => {
         }
         style={{
           justifyContent: 'space-between',
-          paddingBottom: 20,
+          marginBottom: 20,
           alignItems: 'center',
           flexDirection: 'row',
         }}>

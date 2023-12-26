@@ -188,3 +188,20 @@ export const INCREASE_CART_VALUE = gql`
     }
   }
 `;
+
+export const ADD_ADDRESS_IN_CART = gql`
+  mutation cartBuyerIdentityUpdate(
+    $buyerIdentity: CartBuyerIdentityInput!
+    $cartId: ID!
+  ) {
+    cartBuyerIdentityUpdate(buyerIdentity: $buyerIdentity, cartId: $cartId) {
+      cart {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;

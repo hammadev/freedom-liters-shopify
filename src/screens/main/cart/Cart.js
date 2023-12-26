@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
-import {DeleteSvg} from '../../../assets/svgs/CheckoutSvg';
+import {DeleteSvg, EditSvg} from '../../../assets/svgs/CheckoutSvg';
 import Icon from '../../../core/Icon';
 import Button from '../../../components/Button';
 import {useMutation, useQuery} from '@apollo/client';
@@ -27,7 +27,10 @@ import {
 } from '../../../apis/cart';
 
 import {REMOVE_ITEM} from '../../../graphql/mutations/Product';
-import {INCREASE_CART_VALUE} from '../../../graphql/mutations/Cart';
+import {
+  ADD_ADDRESS_IN_CART,
+  INCREASE_CART_VALUE,
+} from '../../../graphql/mutations/Cart';
 import {useIsFocused} from '@react-navigation/native';
 import Header from '../../../components/Header';
 import {
@@ -40,6 +43,9 @@ import {
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import {ChevronSvg} from '../../../assets/svgs/ProfileSvgs';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
+import {FETCH_CUSTOMER_ADDRESS} from '../../../graphql/queries/Customer';
+import {useSelector} from 'react-redux';
+import AddressList from '../../../components/AddressList';
 
 const PaymentDetails = ({totalAmout, cartId, setCouponPopup}) => {
   return (
@@ -52,12 +58,12 @@ const PaymentDetails = ({totalAmout, cartId, setCouponPopup}) => {
               {totalAmout.subtotalAmount.amount}
             </Text>
           </View>
-          <View style={styles.paymentRow}>
+          {/* <View style={styles.paymentRow}>
             <Text style={styles.paymentTextStyle}>Delivery Fee</Text>
             <Text style={styles.paymentRightStyle}>
               {totalAmout.totalTaxAmount.amount}
             </Text>
-          </View>
+          </View> */}
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => setCouponPopup(true)}
@@ -87,8 +93,21 @@ const Cart = () => {
   //COUPON START
   const [couponCode, setCouponCode] = useState(false);
   const [CouponCodeVisibility, setCouponCodeVisibility] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState('');
+  const [showAddressBook, setShowAddressBook] = useState(false);
 
   const [cart] = useMutation(COUPON_CODE);
+
+  const {auth} = useSelector(state => ({...state}));
+
+  const {data: customerAddressData, loading: customerAddressLoading} = useQuery(
+    FETCH_CUSTOMER_ADDRESS,
+    {
+      variables: {
+        customerAccessToken: auth.accessToken,
+      },
+    },
+  );
 
   useEffect(() => {
     Check_Coupon();
@@ -125,6 +144,8 @@ const Cart = () => {
     cartLinesRemove,
     {data: RemoveData, loading: RemoveLoading, error: RemoveError},
   ] = useMutation(REMOVE_ITEM);
+
+  const [addAddressInCart] = useMutation(ADD_ADDRESS_IN_CART);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -139,6 +160,8 @@ const Cart = () => {
         setRemoveLoader(true);
       }, 1000);
     }
+
+    // console.log('cartData', CartData?.checkoutUrl);
   }, [isFocused, CartData, loadingCartData, errorCartData]);
 
   const Get_Cart_Id = async () => {
@@ -178,6 +201,45 @@ const Cart = () => {
     }
   };
 
+  const setSelectedAddressHandler = async item => {
+    console.log('asdas');
+    try {
+      // const variables = {
+      //   buyerIdentity: {
+      //     countryCode: 'US',
+      //     customerAccessToken: auth.accessToken,
+      //     deliveryAddressPreferences: [
+      //       {
+      //         customerAddressId: item.id,
+      //         deliveryAddress: {
+      //           address1: item.address1,
+      //           address2: item.address2,
+      //           city: item.city,
+      //           country: item.country,
+      //           firstName: item.firstName,
+      //           lastName: item.lastName,
+      //           phone: item.phone,
+      //           province: item.province,
+      //           zip: item.zip,
+      //         },
+      //       },
+      //     ],
+      //   },
+      //   cartId: CartId,
+      // };
+      // const result = await addAddressInCart({variables});
+      // console.log('result', result.data);
+      // console.log(
+      //   'resultError',
+      //   result.data?.cartBuyerIdentityUpdate?.userError,
+      // );
+      setSelectedAddress(item);
+      setShowAddressBook(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FocusAwareStatusBar
@@ -197,20 +259,35 @@ const Cart = () => {
             contentContainerStyle={{
               flexGrow: 1,
               paddingHorizontal: CONTAINER_PADDING,
-              paddingVertical: 25,
+              paddingVertical: 20,
             }}>
-            {CartItems.lines.edges.length > 0 && (
-              <Text style={styles.topText}>
-                Spend $500{' '}
-                <Text
-                  style={{
-                    color: COLORS.secondary,
-                    fontFamily: FONTS.regular,
-                  }}>
-                  enjoy free shipping for standard delivery option
+            <View
+              style={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <Text style={styles.DeliveryStyle}>Shipping To :</Text>
+              <TouchableOpacity onPress={() => setShowAddressBook(true)}>
+                <EditSvg width={20} height={20} />
+              </TouchableOpacity>
+            </View>
+
+            {selectedAddress ? (
+              <AddressList
+                item={selectedAddress}
+                auth={auth}
+                isCartPage
+                hideRadio
+              />
+            ) : (
+              <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>
+                  Please select address before proceeding to checkout
                 </Text>
-              </Text>
+              </View>
             )}
+
             {CartItems ? (
               CartItems.lines.edges.map((item, index) => (
                 <View
@@ -218,19 +295,16 @@ const Cart = () => {
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginVertical: 15,
+                    marginVertical: 10,
                   }}>
-                  {item.node.merchandise.image ? (
-                    <Image
-                      style={{width: 80, height: 80, borderRadius: RADIUS}}
-                      source={{uri: item.node.merchandise.image.url}}
-                    />
-                  ) : (
-                    <Image
-                      style={{width: 80, height: 80, borderRadius: RADIUS}}
-                      source={require('../../../assets/images/products/flannelShirt.png')}
-                    />
-                  )}
+                  <Image
+                    style={{width: 80, height: 80, borderRadius: RADIUS}}
+                    source={
+                      item.node.merchandise.image
+                        ? {uri: item.node.merchandise.image.url}
+                        : require('../../../assets/images/products/flannelShirt.png')
+                    }
+                  />
                   <View style={{flex: 1, marginLeft: 10}}>
                     <View style={styles.cartRowTop}>
                       <View>
@@ -291,7 +365,7 @@ const Cart = () => {
           {/* BOTTOM CONTAINER */}
           <View style={styles.bottomContainer}>
             {CartItems ? (
-              CartItems.lines.edges.length > 0 ? (
+              CartItems.lines.edges.length > 0 && CartItems.cost ? (
                 <View style={{paddingBottom: 10}}>
                   <PaymentDetails
                     totalAmout={CartItems ? CartItems.cost : ''}
@@ -353,6 +427,32 @@ const Cart = () => {
         }
         visible={couponPopup}
         setVisible={setCouponPopup}
+      />
+      <BottomPopupHOC
+        title="Select Address"
+        color={Color.primary}
+        PopupBody={
+          <ScrollView
+            style={{flex: 1, marginTop: -10}}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1}}>
+            {!customerAddressLoading &&
+              customerAddressData.customer !== null &&
+              customerAddressData.customer.defaultAddress !== null &&
+              customerAddressData.customer.addresses.edges.map((item, i) => (
+                <AddressList
+                  key={i}
+                  item={item.node}
+                  auth={auth}
+                  radioCheck={selectedAddress?.id}
+                  isCartPage
+                  setSelectedAddress={setSelectedAddressHandler}
+                />
+              ))}
+          </ScrollView>
+        }
+        visible={showAddressBook}
+        setVisible={setShowAddressBook}
       />
     </SafeAreaView>
   );
@@ -546,5 +646,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: Color.secondary,
     borderWidth: 2,
+  },
+
+  noteContainer: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginVertical: Window.fixPadding * 1.5,
+  },
+  noteTitle: {
+    color: COLORS.white,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  noteText: {
+    color: COLORS.white,
+    fontSize: 12,
   },
 });

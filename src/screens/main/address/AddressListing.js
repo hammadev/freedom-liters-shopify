@@ -237,7 +237,11 @@ const AddressListing = ({navigation}) => {
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1, paddingHorizontal: 20}}>
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingHorizontal: 20,
+          paddingTop: 15,
+        }}>
         {!loading &&
           data.customer !== null &&
           data.customer.defaultAddress !== null &&
