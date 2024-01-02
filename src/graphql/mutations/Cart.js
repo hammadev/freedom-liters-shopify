@@ -197,6 +197,7 @@ export const ADD_ADDRESS_IN_CART = gql`
     cartBuyerIdentityUpdate(buyerIdentity: $buyerIdentity, cartId: $cartId) {
       cart {
         id
+        checkoutUrl
       }
       userErrors {
         field

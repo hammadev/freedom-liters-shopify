@@ -1,7 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
 
-export const handleCreateCart = async (cartCreate, variables, navigation, isCreateCart, fromDetailScreen = 0) => {
+export const handleCreateCart = async (
+  cartCreate,
+  variables,
+  navigation,
+  isCreateCart,
+  fromDetailScreen = 0,
+) => {
   console.log('Is created', isCreateCart);
   try {
     const response = await cartCreate({
@@ -16,10 +22,8 @@ export const handleCreateCart = async (cartCreate, variables, navigation, isCrea
         message: 'Item Added Successfully',
         type: 'success',
       });
-      console.log('fromDetailScreen',fromDetailScreen);
-      if(fromDetailScreen)
-        navigation.navigate('Cart');
-
+      console.log('fromDetailScreen', fromDetailScreen);
+      if (fromDetailScreen) navigation.navigate('Cart');
     }
   } catch (error) {
     console.error('Mutation Error:', error);
@@ -80,10 +84,18 @@ export const handleCouponCode = async (cart, variables) => {
       variables,
     });
     if (response) {
-      console.log('resop', response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable);
-      if (response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable) {
+      console.log(
+        'resop',
+        response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable,
+      );
+      if (
+        response.data.cartDiscountCodesUpdate.cart.discountCodes[0].applicable
+      ) {
         console.log('Yessss');
-        await AsyncStorage.setItem('COUPON', JSON.stringify(response.data.cartDiscountCodesUpdate.cart));
+        await AsyncStorage.setItem(
+          'COUPON',
+          JSON.stringify(response.data.cartDiscountCodesUpdate.cart),
+        );
         showMessage({
           message: 'Coupon Applied Successfully',
           type: 'success',
@@ -97,5 +109,26 @@ export const handleCouponCode = async (cart, variables) => {
     }
   } catch (error) {
     console.error('Mutation Coupon Error:', error);
+  }
+};
+
+export const hnadleAddCartAddress = async (addAddressInCart, variables) => {
+  try {
+    const response = await addAddressInCart({
+      variables,
+    });
+    if (response) {
+      if (response.data?.cartBuyerIdentityUpdate?.userErrors.length) {
+        console.error(
+          response.data?.cartBuyerIdentityUpdate?.userErrors[0].message,
+        );
+      }
+
+      if (response.data?.cartBuyerIdentityUpdate.cart) {
+        console.log(response.data?.cartBuyerIdentityUpdate.cart);
+      }
+    }
+  } catch (error) {
+    console.error('Mutation Remove Error:', error);
   }
 };

@@ -201,43 +201,38 @@ const Cart = () => {
     }
   };
 
-  const setSelectedAddressHandler = async item => {
-    console.log('asdas');
-    try {
-      // const variables = {
-      //   buyerIdentity: {
-      //     countryCode: 'US',
-      //     customerAccessToken: auth.accessToken,
-      //     deliveryAddressPreferences: [
-      //       {
-      //         customerAddressId: item.id,
-      //         deliveryAddress: {
-      //           address1: item.address1,
-      //           address2: item.address2,
-      //           city: item.city,
-      //           country: item.country,
-      //           firstName: item.firstName,
-      //           lastName: item.lastName,
-      //           phone: item.phone,
-      //           province: item.province,
-      //           zip: item.zip,
-      //         },
-      //       },
-      //     ],
-      //   },
-      //   cartId: CartId,
-      // };
-      // const result = await addAddressInCart({variables});
-      // console.log('result', result.data);
-      // console.log(
-      //   'resultError',
-      //   result.data?.cartBuyerIdentityUpdate?.userError,
-      // );
-      setSelectedAddress(item);
-      setShowAddressBook(false);
-    } catch (error) {
-      console.error(error);
-    }
+  const setSelectedAddressHandler = item => {
+    const variables = {
+      buyerIdentity: {
+        countryCode: 'US',
+        customerAccessToken: auth.accessToken,
+        deliveryAddressPreferences: [
+          {
+            customerAddressId: item.id,
+            deliveryAddress: {
+              address1: item.address1,
+              address2: item.address2,
+              city: item.city,
+              country: item.country,
+              firstName: item.firstName,
+              lastName: item.lastName,
+              phone: item.phone,
+              province: item.province,
+              zip: item.zip,
+            },
+          },
+        ],
+      },
+      cartId: CartId,
+    };
+    // const result = await addAddressInCart({variables});
+    // console.log('result', result.data);
+    // console.log(
+    //   'resultError',
+    //   result.data?.cartBuyerIdentityUpdate?.userError,
+    // );
+    setSelectedAddress(item);
+    setShowAddressBook(false);
   };
 
   return (
