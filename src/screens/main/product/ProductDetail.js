@@ -54,18 +54,24 @@ const ProductDetail = ({route, navigation}) => {
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
   const [open, setOpen] = useState(false);
+  const [allSizesIndex, setAllSizesIndex] = useState(null);
+  const [allColorsIndex, setAllColorsIndex] = useState(null);
 
   useEffect(() => {
     setProductImages(product.node.featuredImage.url);
     if (selectedColor && selectedSize) {
       const filtered = product.node.variants.edges.filter(
         item =>
-          item.node.selectedOptions[0].value === selectedSize &&
-          item.node.selectedOptions[1].value === selectedColor,
+          item.node.selectedOptions[allSizesIndex].value === selectedSize &&
+          item.node.selectedOptions[allColorsIndex].value === selectedColor,
       );
-      setNewArr(filtered[0].node);
-      setProductImages(filtered[0].node.image.url);
-      setNewPrice(filtered[0].node.price.amount);
+      if (filtered.length > 0) {
+        setNewArr(filtered[0].node);
+        setProductImages(filtered[0].node.image.url);
+        if (filtered[0]?.node?.price?.amount) {
+          setNewPrice(filtered[0].node.price.amount);
+        }
+      }
     }
   }, [product, selectedColor, selectedSize, NewPrice]);
 
@@ -74,14 +80,28 @@ const ProductDetail = ({route, navigation}) => {
     const productEdge = product.node.variants.edges;
     const tempProductData = [];
     const uniqueVariant = [];
+    if (productEdge.length) {
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions[index]) {
+          tempProductData.push(
+            productEdge[a].node.selectedOptions[index].value,
+          );
+        }
+      }
 
-    for (let a = 0; a < productEdge.length; a++) {
-      tempProductData.push(productEdge[a].node.selectedOptions[index].value);
+      for (let b = 0; b < tempProductData.length; b++) {
+        if (!uniqueVariant.includes(tempProductData[b])) {
+          uniqueVariant.push(tempProductData[b]);
+        }
+      }
     }
 
-    for (let b = 0; b < tempProductData.length; b++) {
-      if (!uniqueVariant.includes(tempProductData[b])) {
-        uniqueVariant.push(tempProductData[b]);
+    if (uniqueVariant.length === 1) {
+      if (index === allSizesIndex) {
+        setselectedSize(uniqueVariant[0]);
+      }
+      if (index === allColorsIndex) {
+        setselectedColor(uniqueVariant[0]);
       }
     }
 
@@ -122,6 +142,59 @@ const ProductDetail = ({route, navigation}) => {
     return uniqueVariant;
   };
 
+  const findCurrectIndexOfVarients = () => {
+    const productEdge = product.node.variants.edges;
+    const tempProductData = {
+      size: null,
+      color: null,
+    };
+
+    if (productEdge.length) {
+      for (let a = 0; a < productEdge.length; a++) {
+        if (productEdge[a].node.selectedOptions) {
+          for (let b = 0; b < productEdge[a].node.selectedOptions.length; b++) {
+            if (
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'size' ||
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'sizes'
+            ) {
+              tempProductData.size = b;
+            }
+            if (
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'color' ||
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'colors' ||
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'colour' ||
+              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
+                'colours'
+            ) {
+              tempProductData.color = b;
+            }
+
+            tempProductData.some = productEdge[a].node.selectedOptions[b].name;
+          }
+        }
+      }
+
+      setAllSizesIndex(tempProductData.size);
+      setAllColorsIndex(tempProductData.color);
+      // setSelectedProductID(product.variants.edges[0].node.id);
+      // setProductImage(
+      //   product?.images?.edges[0]?.node?.url
+      //     ? product.images.edges[0].node.url
+      //     : null,
+      // );
+      // console.log(tempProductData);
+    }
+  };
+
+  useEffect(() => {
+    findCurrectIndexOfVarients();
+  }, []);
+
   useEffect(() => {
     if (route.params.relatedProducts) {
       setAllColors([]);
@@ -129,20 +202,36 @@ const ProductDetail = ({route, navigation}) => {
       ref.current?.scrollTo({y: 0});
     }
     if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
-      setAllSizes(getUniqueVariant(0));
-      setAllColors(getUniqueVariant(1));
+      setAllSizes(getUniqueVariant(allSizesIndex));
+      setAllColors(getUniqueVariant(allColorsIndex));
     }
   }, [isFocused, route.params.relatedProducts, product]);
 
   useEffect(() => {
+    if (allSizesIndex !== null) {
+      setAllSizes(getUniqueVariant(allSizesIndex));
+    }
+  }, [allSizesIndex]);
+
+  useEffect(() => {
+    if (allColorsIndex !== null) {
+      setAllColors(getUniqueVariant(allColorsIndex));
+    }
+  }, [allColorsIndex]);
+
+  useEffect(() => {
     if (allColors.length > 0) {
-      setAllColors(checkAllVarientValues(0, 1, selectedSize));
+      setAllColors(
+        checkAllVarientValues(allSizesIndex, allColorsIndex, selectedSize),
+      );
     }
   }, [selectedSize]);
 
   useEffect(() => {
     if (allSizes.length > 0) {
-      setAllSizes(checkAllVarientValues(1, 0, selectedColor));
+      setAllSizes(
+        checkAllVarientValues(allColorsIndex, allSizesIndex, selectedColor),
+      );
     }
   }, [selectedColor]);
 
@@ -386,25 +475,30 @@ const ProductDetail = ({route, navigation}) => {
                           onPress={() => HandleColor(item)}
                           key={index}
                           style={[
-                            styles.colorBox,
+                            styles.sizeBox,
                             {
-                              backgroundColor: item.toLowerCase(),
+                              backgroundColor:
+                                selectedColor === item
+                                  ? COLORS.primary
+                                  : '#FAF7F1',
                               marginLeft: index === 0 ? 0 : 5,
                               marginRight: index === allColors.length ? 0 : 5,
                             },
                           ]}>
-                          {selectedColor == item ? <ColorCheckSvg /> : null}
-
-                          <View
+                          <Text
                             style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              backgroundColor: 'rgba(255,255,255,0.15)',
-                            }}
-                          />
+                              fontSize: 14,
+                              fontFamily:
+                                selectedColor === item
+                                  ? FONTS.semiBold
+                                  : FONTS.light,
+                              color:
+                                selectedColor === item
+                                  ? COLORS.white
+                                  : COLORS.secondary,
+                            }}>
+                            {item}
+                          </Text>
                         </TouchableOpacity>
                       ))}
                     </ScrollView>
