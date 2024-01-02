@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TextField2 from '../../../components/TextFeild2';
 import {COUPON_CODE} from '../../../graphql/mutations/Coupon';
 import {
+  handleAddCartAddress,
   handleCouponCode,
   hnadleDecreaseCartValue,
   hnadleIncreseCartValue,
@@ -46,6 +47,7 @@ import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 import {FETCH_CUSTOMER_ADDRESS} from '../../../graphql/queries/Customer';
 import {useSelector} from 'react-redux';
 import AddressList from '../../../components/AddressList';
+import {showMessage} from 'react-native-flash-message';
 
 const PaymentDetails = ({totalAmout, cartId, setCouponPopup}) => {
   return (
@@ -85,7 +87,7 @@ const PaymentDetails = ({totalAmout, cartId, setCouponPopup}) => {
   );
 };
 
-const Cart = () => {
+const Cart = ({navigation}) => {
   const [CartItems, setCartItems] = useState('');
   const [RemoveLoader, setRemoveLoader] = useState(false);
   const [couponPopup, setCouponPopup] = useState(false);
@@ -208,7 +210,6 @@ const Cart = () => {
         customerAccessToken: auth.accessToken,
         deliveryAddressPreferences: [
           {
-            customerAddressId: item.id,
             deliveryAddress: {
               address1: item.address1,
               address2: item.address2,
@@ -225,14 +226,23 @@ const Cart = () => {
       },
       cartId: CartId,
     };
-    // const result = await addAddressInCart({variables});
-    // console.log('result', result.data);
-    // console.log(
-    //   'resultError',
-    //   result.data?.cartBuyerIdentityUpdate?.userError,
-    // );
+    handleAddCartAddress(addAddressInCart, variables);
     setSelectedAddress(item);
     setShowAddressBook(false);
+  };
+
+  const handlePlaceOrder = () => {
+    if (!selectedAddress) {
+      showMessage({
+        type: 'danger',
+        message: 'Please set shipping address before proceeding to checkout',
+      });
+      return;
+    }
+
+    navigation.navigate('CheckOut', {
+      checkoutData: CartData.cart.checkoutUrl,
+    });
   };
 
   return (
@@ -375,7 +385,11 @@ const Cart = () => {
               <ActivityLoader />
             )}
             {CartItems.lines.edges.length > 0 && (
-              <Button text="Proceed to Checkout" type="primary" />
+              <Button
+                text="Proceed to Checkout"
+                type="primary"
+                onPressFunc={handlePlaceOrder}
+              />
             )}
           </View>
         </>

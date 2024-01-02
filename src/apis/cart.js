@@ -112,12 +112,13 @@ export const handleCouponCode = async (cart, variables) => {
   }
 };
 
-export const hnadleAddCartAddress = async (addAddressInCart, variables) => {
+export const handleAddCartAddress = async (addAddressInCart, variables) => {
   try {
     const response = await addAddressInCart({
       variables,
     });
     if (response) {
+      console.log('response');
       if (response.data?.cartBuyerIdentityUpdate?.userErrors.length) {
         console.error(
           response.data?.cartBuyerIdentityUpdate?.userErrors[0].message,
