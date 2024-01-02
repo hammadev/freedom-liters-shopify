@@ -41,6 +41,8 @@ const ProductListing = route => {
       handle: route.route.params?.handle,
     },
   });
+
+  console.log(route.route.params?.handle);
   const {
     data: featuredProductData,
     loader: featuredProductLoader,

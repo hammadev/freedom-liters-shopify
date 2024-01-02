@@ -186,8 +186,9 @@ const Home = ({navigation}) => {
                 heading="Dresses"
                 onPressLeft={() => {
                   navigation.navigate('ProductListing', {
-                    value: 1,
-                    title: 'Featured',
+                    handle: 'dresses',
+                    value: 0,
+                    title: 'Dresses',
                   });
                 }}
               />
@@ -208,8 +209,9 @@ const Home = ({navigation}) => {
                 heading="Bags"
                 onPressLeft={() => {
                   navigation.navigate('ProductListing', {
-                    value: 3,
-                    title: 'ONSALE',
+                    handle: 'bags',
+                    value: 0,
+                    title: 'Bags',
                   });
                 }}
               />

@@ -37,7 +37,7 @@ export const GET_ONE_CATEGORIES_PRODUCT = gql`
     collection(handle: $handle) {
       id
       title
-      products(first: 50, sortKey: BEST_SELLING) {
+      products(first: 50, sortKey: CREATED) {
         edges {
           node {
             id

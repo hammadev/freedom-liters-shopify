@@ -65,8 +65,9 @@ const Banner = ({}) => {
             rippleColor={'rgba(255, 255, 255, 0.1)'}
             onPress={() =>
               navigation.navigate('ProductListing', {
-                value: 1,
-                title: 'Featured',
+                handle: 'featured-products',
+                value: 0,
+                title: 'On Sale',
               })
             }>
             <Text style={styles.btnText}>Buy Now</Text>
