@@ -1,9 +1,9 @@
 import {ApolloClient, InMemoryCache, createHttpLink} from '@apollo/client';
 
 // Load the access token as per your instructions
-const storefrontAccessToken = 'bd2caaa540b72d513b488db6e9235c78';
+const storefrontAccessToken = '7958138faf4b497e479f8ff85689a51d';
 const api_version = '2023-01';
-const shop = 'irongearclothing.myshopify.com';
+const shop = 'styledblacknwhite.com';
 // Shopify Storefront API URL
 const apiBaseUrl = `https://${shop}/api/${api_version}/graphql.json`;
 

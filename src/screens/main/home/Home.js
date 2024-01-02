@@ -183,7 +183,7 @@ const Home = ({navigation}) => {
               onMomentumScrollBegin={handleScroll}>
               {/* Featured Product List */}
               <SeactionRow
-                heading="Featured"
+                heading="Dresses"
                 onPressLeft={() => {
                   navigation.navigate('ProductListing', {
                     value: 1,
@@ -191,10 +191,32 @@ const Home = ({navigation}) => {
                   });
                 }}
               />
-              {product && (
+              {product.featured && (
                 <FlatList
                   contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-                  data={product.featured.edges}
+                  data={product.featured?.edges}
+                  renderItem={({item, index}) => (
+                    <ProductBox item={item} index={index} />
+                  )}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
+                />
+              )}
+              {/* On Sale Product List */}
+              <SeactionRow
+                heading="Bags"
+                onPressLeft={() => {
+                  navigation.navigate('ProductListing', {
+                    value: 3,
+                    title: 'ONSALE',
+                  });
+                }}
+              />
+              {product.onsale && (
+                <FlatList
+                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  data={product.onsale.edges}
                   renderItem={({item, index}) => (
                     <ProductBox item={item} index={index} />
                   )}
@@ -213,32 +235,10 @@ const Home = ({navigation}) => {
                   });
                 }}
               />
-              {product && (
+              {product.latest && (
                 <FlatList
                   contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-                  data={product.latest.edges}
-                  renderItem={({item, index}) => (
-                    <ProductBox item={item} index={index} />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
-                />
-              )}
-              {/* On Sale Product List */}
-              <SeactionRow
-                heading="ONSALE"
-                onPressLeft={() => {
-                  navigation.navigate('ProductListing', {
-                    value: 3,
-                    title: 'ONSALE',
-                  });
-                }}
-              />
-              {product && (
-                <FlatList
-                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
-                  data={product.onsale.edges}
+                  data={product.latest?.edges}
                   renderItem={({item, index}) => (
                     <ProductBox item={item} index={index} />
                   )}

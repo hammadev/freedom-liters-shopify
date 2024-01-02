@@ -7,11 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import {
-  GET_FEATURED_PRODUCT,
   GET_LATEST_PRODUCT,
-  GET_ONSALE_PRODUCT,
+  GET_PRODUCTS_USING_COLLECTION_FILTER,
 } from '../graphql/queries/Product';
-import {GET_ALL_CATEGORIES, GET_CATEGORIES} from '../graphql/queries/Category';
+import {GET_ALL_CATEGORIES} from '../graphql/queries/Category';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 const Splash = ({navigation}) => {
@@ -22,7 +21,12 @@ const Splash = ({navigation}) => {
     loading: featuredProductLoading,
     error: featuredProductError,
     data: featuredProductData,
-  } = useQuery(GET_FEATURED_PRODUCT);
+  } = useQuery(GET_PRODUCTS_USING_COLLECTION_FILTER, {
+    variables: {
+      first: 10,
+      handle: 'dresses',
+    },
+  });
 
   // (GET_LATEST_PRODUCT)
   const {
@@ -36,7 +40,12 @@ const Splash = ({navigation}) => {
     loading: onsaleProductLoading,
     error: onsaleProductError,
     data: onsaleProductData,
-  } = useQuery(GET_ONSALE_PRODUCT);
+  } = useQuery(GET_PRODUCTS_USING_COLLECTION_FILTER, {
+    variables: {
+      first: 10,
+      handle: 'bags',
+    },
+  });
 
   // (GET_ALL_CATEGORIES)
   const {
@@ -62,7 +71,7 @@ const Splash = ({navigation}) => {
       // Dispatch Featrued product data in Redux
       dispatch({
         type: 'FEATURED_PRODUCTS',
-        Payload: featuredProductData.products,
+        Payload: featuredProductData.collection.products,
       });
     }
     if (!latestProductLoading && !latestProductError && latestProductData) {
@@ -77,7 +86,7 @@ const Splash = ({navigation}) => {
       // Dispatch Onsale data in Redux
       dispatch({
         type: 'ONSALE_PRODUCTS',
-        Payload: onsaleProductData.products,
+        Payload: onsaleProductData.collection.products,
       });
     }
 

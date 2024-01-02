@@ -98,6 +98,56 @@ export const GET_ALL_LATEST_PRODUCT = gql`
   }
 `;
 
+export const GET_PRODUCTS_USING_COLLECTION_FILTER = gql`
+  query getProductsUsingCollectionFilter($first: Int!, $handle: String!) {
+    collection(handle: $handle) {
+      products(first: $first, sortKey: CREATED, reverse: true) {
+        edges {
+          node {
+            availableForSale
+            id
+            featuredImage {
+              url
+            }
+            images(first: 100) {
+              edges {
+                node {
+                  url
+                }
+              }
+            }
+            title
+            description
+            descriptionHtml
+            tags
+            priceRange {
+              minVariantPrice {
+                amount
+              }
+            }
+            variants(first: 100) {
+              edges {
+                node {
+                  availableForSale
+                  selectedOptions {
+                    value
+                    name
+                  }
+                  title
+                  id
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_FEATURED_PRODUCT = gql`
   query FetchFeaturedProduct {
     products(first: 8, query: "product_type:featured") {
@@ -392,7 +442,11 @@ export const FILTER_PRODUCTS = gql`
 `;
 
 export const FILTER_CATEGORY_PRODUCTS = gql`
-  query getProductsOfProductTypeInCollection($handle: String!, $reverse: Boolean!, $sortkey: ProductCollectionSortKeys!) {
+  query getProductsOfProductTypeInCollection(
+    $handle: String!
+    $reverse: Boolean!
+    $sortkey: ProductCollectionSortKeys!
+  ) {
     collection(handle: $handle) {
       handle
       products(first: 100, sortKey: $sortkey, reverse: $reverse) {
