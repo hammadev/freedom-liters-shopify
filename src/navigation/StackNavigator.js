@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PersonalInfo from '../screens/main/personalInfo/PersonalInfo';
 import BottomTabScreen from './BottomTab';
 import CodeVerification from '../screens/auth/codeVerification/CodeVerification';
@@ -19,6 +19,8 @@ import ProductListing from '../screens/main/product/ProductListing';
 import PersonalInfoEdit from '../screens/main/personalInfo/PersonalInfoEdit';
 import AddressListing from '../screens/main/address/AddressListing';
 import Voucher from '../screens/main/profile/Voucher';
+import CustomDesign from '../screens/main/product/CustomDesign';
+import CustomDesignQty from '../screens/main/product/CustomDesignQty';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -48,6 +50,8 @@ const StackNavigator = () => {
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Category" component={Category} />
+      <Stack.Screen name="CustomDesign" component={CustomDesign} />
+      <Stack.Screen name="CustomDesignQty" component={CustomDesignQty} />
       <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
     </Stack.Navigator>
   );

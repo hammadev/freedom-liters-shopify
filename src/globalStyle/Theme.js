@@ -1,4 +1,4 @@
-import {Dimensions, Platform} from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 const Color = {
   primary: '#231F20',
   secondary: '#656872',
@@ -34,9 +34,9 @@ const GlobalStyle = {
     flex: 1,
   },
   heading: {
-    fontSize: 16,
-    fontFamily: Font.Automove_Personal,
-    color: Color.primary,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Color.black,
     lineHeight: Window.fixPadding * 2,
   },
   textStlye: {
@@ -67,4 +67,4 @@ const GlobalStyle = {
   },
 };
 
-export {Color, Font, Window, GlobalStyle};
+export { Color, Font, Window, GlobalStyle };

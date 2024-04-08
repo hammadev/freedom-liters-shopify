@@ -6,23 +6,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Icon from '../../../../core/Icon';
-import {Color, Font, GlobalStyle, Window} from '../../../../globalStyle/Theme';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import { Color, Font, GlobalStyle, Window } from '../../../../globalStyle/Theme';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ADD_MORE_ITEM,
   CREATE_CART_ADD_ONE_ITEM,
 } from '../../../../graphql/mutations/Cart';
-import {handleCreateCart} from '../../../../apis/cart';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {COLORS, FONTS, RADIUS, WIDTH} from '../../../../constants';
-import {TouchableRipple} from 'react-native-paper';
+import { handleCreateCart } from '../../../../apis/cart';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { COLORS, FONTS, RADIUS, WIDTH } from '../../../../constants';
+import { TouchableRipple } from 'react-native-paper';
 
-const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
+const ProductBox = ({ item, relatedProducts = false, GET_WISHLIST_DATA }) => {
   const [showFavIcon, setShowFavIcon] = useState(false);
   const navigation = useNavigation();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
@@ -82,7 +82,7 @@ const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
         );
         await AsyncStorage.setItem(
           'WishList_Items',
-          JSON.stringify({addedItems: filterData}),
+          JSON.stringify({ addedItems: filterData }),
         );
         setShowFavIcon(false);
         if (GET_WISHLIST_DATA) {
@@ -102,7 +102,7 @@ const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
         }
       }
     } else {
-      const NewObject = {addedItems: [item]};
+      const NewObject = { addedItems: [item] };
       await AsyncStorage.setItem('WishList_Items', JSON.stringify(NewObject));
       setShowFavIcon(true);
     }
@@ -119,10 +119,10 @@ const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
         }>
         <>
           <ImageBackground
-            imageStyle={{borderRadius: RADIUS, overflow: 'hidden'}}
+            imageStyle={{ borderRadius: RADIUS, overflow: 'hidden' }}
             source={
               item.node
-                ? {uri: item.node.featuredImage?.url}
+                ? { uri: item.node.featuredImage?.url }
                 : require('../../../../assets/images/products/noimage.png')
             }
             style={{
@@ -136,7 +136,7 @@ const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
                 onPress={wishlistHandler}>
                 <Icon
                   iconFamily={'AntDesign'}
-                  style={{fontSize: 16}}
+                  style={{ fontSize: 16 }}
                   color={showFavIcon ? '#F91212' : Color.secondary}
                   name={showFavIcon ? 'heart' : 'hearto'}
                 />
@@ -144,19 +144,19 @@ const ProductBox = ({item, relatedProducts = false, GET_WISHLIST_DATA}) => {
               <TouchableOpacity
                 style={[
                   styles.iconContainer,
-                  {backgroundColor: 'rgba(2, 28, 94,0.7)'},
+                  { backgroundColor: COLORS.green },
                 ]}
                 onPress={
                   isVariation > 1
                     ? () =>
-                        navigation.navigate('ProductDetail', {
-                          product: item,
-                        })
+                      navigation.navigate('ProductDetail', {
+                        product: item,
+                      })
                     : () => Add_To_Card(item.node.variants.edges[0].node)
                 }>
                 <Icon
                   iconFamily={'AntDesign'}
-                  style={{fontSize: 16}}
+                  style={{ fontSize: 16 }}
                   color={COLORS.white}
                   name={isVariation > 1 ? 'arrowright' : 'plus'}
                 />
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginHorizontal: 5,
   },
-  ripple: {width: '100%', height: '100%'},
+  ripple: { width: '100%', height: '100%' },
   btnContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.2)',

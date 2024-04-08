@@ -1,15 +1,15 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import NotLogin from '../../../components/NotLogin';
-import {CartEmptyIcon} from '../../../assets/svgs/NotificationSvg';
+import { CartEmptyIcon } from '../../../assets/svgs/NotificationSvg';
 import Header from '../../../components/Header';
-import {COLORS} from '../../../constants';
+import { COLORS } from '../../../constants';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 const MyOrder = () => {
-  const {auth} = useSelector(state => ({...state}));
+  const { auth } = useSelector(state => ({ ...state }));
   if (!auth) {
     return <NotLogin />;
   }
@@ -38,5 +38,5 @@ const MyOrder = () => {
 export default MyOrder;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: COLORS.white},
+  container: { flex: 1, backgroundColor: COLORS.white },
 });

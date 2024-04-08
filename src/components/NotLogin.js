@@ -7,13 +7,13 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {hasNotch} from 'react-native-device-info';
+import { hasNotch } from 'react-native-device-info';
 import AppBar from './AppBar';
-import {NotLoginSvg} from '../assets/svgs/ProfileSvgs';
+import { NotLoginSvg } from '../assets/svgs/ProfileSvgs';
 import Button from './Button';
-import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT, WIDTH} from '../constants';
+import { COLORS, CONTAINER_PADDING, FONTS, HEIGHT, WIDTH } from '../constants';
 
-const NotLogin = ({ShowBackButton = false}) => {
+const NotLogin = ({ ShowBackButton = false }) => {
   return (
     <SafeAreaView
       style={styles.container}
@@ -28,7 +28,7 @@ const NotLogin = ({ShowBackButton = false}) => {
         style={{
           paddingHorizontal: CONTAINER_PADDING,
         }}>
-        <View style={{alignSelf: 'center'}}>
+        <View style={{ alignSelf: 'center' }}>
           <NotLoginSvg width={WIDTH / 1.5} height={HEIGHT / 3} />
         </View>
         <Text style={styles.heading}>Your are not login</Text>
@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   heading: {
-    color: COLORS.primary,
+    color: COLORS.black,
     fontFamily: FONTS.bold,
     fontSize: 24,
     marginTop: 22,
     alignSelf: 'center',
   },
   subHeading: {
-    color: COLORS.primary,
+    color: COLORS.gryLight,
     fontFamily: FONTS.regular,
     fontSize: 16,
     textAlign: 'center',

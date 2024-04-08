@@ -1,13 +1,13 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Color, Font, Window} from '../globalStyle/Theme';
-import {SkypeIndicator} from 'react-native-indicators';
-import {COLORS, FONTS, RADIUS} from '../constants';
-import {TouchableRipple} from 'react-native-paper';
+import { Color, Font, Window } from '../globalStyle/Theme';
+import { SkypeIndicator } from 'react-native-indicators';
+import { COLORS, FONTS, RADIUS } from '../constants';
+import { TouchableRipple } from 'react-native-paper';
 
-const Button = ({type, navLink, onPressFunc, loading, icon, text}) => {
+const Button = ({ type, navLink, onPressFunc, loading, icon, text, style = {} }) => {
   let navigation = useNavigation();
 
   return (
@@ -19,25 +19,26 @@ const Button = ({type, navLink, onPressFunc, loading, icon, text}) => {
             type === 'primary'
               ? COLORS.primary
               : type === 'secondary'
-              ? COLORS.white
-              : 'transparent',
+                ? COLORS.primary
+                : 'transparent',
 
-          borderColor: type === 'alternate' ? COLORS.white : 'transparent',
+          borderColor: type === 'alternate' ? COLORS.gryLight : 'transparent',
         },
+        style
       ]}>
       <TouchableRipple
         rippleColor={
           type === 'primary'
             ? 'rgba(255,255,255,0.2)'
             : type === 'secondary'
-            ? 'rgba(0,0,0,0.2)'
-            : 'rgba(255,255,255,0.2)'
+              ? 'rgba(0,0,0,0.2)'
+              : 'rgba(255,255,255,0.2)'
         }
         style={styles.ripple}
         onPress={
           onPressFunc
             ? onPressFunc
-            : () => navigation.navigate(navLink, {value: 4})
+            : () => navigation.navigate(navLink, { value: 4 })
         }
         disabled={loading ? true : false}>
         <>
@@ -52,10 +53,10 @@ const Button = ({type, navLink, onPressFunc, loading, icon, text}) => {
                 ...styles.btnTextStyle,
                 color:
                   type === 'primary'
-                    ? COLORS.white
+                    ? COLORS.black
                     : type === 'secondary'
-                    ? COLORS.primary
-                    : COLORS.white,
+                      ? COLORS.black
+                      : COLORS.gryLight,
               }}>
               {text}
             </Text>

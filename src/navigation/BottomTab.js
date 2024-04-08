@@ -1,16 +1,16 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../screens/main/home/Home';
 import Profile from '../screens/main/profile/Profile';
-import {Color} from '../globalStyle/Theme';
+import { Color } from '../globalStyle/Theme';
 import MyOrder from '../screens/main/myOrder/MyOrder';
 import Icon from '../core/Icon';
 import Category from '../screens/main/category/Category';
-import {TouchableRipple} from 'react-native-paper';
-import {Text, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {COLORS, FONTS} from '../constants';
+import { TouchableRipple } from 'react-native-paper';
+import { Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { COLORS, FONTS } from '../constants';
 
 const BottomTabScreen = () => {
   const Tab = createBottomTabNavigator();
@@ -18,7 +18,7 @@ const BottomTabScreen = () => {
   return (
     <Tab.Navigator
       tabBar={props => <MyTabBar {...props} />}
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
         headerShown: false,
       })}>
@@ -53,7 +53,7 @@ const tabsData = [
   },
 ];
 
-function MyTabBar({state, descriptors, navigation, route}) {
+function MyTabBar({ state, descriptors, navigation, route }) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -73,13 +73,13 @@ function MyTabBar({state, descriptors, navigation, route}) {
         backgroundColor: COLORS.white,
       }}>
       {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
+        const { options } = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 
@@ -105,7 +105,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
           <TouchableRipple
             key={index}
             accessibilityRole="button"
-            accessibilityState={isFocused ? {selected: true} : {}}
+            accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
@@ -123,7 +123,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
                     name={'home'}
                     iconFamily={'Ionicons'}
                     size={25}
-                    color={COLORS.primary}
+                    color={COLORS.green}
                   />
                 ) : (
                   <Icon
@@ -140,7 +140,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
                     name={'list-circle'}
                     iconFamily={'Ionicons'}
                     size={25}
-                    color={COLORS.primary}
+                    color={COLORS.green}
                   />
                 ) : (
                   <Icon
@@ -157,7 +157,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
                     name={'inbox'}
                     iconFamily={'FontAwesome'}
                     size={25}
-                    color={COLORS.primary}
+                    color={COLORS.green}
                   />
                 ) : (
                   <Icon
@@ -174,7 +174,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
                     name={'account'}
                     iconFamily={'MaterialCommunityIcons'}
                     size={25}
-                    color={COLORS.primary}
+                    color={COLORS.green}
                   />
                 ) : (
                   <Icon
@@ -188,7 +188,7 @@ function MyTabBar({state, descriptors, navigation, route}) {
 
               <Text
                 style={{
-                  color: isFocused ? COLORS.primary : COLORS.lightText,
+                  color: isFocused ? COLORS.green : COLORS.lightText,
                   fontFamily: FONTS.regular,
                   fontSize: 12,
                   marginTop: 5,

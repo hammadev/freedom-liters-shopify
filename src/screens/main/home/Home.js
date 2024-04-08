@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,18 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import {Color, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import { Color, GlobalStyle, Window } from '../../../globalStyle/Theme';
 
 import SearchBar from '../../../components/SearchBar';
-import {useSelector} from 'react-redux';
-import {BackHandler} from 'react-native';
+import { useSelector } from 'react-redux';
+import { BackHandler } from 'react-native';
 import ProductBox from '../product/_partials/ProductBox';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import Banner from './Banner';
-import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT} from '../../../constants';
-import {useRef} from 'react';
-import {useIsFocused} from '@react-navigation/native';
-import {useEffect} from 'react';
+import { COLORS, CONTAINER_PADDING, FONTS, HEIGHT } from '../../../constants';
+import { useRef } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect } from 'react';
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
@@ -26,18 +26,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 import {
   FlatList,
   PanGestureHandler,
   ScrollView,
 } from 'react-native-gesture-handler';
+import Button from '../../../components/Button';
 
-export const CatBox = ({item, navigation}) => {
+export const CatBox = ({ item, navigation }) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductListing', {catId: item.id})}>
+      onPress={() => navigation.navigate('ProductListing', { catId: item.id })}>
       <ImageBackground
         style={{
           width: Window.width / 2.3,
@@ -47,7 +48,7 @@ export const CatBox = ({item, navigation}) => {
         }}
         source={
           item.image
-            ? {uri: item.image.src}
+            ? { uri: item.image.src }
             : require('../../../assets/images/products/review.png')
         }>
         <View
@@ -82,12 +83,12 @@ export const CatBox = ({item, navigation}) => {
   );
 };
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [SearchVale, setSearcValue] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const {product} = useSelector(state => ({
+  const { product } = useSelector(state => ({
     ...state,
   }));
   const subscription = BackHandler.addEventListener(
@@ -98,6 +99,7 @@ const Home = ({navigation}) => {
   const onBackPress = () => {
     setSearcValue(false);
   };
+
   //ANIMATED GESTURES ====> START
   const handleScroll = e => {
     if (e.nativeEvent.contentOffset.y > 1) {
@@ -116,6 +118,7 @@ const Home = ({navigation}) => {
       );
     }
   };
+
   const progress = useSharedValue(
     Platform.OS === 'ios'
       ? HEIGHT / 1.5 - (insets.top - insets.bottom) - 15
@@ -168,16 +171,16 @@ const Home = ({navigation}) => {
         translucent
       />
       <ScrollView
-        style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1, justifyContent: 'flex-end'}}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <Banner />
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[reanimatedStyle, styles.card]}>
             <ScrollView
-              style={{flex: 1}}
-              contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
               onMomentumScrollBegin={handleScroll}>
@@ -194,14 +197,14 @@ const Home = ({navigation}) => {
               />
               {product.featured && (
                 <FlatList
-                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
                   data={product.featured?.edges}
-                  renderItem={({item, index}) => (
+                  renderItem={({ item, index }) => (
                     <ProductBox item={item} index={index} />
                   )}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
+                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
                 />
               )}
               {/* On Sale Product List */}
@@ -217,14 +220,14 @@ const Home = ({navigation}) => {
               />
               {product.onsale && (
                 <FlatList
-                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
                   data={product.onsale.edges}
-                  renderItem={({item, index}) => (
+                  renderItem={({ item, index }) => (
                     <ProductBox item={item} index={index} />
                   )}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
+                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
                 />
               )}
               {/* Latest Product List */}
@@ -237,18 +240,32 @@ const Home = ({navigation}) => {
                   });
                 }}
               />
+
               {product.latest && (
                 <FlatList
-                  contentContainerStyle={{paddingHorizontal: CONTAINER_PADDING}}
+                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
                   data={product.latest?.edges}
-                  renderItem={({item, index}) => (
+                  renderItem={({ item, index }) => (
                     <ProductBox item={item} index={index} />
                   )}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{width: 10}} />}
+                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
                 />
               )}
+
+              <View
+                style={[
+                  styles.bottomButtonContainer,
+                  { paddingBottom: insets.bottom + 15 },
+                ]}>
+                <Button
+                  onPressFunc={() => navigation.navigate('CustomDesign')}
+                  type="primary"
+                  text="Design Now"
+                />
+              </View>
+
             </ScrollView>
           </Animated.View>
         </PanGestureHandler>
@@ -260,7 +277,7 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: COLORS.white, flex: 1},
+  container: { backgroundColor: COLORS.white, flex: 1 },
   card: {
     backgroundColor: COLORS.white,
     // height: HEIGHT / 1.17 - 60,
@@ -290,9 +307,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: CONTAINER_PADDING,
     marginVertical: 25,
   },
+  bottomButtonContainer: {
+    backgroundColor: COLORS.white,
+    marginHorizontal: CONTAINER_PADDING,
+    paddingTop: 15,
+    shadowColor: 'rgba(0,0,0,0.25)',
+    shadowOffset: {
+      width: 0,
+      height: -10,
+    }
+  }
 });
 
-const SeactionRow = ({onPressLeft, heading}) => {
+const SeactionRow = ({ onPressLeft, heading }) => {
   return (
     <View style={styles.row}>
       <Text style={styles.heading}>{heading}</Text>

@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {CartSvg} from '../../../assets/svgs/HomePage';
+import { CartSvg } from '../../../assets/svgs/HomePage';
 import Icon from '../../../core/Icon';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   COLORS,
   CONTAINER_PADDING,
@@ -17,10 +17,10 @@ import {
   HEIGHT,
   RADIUS,
 } from '../../../constants';
-import {TouchableRipple} from 'react-native-paper';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { TouchableRipple } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Banner = ({}) => {
+const Banner = ({ }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
@@ -29,7 +29,7 @@ const Banner = ({}) => {
       resizeMode="cover"
       style={styles.container}
       source={require('../../../assets/images/products/homeBg.png')}>
-      <View style={[styles.row, {marginTop: insets.top}]}>
+      <View style={[styles.row, { marginTop: insets.top }]}>
         <View style={styles.topBtn}>
           <TouchableRipple
             style={styles.ripple}
@@ -43,7 +43,7 @@ const Banner = ({}) => {
             />
           </TouchableRipple>
         </View>
-        <View style={[styles.topBtn, {marginLeft: 5}]}>
+        <View style={[styles.topBtn, { marginLeft: 5 }]}>
           <TouchableRipple
             style={styles.ripple}
             rippleColor={'rgba(255, 255, 255, 0.5)'}
@@ -52,7 +52,7 @@ const Banner = ({}) => {
           </TouchableRipple>
         </View>
       </View>
-      <View style={[styles.contentContainer, {paddingBottom: insets.top}]}>
+      <View style={[styles.contentContainer, { paddingBottom: insets.top }]}>
         <Text style={styles.title}>Dress With Style</Text>
         <Image
           style={styles.lineImg}
@@ -86,8 +86,9 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-    backgroundColor: COLORS.primary,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     height: HEIGHT / 3,
+    paddingBottom: 50,
     paddingHorizontal: CONTAINER_PADDING,
   },
   row: {
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   btn: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.green,
     width: 85,
     height: 40,
     borderRadius: RADIUS,

@@ -1,19 +1,19 @@
-import {ImageBackground, StatusBar, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {Color, Window} from '../globalStyle/Theme';
-import {LogoSvg} from '../assets/svgs/Logo';
-import {SkypeIndicator} from 'react-native-indicators';
+import { ImageBackground, StatusBar, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Color, Window } from '../globalStyle/Theme';
+import { LogoSvg } from '../assets/svgs/Logo';
+import { SkypeIndicator } from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
-import {useQuery} from '@apollo/client';
+import { useDispatch } from 'react-redux';
+import { useQuery } from '@apollo/client';
 import {
   GET_LATEST_PRODUCT,
   GET_PRODUCTS_USING_COLLECTION_FILTER,
 } from '../graphql/queries/Product';
-import {GET_ALL_CATEGORIES} from '../graphql/queries/Category';
+import { GET_ALL_CATEGORIES } from '../graphql/queries/Category';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
-const Splash = ({navigation}) => {
+const Splash = ({ navigation }) => {
   const dispatch = useDispatch();
 
   // (GET_FEATURED_PRODUCT)
@@ -148,31 +148,22 @@ const Splash = ({navigation}) => {
         showHideTransition={'fade'}
         translucent
       />
-      <ImageBackground
-        style={{flex: 1}}
-        source={require('../assets/images/pics/splash_bg.png')}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <LogoSvg />
         <View
           style={{
-            flex: 0.9,
-            justifyContent: 'flex-end',
-            paddingLeft: 24,
+            position: 'absolute',
+            top: Window.height / 1.8,
+            left: 0,
+            right: 0,
           }}>
-          <LogoSvg />
-          <View
-            style={{
-              position: 'absolute',
-              top: Window.height / 1.8,
-              left: 0,
-              right: 0,
-            }}>
-            {featuredProductLoading &&
-              latestProductLoading &&
-              onsaleProductLoading && (
-                <SkypeIndicator size={50} color={Color.white} />
-              )}
-          </View>
         </View>
-      </ImageBackground>
+      </View>
     </>
   );
 };

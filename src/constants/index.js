@@ -1,11 +1,12 @@
-import {Dimensions, Platform} from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 const COLORS = {
-  primary: '#021C5E',
+  primary: '#FFE174',
   secondary: '#656872',
+  green: '#597766',
   tertiary: '#231F20',
   lightText: '#080E1E66',
   light: '#F5F5F5',
@@ -31,4 +32,4 @@ const RADIUS = 16;
 
 const CONTAINER_PADDING = 24;
 
-export {WIDTH, HEIGHT, COLORS, FONTS, RADIUS, CONTAINER_PADDING};
+export { WIDTH, HEIGHT, COLORS, FONTS, RADIUS, CONTAINER_PADDING };

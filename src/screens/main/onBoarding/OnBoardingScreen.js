@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, Image, Text} from 'react-native';
-import {Font, Color, Window, GlobalStyle} from '../../../globalStyle/Theme';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, FlatList, Image, Text } from 'react-native';
+import { Font, Color, Window, GlobalStyle } from '../../../globalStyle/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import {
   useSharedValue,
@@ -9,12 +9,12 @@ import {
 } from 'react-native-reanimated';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
 let hasNotch = deviceInfoModule.hasNotch();
 
-const OnBoarding = ({navigation}) => {
+const OnBoarding = ({ navigation }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
   const progress = useSharedValue(0);
@@ -78,7 +78,7 @@ const OnBoarding = ({navigation}) => {
     }
     if (nextSlideIndex != slides.length) {
       const offset = nextSlideIndex * Window.width;
-      ref?.current.scrollToOffset({offset});
+      ref?.current.scrollToOffset({ offset });
       setCurrentSlideIndex(currentSlideIndex + 1);
     }
   };
@@ -95,7 +95,7 @@ const OnBoarding = ({navigation}) => {
     }
     if (nextSlideIndex != slides.length) {
       const offset = nextSlideIndex * Window.width;
-      ref?.current.scrollToOffset({offset});
+      ref?.current.scrollToOffset({ offset });
       setCurrentSlideIndex(currentSlideIndex - 1);
     }
   };
@@ -124,7 +124,7 @@ const OnBoarding = ({navigation}) => {
         onScrollEndDrag={updateCurrentSlideIndex}
         showsHorizontalScrollIndicator={false}
         bounces={false}
-        renderItem={({item}) => <Slide item={item} />}
+        renderItem={({ item }) => <Slide item={item} />}
         disableIntervalMomentum={true}
       />
 
@@ -143,18 +143,20 @@ const OnBoarding = ({navigation}) => {
   );
 };
 export default OnBoarding;
-const Slide = ({item}) => {
+const Slide = ({ item }) => {
   return (
     <View
       style={{
         width: Window.width,
         height: Window.height / 1.21,
-        backgroundColor: '#021851',
+        backgroundColor: '#fff',
       }}>
       <Image
         style={{
           width: Window.width,
-          height: Window.height,
+          height: Window.height / 1.60,
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
         }}
         source={item.image}
       />
@@ -165,20 +167,20 @@ const Slide = ({item}) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: hasNotch ? 110 : 70,
+          bottom: hasNotch ? 110 : 20,
         }}>
         <Text
           style={{
-            ...GlobalStyle.heading,
-            color: Color.white,
-            fontSize: 14,
-            lineHeight: 34,
+            color: Color.black,
+            fontSize: 28,
+            textAlign: 'center',
+            fontWeight: '900'
           }}>
           {item.title}
         </Text>
         <Text
           style={{
-            color: Color.white,
+            color: Color.gryLight,
             fontSize: 15,
             fontFamily: Font.Gilroy_Medium,
             paddingTop: 20,
@@ -202,19 +204,19 @@ const Indicators = ({
       style={{
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        backgroundColor: '#021851',
+        backgroundColor: '#fff',
         paddingBottom: 25,
       }}>
-      <View style={{paddingBottom: 20}}>
+      <View style={{ paddingBottom: 20 }}>
         <Button
           text={currentSlideIndex === 2 ? 'Continue' : 'Next'}
           type="secondary"
           onPressFunc={
             currentSlideIndex === 2
               ? async () => {
-                  await AsyncStorage.setItem('onBoardCompleted', 'Done');
-                  navigation.replace('SignIn');
-                }
+                await AsyncStorage.setItem('onBoardCompleted', 'Done');
+                navigation.replace('SignIn');
+              }
               : goToNextSlide
           }
         />
@@ -226,9 +228,9 @@ const Indicators = ({
         onPressFunc={
           currentSlideIndex === 2
             ? async () => {
-                await AsyncStorage.setItem('onBoardCompleted', 'Done');
-                navigation.replace('SignIn');
-              }
+              await AsyncStorage.setItem('onBoardCompleted', 'Done');
+              navigation.replace('SignIn');
+            }
             : goLastSlide
         }
       />
@@ -239,23 +241,26 @@ const Indicators = ({
 const slides = [
   {
     id: 1,
-    title: 'Discover a better way to shop online',
+    title: `Custom Apparel  
+Your Way`,
     subtitle:
       'Explore our wide selection of products and brands, and save time with smart search tools.',
-    image: require('../../../assets/images/products/onboarding1.png'),
+    image: require('../../../assets/images/images/onboarding1.png'),
   },
   {
     id: 2,
-    title: 'Your One-Stop Shop for Everything',
+    title: `Custom Apparel
+Your Way`,
     subtitle:
-      'Browse our curated collections and get personalized recommendations based on your preferences.',
-    image: require('../../../assets/images/products/onboarding2.png'),
+      'Browse our curated collections and get recommendations based on your preferences.',
+    image: require('../../../assets/images/images/onboarding2.png'),
   },
   {
     id: 3,
-    title: 'fast -  secure -  and easy!',
+    title: `Custom Apparel 
+Your Way`,
     subtitle:
       'Enjoy interactive product demos, 360-degree views, and user-generated reviews.',
-    image: require('../../../assets/images/products/onboarding3.png'),
+    image: require('../../../assets/images/images/onboarding3.png'),
   },
 ];

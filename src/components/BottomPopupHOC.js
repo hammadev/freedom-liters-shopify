@@ -6,23 +6,24 @@ import {
   Modal,
 } from 'react-native';
 import React from 'react';
-import {GlobalStyle} from '../globalStyle/Theme';
-import {ScrollView} from 'react-native';
+import { GlobalStyle } from '../globalStyle/Theme';
+import { ScrollView } from 'react-native';
 
-const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
+const BottomPopupHOC = ({ PopupBody, title, visible, setVisible, color }) => {
   const onTouchOutside = () => {
     setVisible(false);
   };
 
   const renderOutsideTouchable = onTouch => {
-    const view = <View style={{flex: 1, width: '100%'}} />;
+    const view = <View style={{ flex: 1, width: '100%' }} />;
     if (!onTouch) {
       return view;
     }
+
     return (
       <TouchableWithoutFeedback
         onPress={onTouch}
-        style={{flex: 1, width: '100%'}}>
+        style={{ flex: 1, width: '100%' }}>
         {view}
       </TouchableWithoutFeedback>
     );
@@ -71,7 +72,6 @@ const BottomPopupHOC = ({PopupBody, title, visible, setVisible, color}) => {
                 backgroundColor: '#EEEEEE',
               }}
             />
-
             {/* Render the PopupBody component */}
 
             {PopupBody}
