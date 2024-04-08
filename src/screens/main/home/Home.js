@@ -88,11 +88,6 @@ const Home = ({ navigation }) => {
   const [SearchVale, setSearcValue] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const { product } = useSelector(state => ({
-    ...state,
-  }));
-
-
   const data = [
     {
       id: 1,
@@ -200,8 +195,7 @@ const Home = ({ navigation }) => {
       // Add any additional handling for other directions if needed
     },
   });
-  //ANIMATED GESTURES ====> END
-
+  //ANIMATED GESTURES ====> END 
 
   return (
     <View style={styles.container}>
@@ -283,7 +277,6 @@ const Home = ({ navigation }) => {
                 }}
               />
 
-
               <FlatList
                 contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
                 data={data}
@@ -294,7 +287,6 @@ const Home = ({ navigation }) => {
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
               />
-
 
               <View
                 style={[
