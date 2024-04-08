@@ -33,6 +33,9 @@ const SignUp = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const insets = useSafeAreaInsets();
 
+  const Goto_Home = () => {
+    navigation.navigate('BottomTabScreen')
+  }
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar
@@ -112,6 +115,7 @@ const SignUp = ({ navigation }) => {
               loading={loading}
               text="Register"
               type="secondary"
+              onPressFunc={Goto_Home}
             />
           </View>
         </ScrollView>

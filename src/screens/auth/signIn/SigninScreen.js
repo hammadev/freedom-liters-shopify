@@ -31,7 +31,9 @@ const SignIn = ({ navigation }) => {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
 
-
+  const Goto_Home = () => {
+    navigation.navigate('BottomTabScreen')
+  }
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar
@@ -81,12 +83,14 @@ const SignIn = ({ navigation }) => {
             <Button
               text="Login"
               type="secondary"
+              onPressFunc={Goto_Home}
               loading={loading}
             />
           </View>
         </ScrollView>
         <Text style={[styles.bottomText, { marginBottom: insets.bottom + 15 }]}>
           Don't have an account yet?{' '}
+
           <Text
             onPress={() => navigation.navigate('SignUp')}
             style={{

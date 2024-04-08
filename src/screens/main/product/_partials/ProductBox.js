@@ -27,104 +27,21 @@ const ProductBox = ({ item, relatedProducts = false, GET_WISHLIST_DATA }) => {
   const navigation = useNavigation();
   const [cartCreate] = useMutation(CREATE_CART_ADD_ONE_ITEM);
   const [cartLinesAdd] = useMutation(ADD_MORE_ITEM);
-  let isVariation = item.node.variants.edges[0].node.selectedOptions.length;
-  useEffect(() => {
-    getWishlistData();
-  }, []);
-  const getWishlistData = async () => {
-    AsyncStorage.getItem('WishList_Items').then(res => {
-      if (res !== null) {
-        const ParseData = JSON.parse(res);
 
-        const checkInWishlist = ParseData.addedItems.some(
-          e => e.node.id === item.node.id,
-        );
-        setShowFavIcon(checkInWishlist);
-      }
-    });
-  };
-  const Add_To_Card = async item => {
-    const CART_ID = await AsyncStorage.getItem('CART_ID');
-    let variables;
-    let mutationFunc;
-    let isCreateCart;
-    if (CART_ID) {
-      variables = {
-        cartId: CART_ID,
-        lines: {
-          merchandiseId: item.id,
-          quantity: 1,
-        },
-      };
-      mutationFunc = cartLinesAdd;
-      isCreateCart = 0;
-    } else {
-      variables = {
-        cartInput: {
-          lines: {
-            merchandiseId: item.id,
-            quantity: 1,
-          },
-        },
-      };
-      mutationFunc = cartCreate;
-      isCreateCart = 1;
-    }
-    handleCreateCart(mutationFunc, variables, navigation, isCreateCart);
-  };
-  const wishlistHandler = async () => {
-    const existingWishlist = await AsyncStorage.getItem('WishList_Items');
-    if (existingWishlist !== null) {
-      const ParseData = JSON.parse(existingWishlist);
-      if (ParseData.addedItems.some(e => e.node.id === item.node.id)) {
-        const filterData = ParseData.addedItems.filter(
-          (x, i) => x.node.id !== item.node.id,
-        );
-        await AsyncStorage.setItem(
-          'WishList_Items',
-          JSON.stringify({ addedItems: filterData }),
-        );
-        setShowFavIcon(false);
-        if (GET_WISHLIST_DATA) {
-          GET_WISHLIST_DATA();
-        }
-      } else {
-        const AddItemsNew = {
-          addedItems: [...ParseData.addedItems, item],
-        };
-        await AsyncStorage.setItem(
-          'WishList_Items',
-          JSON.stringify(AddItemsNew),
-        );
-        setShowFavIcon(true);
-        if (GET_WISHLIST_DATA) {
-          GET_WISHLIST_DATA();
-        }
-      }
-    } else {
-      const NewObject = { addedItems: [item] };
-      await AsyncStorage.setItem('WishList_Items', JSON.stringify(NewObject));
-      setShowFavIcon(true);
-    }
-  };
   return (
     <View style={styles.container}>
       <TouchableRipple
         style={styles.ripple}
         onPress={() =>
           navigation.navigate('ProductDetail', {
-            product: item,
+            item: item,
             relatedProducts,
           })
         }>
         <>
           <ImageBackground
             imageStyle={{ borderRadius: RADIUS, overflow: 'hidden' }}
-            source={
-              item.node
-                ? { uri: item.node.featuredImage?.url }
-                : require('../../../../assets/images/products/noimage.png')
-            }
+            source={item.image}
             style={{
               height: WIDTH / 2.75,
               borderRadius: RADIUS,
@@ -132,8 +49,7 @@ const ProductBox = ({ item, relatedProducts = false, GET_WISHLIST_DATA }) => {
             }}>
             <View style={styles.btnContainer}>
               <TouchableOpacity
-                style={styles.iconContainer}
-                onPress={wishlistHandler}>
+                style={styles.iconContainer}>
                 <Icon
                   iconFamily={'AntDesign'}
                   style={{ fontSize: 16 }}
@@ -146,32 +62,28 @@ const ProductBox = ({ item, relatedProducts = false, GET_WISHLIST_DATA }) => {
                   styles.iconContainer,
                   { backgroundColor: COLORS.green },
                 ]}
-                onPress={
-                  isVariation > 1
-                    ? () =>
-                      navigation.navigate('ProductDetail', {
-                        product: item,
-                      })
-                    : () => Add_To_Card(item.node.variants.edges[0].node)
-                }>
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {
+                    product: item,
+                  })}>
                 <Icon
                   iconFamily={'AntDesign'}
                   style={{ fontSize: 16 }}
                   color={COLORS.white}
-                  name={isVariation > 1 ? 'arrowright' : 'plus'}
+                  name={'plus'}
                 />
               </TouchableOpacity>
             </View>
           </ImageBackground>
           <Text numberOfLines={1} style={styles.productTitle}>
-            {item.node.title}
+            {item.title}
           </Text>
           <View style={styles.row}>
             <Text style={styles.subTitle}>
-              ${item.node.priceRange.minVariantPrice.amount}
+              $150
             </Text>
             <Text style={styles.subTitle}>
-              ({item.node.totalInventory} in stock)
+              (4 in stock)
             </Text>
           </View>
         </>

@@ -1,34 +1,34 @@
-import React, {useRef, useState} from 'react';
-import {View, Text, Platform, ImageBackground, StatusBar} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, Platform, ImageBackground, StatusBar } from 'react-native';
 import Button from '../../../components/Button';
-import {Color, Font, GlobalStyle, Window} from '../../../globalStyle/Theme';
+import { Color, Font, GlobalStyle, Window } from '../../../globalStyle/Theme';
 import PopularProducts from './_partials/PopularProducts';
 import Heading from '../../../components/Heading';
 import RenderHtml from 'react-native-render-html';
 import BottomPopupHOC from '../../../components/BottomPopupHOC';
 import VariationsDetails from '../../../components/VariationsDetails';
-import {hasNotch} from 'react-native-device-info';
-import {StyleSheet} from 'react-native';
-import {useMutation} from '@apollo/client';
+import { hasNotch } from 'react-native-device-info';
+import { StyleSheet } from 'react-native';
+import { useMutation } from '@apollo/client';
 import {
   ADD_MORE_ITEM,
   CREATE_CART_ADD_ONE_ITEM,
 } from '../../../graphql/mutations/Cart';
-import {handleCreateCart} from '../../../apis/cart';
+import { handleCreateCart } from '../../../apis/cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {showMessage} from 'react-native-flash-message';
-import {useEffect} from 'react';
+import { showMessage } from 'react-native-flash-message';
+import { useEffect } from 'react';
 import {
   PanGestureHandler,
   ScrollView,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
-import {} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
-import {COLORS, CONTAINER_PADDING, FONTS, HEIGHT} from '../../../constants';
+import { } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import { COLORS, CONTAINER_PADDING, FONTS, HEIGHT } from '../../../constants';
 import BackButton from '../../../components/BackButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ColorCheckSvg} from '../../../assets/svgs/CartSvg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ColorCheckSvg } from '../../../assets/svgs/CartSvg';
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
@@ -38,8 +38,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar';
 
-const ProductDetail = ({route, navigation}) => {
-  const {product} = route.params;
+const ProductDetail = ({ route, navigation }) => {
+  const { item } = route.params;
   const ref = useRef(null);
   const isFocused = useIsFocused();
   const [ProductImages, setProductImages] = useState(null);
@@ -57,262 +57,8 @@ const ProductDetail = ({route, navigation}) => {
   const [allSizesIndex, setAllSizesIndex] = useState(null);
   const [allColorsIndex, setAllColorsIndex] = useState(null);
 
-  useEffect(() => {
-    setProductImages(product.node.featuredImage.url);
-    if (selectedColor && selectedSize) {
-      const filtered = product.node.variants.edges.filter(
-        item =>
-          item.node.selectedOptions[allSizesIndex].value === selectedSize &&
-          item.node.selectedOptions[allColorsIndex].value === selectedColor,
-      );
-      if (filtered.length > 0) {
-        setNewArr(filtered[0].node);
-        setProductImages(filtered[0].node.image.url);
-        if (filtered[0]?.node?.price?.amount) {
-          setNewPrice(filtered[0].node.price.amount);
-        }
-      }
-    }
-  }, [product, selectedColor, selectedSize, NewPrice]);
 
-  // GET PRODUCT COLOR AND SIZE
-  const getUniqueVariant = index => {
-    const productEdge = product.node.variants.edges;
-    const tempProductData = [];
-    const uniqueVariant = [];
-    if (productEdge.length) {
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions[index]) {
-          tempProductData.push(
-            productEdge[a].node.selectedOptions[index].value,
-          );
-        }
-      }
 
-      for (let b = 0; b < tempProductData.length; b++) {
-        if (!uniqueVariant.includes(tempProductData[b])) {
-          uniqueVariant.push(tempProductData[b]);
-        }
-      }
-    }
-
-    if (uniqueVariant.length === 1) {
-      if (index === allSizesIndex) {
-        setselectedSize(uniqueVariant[0]);
-      }
-      if (index === allColorsIndex) {
-        setselectedColor(uniqueVariant[0]);
-      }
-    }
-
-    return uniqueVariant;
-  };
-
-  // CHECK CURRENT COLOR AND SIZE
-  const checkAllVarientValues = (index, returnIndex, selectedOption) => {
-    const productEdge = product.node.variants.edges;
-    const tempProductData = [];
-    const tempProductReturnData = [];
-    const uniqueVariant = [];
-
-    if (productEdge.length && index !== null) {
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions[index]) {
-          tempProductData.push(
-            productEdge[a].node.selectedOptions[index].value,
-          );
-        }
-      }
-
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions[index]) {
-          tempProductReturnData.push(
-            productEdge[a].node.selectedOptions[returnIndex].value,
-          );
-        }
-      }
-
-      for (let b = 0; b < tempProductData.length; b++) {
-        if (tempProductData[b] === selectedOption) {
-          uniqueVariant.push(tempProductReturnData[b]);
-        }
-      }
-    }
-
-    return uniqueVariant;
-  };
-
-  const findCurrectIndexOfVarients = () => {
-    const productEdge = product.node.variants.edges;
-    const tempProductData = {
-      size: null,
-      color: null,
-    };
-
-    if (productEdge.length) {
-      for (let a = 0; a < productEdge.length; a++) {
-        if (productEdge[a].node.selectedOptions) {
-          for (let b = 0; b < productEdge[a].node.selectedOptions.length; b++) {
-            if (
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'size' ||
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'sizes'
-            ) {
-              tempProductData.size = b;
-            }
-            if (
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'color' ||
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'colors' ||
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'colour' ||
-              productEdge[a].node.selectedOptions[b].name.toLowerCase() ===
-                'colours'
-            ) {
-              tempProductData.color = b;
-            }
-
-            tempProductData.some = productEdge[a].node.selectedOptions[b].name;
-          }
-        }
-      }
-
-      setAllSizesIndex(tempProductData.size);
-      setAllColorsIndex(tempProductData.color);
-      // setSelectedProductID(product.variants.edges[0].node.id);
-      // setProductImage(
-      //   product?.images?.edges[0]?.node?.url
-      //     ? product.images.edges[0].node.url
-      //     : null,
-      // );
-      // console.log(tempProductData);
-    }
-  };
-
-  useEffect(() => {
-    findCurrectIndexOfVarients();
-  }, []);
-
-  useEffect(() => {
-    if (route.params.relatedProducts) {
-      setAllColors([]);
-      setAllSizes([]);
-      ref.current?.scrollTo({y: 0});
-    }
-    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
-      setAllSizes(getUniqueVariant(allSizesIndex));
-      setAllColors(getUniqueVariant(allColorsIndex));
-    }
-  }, [isFocused, route.params.relatedProducts, product]);
-
-  useEffect(() => {
-    if (allSizesIndex !== null) {
-      setAllSizes(getUniqueVariant(allSizesIndex));
-    }
-  }, [allSizesIndex]);
-
-  useEffect(() => {
-    if (allColorsIndex !== null) {
-      setAllColors(getUniqueVariant(allColorsIndex));
-    }
-  }, [allColorsIndex]);
-
-  useEffect(() => {
-    if (allColors.length > 0) {
-      setAllColors(
-        checkAllVarientValues(allSizesIndex, allColorsIndex, selectedSize),
-      );
-    }
-  }, [selectedSize]);
-
-  useEffect(() => {
-    if (allSizes.length > 0) {
-      setAllSizes(
-        checkAllVarientValues(allColorsIndex, allSizesIndex, selectedColor),
-      );
-    }
-  }, [selectedColor]);
-
-  const HandleSize = index => {
-    setselectedSize(index);
-  };
-
-  const HandleColor = index => {
-    setselectedColor(index);
-  };
-
-  const Add_To_Card = async () => {
-    if (product.node.variants.edges[0].node.selectedOptions.length > 1) {
-      if (selectedColor && selectedSize) {
-        setloadingSpinner(true);
-        const CART_ID = await AsyncStorage.getItem('CART_ID');
-        let variables;
-        let mutationFunc;
-        let isCreateCart;
-        if (CART_ID) {
-          variables = {
-            cartId: CART_ID,
-            lines: {
-              merchandiseId: NewArr.id,
-              quantity: 1,
-            },
-          };
-          mutationFunc = cartLinesAdd;
-          isCreateCart = 0;
-        } else {
-          variables = {
-            cartInput: {
-              lines: {
-                merchandiseId: NewArr.id,
-                quantity: 1,
-              },
-            },
-          };
-          mutationFunc = cartCreate;
-          isCreateCart = 1;
-        }
-        handleCreateCart(mutationFunc, variables, navigation, isCreateCart, 1);
-        setloadingSpinner(false);
-      } else {
-        showMessage({
-          message: 'Please Select Color & Size First',
-          type: 'danger',
-        });
-      }
-    } else {
-      setloadingSpinner(true);
-      const CART_ID = await AsyncStorage.getItem('CART_ID');
-      let variables;
-      let mutationFunc;
-      let isCreateCart;
-      if (CART_ID) {
-        variables = {
-          cartId: CART_ID,
-          lines: {
-            merchandiseId: product.node.variants.edges[0].node.id,
-            quantity: 1,
-          },
-        };
-        mutationFunc = cartLinesAdd;
-        isCreateCart = 0;
-      } else {
-        variables = {
-          cartInput: {
-            lines: {
-              merchandiseId: product.node.variants.edges[0].node.id,
-              quantity: 1,
-            },
-          },
-        };
-        mutationFunc = cartCreate;
-        isCreateCart = 1;
-      }
-      handleCreateCart(mutationFunc, variables, navigation, isCreateCart, 1);
-      setloadingSpinner(false);
-    }
-  };
   //ANIMATED GESTURES ====> START
   const handleScroll = e => {
     if (e.nativeEvent.contentOffset.y > 1) {
@@ -363,6 +109,11 @@ const ProductDetail = ({route, navigation}) => {
     },
   });
   //ANIMATED GESTURES ====> END
+
+
+  const designNow = () => {
+    navigation.navigate('CustomDesign')
+  }
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar
@@ -373,23 +124,23 @@ const ProductDetail = ({route, navigation}) => {
         translucent
       />
       <ScrollView
-        style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1, justifyContent: 'flex-end'}}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <ImageBackground
           resizeMode="cover"
-          source={{uri: ProductImages}}
+          source={item.image}
           style={styles.productImage}>
-          <View style={[styles.overlay, {paddingTop: insets.top + 10}]}>
+          <View style={[styles.overlay, { paddingTop: insets.top + 10 }]}>
             <BackButton type="secondary" />
           </View>
         </ImageBackground>
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[reanimatedStyle, styles.card]}>
             <ScrollView
-              style={{flex: 1}}
-              contentContainerStyle={{flexGrow: 1}}
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
               onMomentumScrollBegin={handleScroll}>
@@ -398,19 +149,15 @@ const ProductDetail = ({route, navigation}) => {
                   paddingHorizontal: CONTAINER_PADDING,
                 }}>
                 <View style={styles.row}>
-                  <Text style={styles.heading}>{product.node.title}</Text>
+                  <Text style={styles.heading}>{item.title}</Text>
 
                   <Text style={styles.price}>
-                    {product.node.priceRange.minVariantPrice.currencyCode ===
-                      'USD' && '$'}
-                    {NewPrice
-                      ? NewPrice
-                      : product.node.priceRange.minVariantPrice.amount}
+                    $150
                   </Text>
                 </View>
                 {allSizes.length > 0 && (
                   <>
-                    <Text style={[styles.subHeading, {marginTop: 10}]}>
+                    <Text style={[styles.subHeading, { marginTop: 10 }]}>
                       Sizes
                     </Text>
 
@@ -422,7 +169,7 @@ const ProductDetail = ({route, navigation}) => {
                       }}
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
-                      {allSizes.map((item, index) => (
+                      {/* {allSizes.map((item, index) => (
                         <TouchableOpacity
                           onPress={() => HandleSize(item)}
                           key={index}
@@ -452,13 +199,13 @@ const ProductDetail = ({route, navigation}) => {
                             {item}
                           </Text>
                         </TouchableOpacity>
-                      ))}
+                      ))} */}
                     </ScrollView>
                   </>
                 )}
                 {allColors.length > 0 && (
                   <>
-                    <Text style={[styles.subHeading, {marginTop: 0}]}>
+                    <Text style={[styles.subHeading, { marginTop: 0 }]}>
                       Colors
                     </Text>
 
@@ -470,7 +217,7 @@ const ProductDetail = ({route, navigation}) => {
                       }}
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
-                      {allColors.map((item, index) => (
+                      {/* {allColors.map((item, index) => (
                         <TouchableOpacity
                           onPress={() => HandleColor(item)}
                           key={index}
@@ -500,16 +247,19 @@ const ProductDetail = ({route, navigation}) => {
                             {item}
                           </Text>
                         </TouchableOpacity>
-                      ))}
+                      ))} */}
                     </ScrollView>
                   </>
                 )}
                 <View style={styles.border} />
 
-                <Text style={[styles.heading, {marginTop: 10}]}>
+                <Text style={[styles.heading, { marginTop: 10 }]}>
                   Description
                 </Text>
-
+                <Text style={{ marginTop: 10, textAlign: 'justify', fontSize: 16 }}>
+                  {item.description}
+                </Text>
+                {/* 
                 <RenderHtml
                   systemFonts={[FONTS.regular]}
                   tagsStyles={{
@@ -526,23 +276,23 @@ const ProductDetail = ({route, navigation}) => {
                   }}
                   contentWidth={Window.width}
                   source={{html: product.node.descriptionHtml}}
-                />
+                /> */}
 
                 <View style={styles.border} />
-                <Text style={[styles.heading, {marginTop: 10}]}>Latest</Text>
+                <Text style={[styles.heading, { marginTop: 10 }]}>Latest</Text>
               </View>
               <PopularProducts />
             </ScrollView>
             <View
               style={[
                 styles.bottomButtonContainer,
-                {paddingBottom: insets.bottom + 15},
+                { paddingBottom: insets.bottom + 15 },
               ]}>
               <Button
-                onPressFunc={Add_To_Card}
+                onPressFunc={designNow}
                 type="primary"
                 loading={loadingSpinner}
-                text="Add to Cart"
+                text="Design Now"
               />
             </View>
           </Animated.View>
@@ -555,7 +305,7 @@ const ProductDetail = ({route, navigation}) => {
 export default ProductDetail;
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: COLORS.white, flex: 1},
+  container: { backgroundColor: COLORS.white, flex: 1 },
   card: {
     backgroundColor: COLORS.white,
     // height: HEIGHT / 1.17 - 60,
@@ -573,7 +323,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginBottom: 10,
   },
-  heading: {fontSize: 14, color: COLORS.tertiary, fontFamily: FONTS.heading},
+  heading: { fontSize: 14, color: COLORS.tertiary, fontFamily: FONTS.heading },
   subHeading: {
     fontSize: 14,
     color: COLORS.tertiary,
@@ -584,7 +334,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: CONTAINER_PADDING,
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
-  border: {height: 1, backgroundColor: '#080E1E0D', marginVertical: 10},
+  border: { height: 1, backgroundColor: '#080E1E0D', marginVertical: 10 },
   productImage: {
     position: 'absolute',
     top: 0,

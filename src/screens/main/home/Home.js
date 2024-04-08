@@ -91,11 +91,48 @@ const Home = ({ navigation }) => {
   const { product } = useSelector(state => ({
     ...state,
   }));
+
+
+  const data = [
+    {
+      id: 1,
+      title: 'T shirts',
+      image: require('../../../assets/images/images/sample_tshirt.png'),
+      description: '4.2 oz./yd², 52/48 airlume combed and ring-spun cotton/polyester, 32 singles, Athletic Heather and Black Heather are 90/10 airlume combed and ring-spun cotton/polyester. Retail fit, unisex sizing, shoulder taping, Tear-away label.'
+    },
+    {
+      id: 2,
+      title: 'T shirts',
+      image: require('../../../assets/images/images/sample_tshirt.png'),
+      description: '4.2 oz./yd², 52/48 airlume combed and ring-spun cotton/polyester, 32 singles, Athletic Heather and Black Heather are 90/10 airlume combed and ring-spun cotton/polyester. Retail fit, unisex sizing, shoulder taping, Tear-away label.'
+    },
+    {
+      id: 3,
+      title: 'T shirts',
+      image: require('../../../assets/images/images/sample_tshirt.png'),
+      description: '4.2 oz./yd², 52/48 airlume combed and ring-spun cotton/polyester, 32 singles, Athletic Heather and Black Heather are 90/10 airlume combed and ring-spun cotton/polyester. Retail fit, unisex sizing, shoulder taping, Tear-away label.'
+    },
+    {
+      id: 4,
+      title: 'T shirts',
+      image: require('../../../assets/images/images/sample_tshirt.png'),
+      description: '4.2 oz./yd², 52/48 airlume combed and ring-spun cotton/polyester, 32 singles, Athletic Heather and Black Heather are 90/10 airlume combed and ring-spun cotton/polyester. Retail fit, unisex sizing, shoulder taping, Tear-away label.'
+    },
+    {
+      id: 5,
+      title: 'T shirts',
+      image: require('../../../assets/images/images/sample_tshirt.png'),
+      description: '4.2 oz./yd², 52/48 airlume combed and ring-spun cotton/polyester, 32 singles, Athletic Heather and Black Heather are 90/10 airlume combed and ring-spun cotton/polyester. Retail fit, unisex sizing, shoulder taping, Tear-away label.'
+    },
+  ]
+
   const subscription = BackHandler.addEventListener(
     'hardwareBackPress',
     onBackPress,
   );
+
   subscription.remove();
+
   const onBackPress = () => {
     setSearcValue(false);
   };
@@ -124,12 +161,15 @@ const Home = ({ navigation }) => {
       ? HEIGHT / 1.5 - (insets.top - insets.bottom) - 15
       : HEIGHT / 1.5 + 10,
   );
+
   const reanimatedStyle = useAnimatedStyle(() => {
     return {
       height: progress.value,
     };
   }, []);
+
   const translateY = useSharedValue(0);
+
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
       ctx.startY = translateY.value;
@@ -161,6 +201,8 @@ const Home = ({ navigation }) => {
     },
   });
   //ANIMATED GESTURES ====> END
+
+
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar
@@ -195,18 +237,18 @@ const Home = ({ navigation }) => {
                   });
                 }}
               />
-              {product.featured && (
-                <FlatList
-                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
-                  data={product.featured?.edges}
-                  renderItem={({ item, index }) => (
-                    <ProductBox item={item} index={index} />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                />
-              )}
+
+              <FlatList
+                contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
+                data={data}
+                renderItem={({ item, index }) => (
+                  <ProductBox item={item} index={index} />
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+              />
+
               {/* On Sale Product List */}
               <SeactionRow
                 heading="Bags"
@@ -218,18 +260,18 @@ const Home = ({ navigation }) => {
                   });
                 }}
               />
-              {product.onsale && (
-                <FlatList
-                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
-                  data={product.onsale.edges}
-                  renderItem={({ item, index }) => (
-                    <ProductBox item={item} index={index} />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                />
-              )}
+
+              <FlatList
+                contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
+                data={data}
+                renderItem={({ item, index }) => (
+                  <ProductBox item={item} index={index} />
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+              />
+
               {/* Latest Product List */}
               <SeactionRow
                 heading="Latest"
@@ -241,18 +283,18 @@ const Home = ({ navigation }) => {
                 }}
               />
 
-              {product.latest && (
-                <FlatList
-                  contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
-                  data={product.latest?.edges}
-                  renderItem={({ item, index }) => (
-                    <ProductBox item={item} index={index} />
-                  )}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                />
-              )}
+
+              <FlatList
+                contentContainerStyle={{ paddingHorizontal: CONTAINER_PADDING }}
+                data={data}
+                renderItem={({ item, index }) => (
+                  <ProductBox item={item} index={index} />
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+              />
+
 
               <View
                 style={[
